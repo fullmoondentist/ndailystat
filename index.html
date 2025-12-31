@@ -467,8 +467,8 @@
                         this.userId = userId; // Store for global use
 
                         await Promise.all([
-                            this.fetchData(email, userId),
-                            this.fetchHistory(email, userId)
+                            this.fetchData(email || undefined, userId || undefined),
+                            this.fetchHistory(email || undefined, userId || undefined)
                         ]);
 
                         this.isLoading = false;
@@ -507,8 +507,12 @@
 
                             this.recentScores = JSON.parse(this.profile.recent_scores_json || '[]');
                         } else {
-                            console.warn('Profile fetch failed:', profileRes.message);
-                            alert('ไม่พบข้อมูลโปรไฟล์: ' + (profileRes.message || 'กรุณาตรวจสอบการตั้งค่า Data Mapping'));
+                            console.warn('Profile fetch failed:', profileRes);
+                            let errorDetail = profileRes.message || 'ไม่ทราบสาเหตุ';
+                            if (profileRes.error) errorDetail += '\nError: ' + profileRes.error;
+                            if (profileRes.stack) errorDetail += '\nStack: ' + profileRes.stack.split('\n')[0]; // Just the first line of stack
+
+                            alert('ไม่พบข้อมูลโปรไฟล์: ' + errorDetail);
                         }
 
                         if (leaderboardRes.success) {
