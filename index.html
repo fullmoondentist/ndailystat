@@ -10,7 +10,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css" rel="stylesheet">
 
     <script>
@@ -230,233 +229,343 @@
 
 <body class="bg-[#F8F9FD] min-h-screen font-sans pb-12" x-data="dailyApp()" x-init="init()">
 
+    <!-- Top Ticker (Fixed/Top) -->
+    <div class="ticker-wrap border-b border-gray-100/50 bg-white/80 backdrop-blur-md sticky top-0 z-50"
+        x-show="system.ticker_messages?.length > 0">
+        <div class="ticker-move text-xs font-bold text-slate-600">
+            <template x-for="msg in system.ticker_messages" :key="msg">
+                <span class="mx-6 inline-flex items-center">
+                    <span class="w-1.5 h-1.5 rounded-full bg-orange-500 mr-2"></span>
+                    <span x-text="msg"></span>
+                </span>
+            </template>
+        </div>
+    </div>
+
+    <!-- Minimal Header / Greeting -->
+    <div class="container mx-auto px-4 pt-6 pb-4 max-w-md lg:max-w-[75%]">
+        <div class="flex items-center justify-between">
+            <div class="animate-fade-in-down">
+                <div class="text-sm text-slate-500 font-medium mb-0.5">👋 สวัสดีครับ,</div>
+                <h1 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                    <div class="flex items-baseline gap-2">
+                        <span x-text="profile.display_name || 'อาจารย์'"
+                            class="bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-600"></span>
+                        <span
+                            class="text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100"
+                            x-text="profile.department"></span>
+                    </div>
+                </h1>
+            </div>
+            <div class="bg-white p-2 rounded-full shadow-sm border border-slate-100 relative">
+                <i class="fa-regular fa-bell text-slate-400"></i>
+                <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+            </div>
+        </div>
+    </div>
 
     <!-- Main Content Container -->
-    <main class="py-4">
-        <div class="container mx-auto px-4 max-w-md lg:max-w-[75%] space-y-4">
+    <main class="px-4 pb-20">
+        <div class="container mx-auto max-w-md lg:max-w-[75%] space-y-6">
 
-            <!-- Ticker Messages -->
-            <div class="ticker-wrap rounded-lg shadow-sm bg-white border" x-show="system.ticker_messages?.length > 0">
-                <div class="ticker-move text-xs font-medium text-blue-900/60">
-                    <template x-for="msg in system.ticker_messages" :key="msg">
-                        <span class="mx-8 flex-inline items-center">
-                            <i class="fa-solid fa-bullhorn mr-2"></i>
-                            <span x-text="msg"></span>
-                        </span>
-                    </template>
-                </div>
-            </div>
-
-            <!-- Profile Card (Mockup Style) -->
-            <div class="rounded-3xl p-6 text-white shadow-xl relative overflow-hidden"
+            <!-- Simplified Profile Card -->
+            <div class="rounded-2xl p-6 text-white shadow-lg relative overflow-hidden"
                 :class="'bg-gradient-to-br ' + (profile.class_color_css || 'from-blue-600 via-indigo-600 to-violet-700')">
-                <div class="flex justify-between items-start mb-8">
-                    <div class="space-y-1">
-                        <h2 class="text-lg font-bold tracking-tight" x-text="profile.display_name"></h2>
-                    </div>
-                    <div class="text-right" x-show="profile.current_class !== 'UNRANKED'">
-                        <div class="text-5xl font-bold uppercase tracking-tighter mb-1" x-text="profile.current_class">
+
+                <!-- Rank & Stars -->
+                <div class="flex justify-between items-start mb-6">
+                    <div class="flex items-center gap-2">
+                        <span class="text-3xl">💎</span>
+                        <div>
+                            <div class="text-sm font-bold uppercase tracking-wider opacity-90"
+                                x-text="profile.current_class"></div>
+                            <div class="text-xs font-light opacity-75">Rank Tier</div>
                         </div>
+                    </div>
+                    <div class="text-right">
                         <div
-                            class="text-sm font-bold uppercase tracking-wider opacity-80 flex items-center justify-end gap-1">
-                            <i class="fa-solid fa-book-bookmark text-xs"></i>
+                            class="text-sm font-bold bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1">
+                            <span>🎖️</span>
                             <span x-text="profile.current_title"></span>
                         </div>
+                        <div class="text-xs mt-1 opacity-75">⭐️⭐️⭐️ (3 Stars)</div>
                     </div>
                 </div>
 
-                <div class="space-y-2">
-                    <div class="flex justify-between text-xs font-bold uppercase tracking-widest opacity-90">
+                <!-- MP Progress -->
+                <div class="space-y-1.5">
+                    <div class="flex justify-between text-xs font-medium opacity-90">
                         <span>MP Progress</span>
                         <span
                             x-text="profile.total_mp?.toLocaleString() + ' / ' + (profile.next_rank_mp?.toLocaleString() || 'MAX')"></span>
                     </div>
-                    <div class="w-full h-3 bg-white/20 rounded-full overflow-hidden">
-                        <div class="h-full bg-white transition-all duration-1000"
+                    <div class="w-full h-2.5 bg-black/20 rounded-full overflow-hidden">
+                        <div class="h-full bg-white shadow-sm transition-all duration-1000"
                             :style="'width: ' + expPercentage + '%'"></div>
                     </div>
+                    <div class="text-[10px] text-center opacity-70 mt-1">
+                        (อีก <span
+                            x-text="((profile.next_rank_mp || 5000) - (profile.total_mp || 0)).toLocaleString()"></span>
+                        MP ขึ้น Master 🎖️)
+                    </div>
                 </div>
             </div>
 
-            <!-- Stat Summary Grid (3 Columns) -->
+            <!-- Stats Grid (New Layout) -->
+            <div class="flex items-end gap-2 mb-2 px-1">
+                <h3 class="text-sm font-bold text-slate-700">📊 สถิติวันนี้ (Today's Stats)</h3>
+            </div>
             <div class="grid grid-cols-3 gap-3">
+                <!-- Streak -->
                 <div
-                    class="rounded-2xl p-4 flex flex-col items-center justify-center text-center shadow-sm border border-orange-100 bg-orange-50/50">
-                    <div class="text-2xl font-bold text-orange-600" x-text="profile.current_streak || 0"></div>
-                    <div class="text-xs font-bold text-orange-400 uppercase tracking-widest mt-1">
-                        Perfect Combo
-                    </div>
+                    class="bg-white rounded-xl p-3 flex flex-col items-center justify-center text-center shadow-sm border border-slate-100">
+                    <div class="mb-1 text-lg">🔥</div>
+                    <div class="text-xl font-bold text-slate-800" x-text="profile.current_streak || 0"></div>
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Streak</div>
                 </div>
+                <!-- Accuracy -->
                 <div
-                    class="rounded-2xl p-4 flex flex-col items-center justify-center text-center shadow-sm border border-blue-100 bg-blue-50/50">
-                    <div class="text-2xl font-bold text-blue-600" x-text="(profile.recent_acc || 0) + '%'"></div>
-                    <div class="text-xs font-bold text-blue-400 uppercase tracking-widest mt-1">
-                        Recent Accuracy
-                    </div>
+                    class="bg-white rounded-xl p-3 flex flex-col items-center justify-center text-center shadow-sm border border-slate-100">
+                    <div class="mb-1 text-lg">🎯</div>
+                    <div class="text-xl font-bold text-slate-800" x-text="(profile.recent_acc || 0) + '%'"></div>
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Accuracy</div>
                 </div>
+                <!-- Class -->
                 <div
-                    class="rounded-2xl p-4 flex flex-col items-center justify-center text-center shadow-sm border border-purple-100 bg-purple-50/50">
-                    <div class="text-2xl font-bold text-purple-600" x-text="(profile.alltime_acc || 0) + '%'"></div>
-                    <div class="text-xs font-bold text-purple-400 uppercase tracking-widest mt-1">
-                        All-time Accuracy
-                    </div>
+                    class="bg-white rounded-xl p-3 flex flex-col items-center justify-center text-center shadow-sm border border-slate-100">
+                    <div class="mb-1 text-lg">💎</div>
+                    <div class="text-xl font-bold text-slate-800 truncate w-full px-1"
+                        x-text="(profile.current_class || 'NONE').split(' ')[0]"></div>
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Class</div>
                 </div>
             </div>
 
-
-            <!-- Rewards Card -->
-            <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100/50">
-                <div class="flex items-center gap-2 mb-4">
-                    <span class="text-lg">🎁</span>
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Rewards (<span
-                            x-text="profile.rewards?.length || 0"></span>)</h3>
-                </div>
-                <div class="flex flex-wrap gap-4 items-center">
-                    <template x-for="reward in groupedRewards" :key="reward.name">
-                        <div class="flex items-center gap-2">
-                            <span class="text-4xl" x-text="getRewardEmoji(reward.name)"></span>
-                            <span class="text-sm font-bold text-gray-400" x-show="reward.count > 1"
-                                x-text="'x' + reward.count"></span>
-                        </div>
-                    </template>
-                    <div x-show="!profile.rewards || profile.rewards.length === 0" class="text-xs text-gray-300 italic">
-                        No rewards unlocked yet...
-                    </div>
-                </div>
-            </div>
-
-            <!-- PERFORMANCE SECTION WITH HANDLE -->
-            <div class="relative pt-4">
-                <div
-                    class="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-gray-200/50 border-4 border-[#F8F9FD] z-10">
+            <!-- Rewards Box (Clean) -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100/60">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm font-bold text-slate-700">🎁 กล่องของรางวัล (Reward Box)</h3>
+                    <span class="text-xs font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-md"
+                        x-text="profile.rewards?.length + ' ชิ้น'"></span>
                 </div>
 
-                <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100/50 relative">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-chart-simple text-blue-400"></i>
-                            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Today's
-                                Performance</h3>
-                        </div>
-                    </div>
-
-                    <div class="space-y-3">
-                        <template x-for="item in history" :key="item.date + item.session">
-                            <div
-                                class="bg-gray-50/50 border border-gray-100/50 rounded-2xl p-4 flex items-center justify-between group active:scale-[0.98] transition-all">
-                                <div class="flex flex-col">
-                                    <span class="text-sm font-bold text-gray-800 leading-tight"
-                                        x-text="item.student || 'Unknown Student'"></span>
-                                    <div class="flex items-center gap-2 text-xs font-bold text-gray-400 mt-1">
-                                        <span x-text="item.time"></span>
-                                        <span>•</span>
-                                        <span x-text="Math.abs(item.delta) + 'm'"></span>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <div :class="'px-2 py-0.5 rounded-md text-xs font-bold uppercase ' + (item.status === 'perfect' ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-500')"
-                                        x-text="item.status"></div>
-                                    <div class="text-sm font-bold text-gray-800 w-8 text-right" x-text="item.score">
-                                    </div>
-                                </div>
+                <div class="bg-slate-50/50 rounded-xl p-4 border border-dashed border-slate-200">
+                    <div class="flex flex-wrap gap-3 items-center justify-start">
+                        <template x-for="reward in groupedRewards" :key="reward.name">
+                            <div class="relative group cursor-help">
+                                <span class="text-3xl filter drop-shadow-sm transition-transform hover:scale-110"
+                                    x-text="getRewardEmoji(reward.name)"></span>
+                                <span
+                                    class="absolute -top-2 -right-2 bg-slate-800 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-sm"
+                                    x-show="reward.count > 1" x-text="reward.count"></span>
                             </div>
                         </template>
-
-                        <div x-show="historyHasMore" class="pt-2">
-                            <button @click="loadMoreHistory()" :disabled="isLoadingHistory"
-                                class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest text-blue-500/60 hover:text-blue-500 transition-colors">
-                                Load More Results
-                            </button>
+                        <div x-show="!profile.rewards || profile.rewards.length === 0"
+                            class="text-xs text-slate-400 italic w-full text-center py-2">
+                            สะสม MP เพื่อรับของรางวัล...
                         </div>
+                    </div>
+                    <div class="mt-3 text-[10px] text-slate-400 text-center font-medium">
+                        ได้จากวันที่ทำคะแนน 100% Perfect
                     </div>
                 </div>
             </div>
 
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-2 gap-3">
+                <button
+                    class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center justify-center gap-2 active:scale-95 transition-transform hover:bg-slate-50 text-slate-700">
+                    <i class="fa-solid fa-stethoscope text-blue-500"></i>
+                    <span class="text-sm font-bold">ตรวจงาน</span>
+                </button>
+                <a href="#history-section"
+                    @click.prevent="document.getElementById('history-section').scrollIntoView({behavior: 'smooth'})"
+                    class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center justify-center gap-2 active:scale-95 transition-transform hover:bg-slate-50 text-slate-700">
+                    <i class="fa-solid fa-clock-rotate-left text-orange-500"></i>
+                    <span class="text-sm font-bold">ประวัติวันนี้</span>
+                </a>
+            </div>
 
-            <!-- Hall of Fame Card -->
-            <div class="bg-white rounded-3xl shadow-sm border border-gray-100/50 overflow-hidden">
-                <div class="p-5 border-b border-gray-50 bg-gray-50/30">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-crown text-yellow-500"></i>
-                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Hall of Fame</h3>
-                    </div>
+            <!-- Department Overview (Preview) -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100/60">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm font-bold text-slate-700">🏢 Department Overview</h3>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Preview</span>
                 </div>
-                <div class="divide-y divide-gray-50">
-                    <template x-for="(entry, index) in leaderboard" :key="entry.email">
-                        <div class="p-4 flex items-center justify-between hover:bg-gray-50/50 transition-colors">
-                            <div class="flex items-center gap-3">
-                                <div class="w-5 text-center text-xs font-bold text-gray-300" x-text="index + 1"></div>
-                                <div class="avatar-circle w-8 h-8 text-xs font-bold"
-                                    :class="'bg-gradient-to-br ' + entry.class_color_css"
-                                    x-text="getInitials(entry.email)"></div>
-                                <div class="flex flex-col">
-                                    <div class="text-xs font-bold text-gray-800" x-text="entry.display_name"></div>
-                                    <div class="text-xs font-bold text-gray-400 uppercase tracking-wider"
-                                        x-text="entry.current_title"></div>
+                <div class="space-y-3">
+                    <!-- Loop simplified standard stats or manual top 3 -->
+                    <template x-for="(stat, dept) in system.dept_stats" :key="dept">
+                        <div x-show="Object.keys(system.dept_stats).indexOf(dept) < 3" class="flex items-center gap-3">
+                            <div class="w-6 text-[10px] font-bold text-slate-400 text-center"
+                                x-text="['🥇','🥈','🥉'][Object.keys(system.dept_stats).indexOf(dept)]"></div>
+                            <div class="flex-1">
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="font-bold text-slate-700" x-text="dept"></span>
+                                    <span class="font-bold"
+                                        :class="stat.on_time_rate >= 80 ? 'text-green-600' : 'text-slate-500'"
+                                        x-text="stat.on_time_rate + '%'"></span>
+                                </div>
+                                <div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                    <div class="h-full rounded-full"
+                                        :class="dept === profile.department ? 'bg-blue-500' : (stat.on_time_rate >= 80 ? 'bg-green-400' : 'bg-slate-300')"
+                                        :style="'width: ' + stat.on_time_rate + '%'"></div>
                                 </div>
                             </div>
-                            <div class="flex flex-col items-end">
-                                <div class="text-xs font-bold text-blue-600"
-                                    x-text="entry.total_mp.toLocaleString() + ' MP'"></div>
-                                <div class="text-xs font-bold text-emerald-500 mt-0.5"
-                                    x-text="entry.recent_acc + '% ACC'"></div>
+                        </div>
+                    </template>
+                    <div class="pt-2 text-center">
+                        <button class="text-xs font-bold text-blue-500 hover:text-blue-600 transition-colors">View Full
+                            Leaderboard</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Department Leaderboard (Full View) -->
+            <div id="dept-leaderboard-section"
+                class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100/60 scroll-mt-20">
+                <div
+                    class="bg-gradient-to-r from-slate-50 to-white p-3 rounded-xl border border-slate-100 mb-4 text-center">
+                    <h3 class="text-sm font-bold text-slate-700">🏢 ภาพรวมความแม่นยำ (วันนี้)</h3>
+                    <div class="text-[10px] text-slate-400">Department Leaderboard</div>
+                </div>
+
+                <div class="space-y-6">
+                    <template x-for="(stat, dept) in system.dept_stats" :key="dept">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-lg"
+                                        x-text="['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣'][Object.keys(system.dept_stats).indexOf(dept)] || (Object.keys(system.dept_stats).indexOf(dept)+1) + '.'"></span>
+                                    <span class="text-sm font-bold text-slate-700" x-text="dept"></span>
+                                    <span x-show="dept === profile.department"
+                                        class="text-[10px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded font-bold">You</span>
+                                </div>
+                                <div class="text-xs font-bold"
+                                    x-text="stat.on_time_rate + '% (' + (stat.on_time_rate >= 80 ? 'Excellent' : (stat.on_time_rate >= 50 ? 'Good' : 'Need Help')) + ')'"
+                                    :class="stat.on_time_rate >= 80 ? 'text-green-600' : (stat.on_time_rate >= 50 ? 'text-yellow-600' : 'text-red-500')">
+                                </div>
+                            </div>
+                            <div class="w-full h-4 bg-slate-100 rounded-sm overflow-hidden flex">
+                                <!-- Bar segments mimicking mockup -->
+                                <div class="h-full"
+                                    :class="stat.on_time_rate >= 80 ? 'bg-blue-500' : (stat.on_time_rate >= 60 ? 'bg-green-500' : (stat.on_time_rate >= 40 ? 'bg-yellow-400' : 'bg-red-400'))"
+                                    :style="'width: ' + stat.on_time_rate + '%'"></div>
                             </div>
                         </div>
                     </template>
                 </div>
+
+                <!-- Insight Box -->
+                <div class="mt-6 bg-yellow-50/50 border border-yellow-100 rounded-xl p-4 relative">
+                    <div class="absolute -top-3 left-4 bg-white px-2 text-lg">💡</div>
+                    <div class="mt-2 text-xs text-slate-600 italic">
+                        "สาขาที่ทำผลงานได้ดีที่สุดวันนี้คือ <span class="font-bold text-slate-800"
+                            x-text="Object.keys(system.dept_stats)[0]"></span> สุดยอดครับ! 🦷"
+                    </div>
+                </div>
             </div>
 
-            <!-- Community Rank (Chart) at very bottom -->
-            <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100/50">
-                <div class="flex justify-between items-center mb-6">
+            <!-- History / Logs -->
+            <div id="history-section"
+                class="bg-white rounded-2xl shadow-sm border border-slate-100/60 overflow-hidden scroll-mt-24">
+                <div
+                    class="bg-slate-50 border-b border-slate-100 p-4 sticky top-14 z-10 flex items-center justify-between">
                     <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-chart-simple text-blue-500"></i>
-                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Community Rank</h3>
-                    </div>
-                    <div class="px-3 py-1 bg-gray-50 rounded-full text-xs font-bold text-gray-400"
-                        x-text="profile.department"></div>
-                </div>
-                <div class="h-48 relative">
-                    <canvas id="deptChart"
-                        x-show="system.dept_stats && Object.keys(system.dept_stats).length > 0"></canvas>
-                    <div x-show="!system.dept_stats || Object.keys(system.dept_stats).length === 0"
-                        class="text-center py-10 opacity-30 absolute inset-0 flex flex-col items-center justify-center">
-                        <i class="fa-solid fa-hourglass-start text-2xl mb-2"></i>
-                        <p class="text-xs font-bold uppercase tracking-wider">Awaiting Daily Sync...</p>
+                        <i class="fa-solid fa-clock-rotate-left text-slate-400"></i>
+                        <h3 class="text-sm font-bold text-slate-700">ประวัติวันนี้ (Today)</h3>
                     </div>
                 </div>
-                <p class="text-xs text-gray-300 mt-4 text-center italic">
-                    * Averaged same-day performance across department instructors
-                </p>
+
+                <div class="divide-y divide-slate-50">
+                    <template x-for="item in history" :key="item.date + item.session">
+                        <div class="p-4 bg-white">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-[10px] font-bold text-slate-400"
+                                    x-text="'รายการที่ ' + item.session + ': ' + item.time + ' น.'"></span>
+                                <span class="text-xs font-bold text-slate-800" x-text="'นศ. ' + item.student"></span>
+                            </div>
+
+                            <!-- Card Content based on Status -->
+                            <div class="rounded-lg p-3 border-l-4"
+                                :class="item.status === 'perfect' ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'">
+                                <div class="flex justify-between items-center mb-1">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid"
+                                            :class="item.status === 'perfect' ? 'fa-circle-check text-green-500' : 'fa-circle-exclamation text-red-500'"></i>
+                                        <span class="text-xs font-bold"
+                                            :class="item.status === 'perfect' ? 'text-green-700' : 'text-red-700'"
+                                            x-text="item.status === 'perfect' ? 'PERFECT (+100 คะแนน)' : 'OVERDUE (0 คะแนน)'"></span>
+                                    </div>
+                                    <div class="text-lg" x-text="item.status === 'perfect' ? '✅' : '❌'"></div>
+                                </div>
+                                <div class="text-[10px]"
+                                    :class="item.status === 'perfect' ? 'text-green-600' : 'text-red-600'">
+                                    <div x-show="item.status === 'perfect'" class="flex items-center gap-1">
+                                        ⏱️ ส่งตรงเวลา (Delta <span x-text="Math.abs(item.delta)"></span> min)
+                                    </div>
+                                    <div x-show="item.status !== 'perfect'">
+                                        🕒 ล่าช้า: <span x-text="Math.floor(Math.abs(item.delta)/60) + ' ชม.'"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <div x-show="historyHasMore" class="p-4 bg-slate-50">
+                    <button @click="loadMoreHistory()" :disabled="isLoadingHistory"
+                        class="w-full py-3 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-500 hover:text-blue-500 transition-colors shadow-sm">
+                        โหลดเพิ่มเติม...
+                    </button>
+                </div>
             </div>
 
         </div>
     </main>
 
 
-    <!-- Rankup Celebration Modal -->
+    <!-- Rankup Celebration Modal (Screen 1) -->
     <div x-show="showRankup" x-cloak
-        class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm"
+        class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm"
         x-transition.opacity>
-        <div class="glass-card w-full max-w-sm p-8 text-center relative overflow-hidden"
+        <div class="bg-white rounded-2xl w-full max-w-sm p-6 text-center relative overflow-hidden shadow-2xl"
             x-transition:enter="transition ease-out duration-500 scale-90 opacity-0"
             x-transition:enter-start="scale-90 opacity-0" x-transition:enter-end="scale-100 opacity-100">
 
-            <div class="absolute top-0 left-0 w-full h-2 premium-gradient"></div>
+            <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500">
+            </div>
 
-            <div class="text-6xl mb-4 animate-bounce">🎊</div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-2" x-text="'RANK UP: ' + profile.current_class"></h2>
-            <p class="text-gray-500 text-sm mb-6">ยินดีด้วย! คุณได้รับการเลื่อนขั้นที่สูงขึ้น</p>
+            <div class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">✨ CONGRATULATIONS ✨</div>
+            <div class="text-4xl mb-4 animate-bounce">🎉</div>
+
+            <h2 class="text-lg font-bold text-slate-600 mb-2">คุณได้รับการเลื่อนขั้นเป็น:</h2>
 
             <div
-                :class="'inline-flex items-center px-6 py-2 rounded-full text-white font-bold shadow-lg mb-8 bg-gradient-to-r ' + (rankConfig[profile.current_class]?.color || 'from-blue-600 to-indigo-600')">
+                :class="'inline-flex items-center px-5 py-2 rounded-full text-white font-bold shadow-lg mb-6 bg-gradient-to-r ' + (rankConfig[profile.current_class]?.color || 'from-blue-600 to-indigo-600')">
                 <span x-text="rankConfig[profile.current_class]?.emoji || '🏆'"></span>
                 <span x-text="profile.current_class" class="ml-2 uppercase tracking-widest text-lg"></span>
             </div>
 
+            <div class="border-t border-slate-100 py-4 mb-4">
+                <h3 class="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wider">📊 สถิติใหม่ของคุณ</h3>
+                <div class="space-y-2 text-sm text-slate-700">
+                    <div class="flex justify-between px-4">
+                        <span class="text-slate-500">Total MP:</span>
+                        <span class="font-bold" x-text="profile.total_mp?.toLocaleString() || 0"></span>
+                    </div>
+                    <div class="flex justify-between px-4">
+                        <span class="text-slate-500">Bonus:</span>
+                        <span class="font-bold text-green-600">x1.2 Multiplier</span>
+                    </div>
+                    <div class="flex justify-between px-4">
+                        <span class="text-slate-500">Unlock:</span>
+                        <span class="font-bold text-orange-500">กรอบโปรไฟล์ทอง ⭐</span>
+                    </div>
+                </div>
+            </div>
+
             <button @click="closeRankup()"
-                class="w-full py-4 premium-gradient text-white font-bold rounded-xl shadow-lg active:scale-95 transition-transform">
-                รับทราบ และไปต่อ!
+                class="w-full py-3.5 bg-slate-800 text-white font-bold rounded-xl shadow-lg active:scale-95 transition-transform hover:bg-slate-900">
+                รับทราบและลุยต่อ! 🚀
             </button>
         </div>
     </div>
@@ -565,10 +674,7 @@
                             setTimeout(() => this.showRankup = true, 500);
                         }
 
-                        // Render chart after DOM is ready
-                        this.$nextTick(() => {
-                            this.renderDeptChart();
-                        });
+                        // Chart render removed
 
                     } catch (err) {
                         console.error('Initialization failed', err);
@@ -687,65 +793,6 @@
                     await this.callAPI('clearRankUp', { email: this.profile.email });
                 },
 
-                renderDeptChart() {
-                    const canvas = document.getElementById('deptChart');
-                    if (!canvas) return;
-
-                    const stats = this.system.dept_stats;
-                    if (!stats || Object.keys(stats).length === 0) return;
-
-                    const labels = Object.keys(stats);
-                    const data = labels.map(label => stats[label].on_time_rate);
-                    const backgroundColors = labels.map(label =>
-                        label === this.profile.department ? 'rgba(30, 64, 175, 0.8)' : 'rgba(148, 163, 184, 0.3)'
-                    );
-                    const borderColors = labels.map(label =>
-                        label === this.profile.department ? 'rgba(30, 64, 175, 1)' : 'rgba(148, 163, 184, 0.5)'
-                    );
-
-                    if (this.deptChart) this.deptChart.destroy();
-
-                    const ctx = canvas.getContext('2d');
-                    this.deptChart = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                data: data,
-                                backgroundColor: backgroundColors,
-                                borderColor: borderColors,
-                                borderWidth: 1,
-                                borderRadius: 8,
-                                barThickness: 25
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            indexAxis: 'y',
-                            plugins: {
-                                legend: { display: false },
-                                tooltip: {
-                                    callbacks: {
-                                        label: (context) => ` ${context.parsed.x}% On-time`
-                                    }
-                                }
-                            },
-                            scales: {
-                                x: {
-                                    beginAtZero: true,
-                                    max: 100,
-                                    grid: { display: false },
-                                    ticks: { font: { size: 9, weight: 'bold' } }
-                                },
-                                y: {
-                                    grid: { display: false },
-                                    ticks: { font: { size: 10, weight: 'bold' } }
-                                }
-                            }
-                        }
-                    });
-                }
             }
         }
     </script>
