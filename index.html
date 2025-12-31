@@ -453,15 +453,20 @@
                         }
 
                         const idToken = liff.getDecodedIDToken();
-                        if (!idToken || !idToken.email) {
-                            throw new Error('Could not retrieve email from LIFF ID Token');
+                        let email = idToken ? idToken.email : null;
+                        let userId = null;
+
+                        if (!email) {
+                            console.log('Email not found in ID Token, falling back to liff.getProfile()');
+                            const profile = await liff.getProfile();
+                            userId = profile.userId;
                         }
 
-                        console.log('User Email:', idToken.email);
+                        console.log('Auth Identifier:', email || userId);
 
                         await Promise.all([
-                            this.fetchData(idToken.email),
-                            this.fetchHistory(idToken.email)
+                            this.fetchData(email, userId),
+                            this.fetchHistory(email, userId)
                         ]);
 
                         this.isLoading = false;
@@ -483,10 +488,10 @@
                     }
                 },
 
-                async fetchData(email) {
+                async fetchData(email, userId) {
                     try {
                         const [profileRes, leaderboardRes, systemRes] = await Promise.all([
-                            this.callAPI('getProfile', { email }),
+                            this.callAPI('getProfile', { email, userId }),
                             this.callAPI('getLeaderboard', { limit: 20 }),
                             this.callAPI('getSystemStatus')
                         ]);
@@ -510,6 +515,11 @@
 
                 async callAPI(action, params = {}) {
                     try {
+                        // Ensure userId is included if we have it and it's not already in params
+                        if (this.profile?.userId && !params.userId) {
+                            params.userId = this.profile.userId;
+                        }
+
                         const query = new URLSearchParams({ action, ...params }).toString();
                         const response = await fetch(`${WEB_APP_URL}?${query}`);
                         return await response.json();
@@ -519,10 +529,10 @@
                     }
                 },
 
-                async fetchHistory(email, page = 1) {
+                async fetchHistory(email, userId, page = 1) {
                     this.isLoadingHistory = true;
                     try {
-                        const res = await this.callAPI('getHistory', { email, page, limit: 20 });
+                        const res = await this.callAPI('getHistory', { email, userId, page, limit: 20 });
                         if (res.status === 'success') {
                             if (page === 1) this.history = [];
                             this.history = [...this.history, ...res.data.history];
