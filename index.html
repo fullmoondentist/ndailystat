@@ -395,6 +395,7 @@
                 isLoading: true,
                 showRankup: false,
                 profile: {},
+                userId: null,
                 system: {},
                 leaderboard: [],
                 recentScores: [],
@@ -463,6 +464,7 @@
                         }
 
                         console.log('Auth Identifier:', email || userId);
+                        this.userId = userId; // Store for global use
 
                         await Promise.all([
                             this.fetchData(email, userId),
@@ -496,9 +498,17 @@
                             this.callAPI('getSystemStatus')
                         ]);
 
+                        console.log('Profile Response:', profileRes);
+
                         if (profileRes.success) {
                             this.profile = profileRes.profile;
+                            // Also ensure userId is stored if it came back from backend
+                            if (!this.userId && this.profile.userId) this.userId = this.profile.userId;
+
                             this.recentScores = JSON.parse(this.profile.recent_scores_json || '[]');
+                        } else {
+                            console.warn('Profile fetch failed:', profileRes.message);
+                            alert('ไม่พบข้อมูลโปรไฟล์: ' + (profileRes.message || 'กรุณาตรวจสอบการตั้งค่า Data Mapping'));
                         }
 
                         if (leaderboardRes.success) {
@@ -515,9 +525,10 @@
 
                 async callAPI(action, params = {}) {
                     try {
-                        // Ensure userId is included if we have it and it's not already in params
-                        if (this.profile?.userId && !params.userId) {
-                            params.userId = this.profile.userId;
+                        // Use userId from state if not provided and profile not yet set
+                        const activeUserId = params.userId || this.userId || (this.profile && this.profile.userId);
+                        if (activeUserId && !params.userId) {
+                            params.userId = activeUserId;
                         }
 
                         const query = new URLSearchParams({ action, ...params }).toString();
@@ -533,7 +544,7 @@
                     this.isLoadingHistory = true;
                     try {
                         const res = await this.callAPI('getHistory', { email, userId, page, limit: 20 });
-                        if (res.status === 'success') {
+                        if (res.success) {
                             if (page === 1) this.history = [];
                             this.history = [...this.history, ...res.data.history];
                             this.historyTotal = res.data.total;
