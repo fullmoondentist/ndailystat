@@ -165,8 +165,15 @@
                         <i class="fa-solid fa-chart-column text-blue-600"></i>
                         Department Performance (On-time Rate)
                     </h3>
-                    <div class="h-48 relative">
-                        <canvas id="deptChart"></canvas>
+                    <div class="h-48 relative flex items-center justify-center">
+                        <canvas id="deptChart"
+                            x-show="system.dept_stats && Object.keys(system.dept_stats).length > 0"></canvas>
+                        <div x-show="!system.dept_stats || Object.keys(system.dept_stats).length === 0"
+                            class="text-center py-10 opacity-40">
+                            <i class="fa-solid fa-clock-rotate-left text-3xl mb-2"></i>
+                            <p class="text-[10px] font-bold uppercase tracking-widest">Collecting Day 1 Data...</p>
+                            <p class="text-[9px] mt-1 italic">สถิติจะปรากฏหลังเริ่มมีการบันทึกงาน</p>
+                        </div>
                     </div>
                     <p class="text-[10px] text-gray-400 mt-4 text-center italic">
                         * Average same-day submission percentage per instructor within department
@@ -578,10 +585,12 @@
                 },
 
                 renderDeptChart() {
-                    const ctx = document.getElementById('deptChart');
-                    if (!ctx || !this.system.dept_stats) return;
+                    const canvas = document.getElementById('deptChart');
+                    if (!canvas) return;
 
                     const stats = this.system.dept_stats;
+                    if (!stats || Object.keys(stats).length === 0) return;
+
                     const labels = Object.keys(stats);
                     const data = labels.map(label => stats[label].on_time_rate);
                     const backgroundColors = labels.map(label =>
