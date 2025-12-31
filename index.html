@@ -2,638 +2,753 @@
 <html lang="th">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Daily Stat - RSU Dental</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Daily Stat - RSU Dental</title>
 
-  <!-- Libraries -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css" rel="stylesheet">
+    <!-- Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css" rel="stylesheet">
 
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            rsu: {
-              blue: '#1e40af',
-              light: '#dbeafe',
-              dark: '#1e3a8a'
-            }
-          },
-          animation: {
-            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#3b82f6',
+                            foreground: '#ffffff',
+                        },
+                        destructive: {
+                            DEFAULT: '#ef4444',
+                            foreground: '#ffffff',
+                        },
+                        muted: {
+                            DEFAULT: '#f3f4f6',
+                            foreground: '#6b7280',
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer components {
+        .checkbox {
+          @apply h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500 checked:bg-red-600 checked:hover:bg-red-600;
+        }
+        
+        .badge {
+          @apply inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-medium ring-1 ring-inset;
+        }
+        
+        .avatar-circle {
+          @apply rounded-full flex items-center justify-center text-white shadow-sm font-light;
+        }
+        
+        .badge-morning {
+          @apply bg-blue-50 text-blue-700 ring-blue-600/20;
+        }
+        
+        .badge-afternoon {
+          @apply bg-amber-50 text-amber-700 ring-amber-600/20;
+        }
+        
+        .badge-evening {
+          @apply bg-purple-50 text-purple-700 ring-purple-600/20;
+        }
+        
+        .count-badge {
+          @apply bg-gray-50 text-gray-700 ring-gray-600/20;
+        }
+        
+        .badge-work {
+          @apply bg-gray-100 text-gray-700 ring-gray-600/20;
+        }
+        
+        .badge-green {
+          @apply bg-green-50 text-green-700 ring-green-600/20;
+        }
+        
+        .badge-pink {
+          @apply bg-pink-50 text-pink-700 ring-pink-600/20;
+        }
+        
+        .badge-indigo {
+          @apply bg-indigo-50 text-indigo-700 ring-indigo-600/20;
+        }
+        
+        .badge-yellow {
+          @apply bg-yellow-50 text-yellow-700 ring-yellow-600/20;
+        }
+        
+        .badge-red {
+          @apply bg-red-50 text-red-700 ring-red-600/20;
+        }
+        
+        .badge-blue {
+          @apply bg-blue-50 text-blue-700 ring-blue-600/20;
+        }
+        
+        .badge-purple {
+          @apply bg-purple-50 text-purple-700 ring-purple-600/20;
+        }
+        
+        .badge-teal {
+          @apply bg-teal-50 text-teal-700 ring-teal-600/20;
+        }
+        
+        .spinner {
+          @apply inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em];
+        }
+        
+        .spinner-sm {
+          @apply h-3 w-3;
+        }
+        
+        .spinner-lg {
+          @apply h-8 w-8;
+        }
+        
+        .toast {
+          @apply fixed bottom-4 right-4 z-50 rounded-lg bg-white px-6 py-4 shadow-lg ring-1 ring-black/5;
+        }
+        
+        .toast-success {
+          @apply bg-green-50 text-green-800 ring-green-500/10;
+        }
+        
+        .badge-stat {
+          @apply inline-flex items-center text-xs text-gray-500 border border-gray-200 rounded-full px-2 py-1 bg-transparent;
+        }
+        
+        .badge-count {
+          @apply absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full bg-red-500 text-white text-[8px] min-w-3.5 h-3.5 font-medium p-0.5 leading-none;
+        }
+        
+        .badge-active .badge-count {
+          @apply bg-gray-700 text-white;
+        }
+        
+        .score-sum {
+          @apply text-xs text-gray-500 font-normal ml-1;
+        }
+        
+        .red-yellow-sum {
+          @apply text-xs text-gray-500 ml-1 flex items-center;
+        }
+        
+        .red-dot {
+          @apply w-2 h-2 rounded-full bg-red-500 mr-0.5;
+        }
+        
+        .yellow-dot {
+          @apply w-2 h-2 rounded-full bg-yellow-500 mr-0.5;
+        }
+        
+        .dot-loading {
+          display: inline-block;
+          position: relative;
+          width: 20px;
+          text-align: left;
+        }
+        
+        .dot-loading:after {
+          content: '.';
+          animation: dots 1.5s steps(3, end) infinite;
+        }
+        
+        @keyframes dots {
+          0%, 20% { content: '.'; }
+          40%, 60% { content: '..'; }
+          80%, 100% { content: '...'; }
+        }
+        
+        .help-icon {
+          @apply ml-1 text-gray-400 hover:text-gray-600 cursor-pointer transition-colors;
+        }
+        
+        .help-icon-pulse {
+          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+          @apply text-blue-500;
+        }
+        
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+          50% {
+            opacity: .8;
+            transform: scale(1.1);
           }
         }
-      }
-    }
-  </script>
-
-  <style type="text/tailwindcss">
-    @layer components {
-            .glass-card {
-                @apply bg-white/90 backdrop-blur-md border border-white/20 shadow-xl rounded-2xl;
-            }
-            .nav-item {
-                @apply flex flex-col items-center justify-center pt-2 pb-1 text-xs font-medium transition-colors duration-200;
-            }
-            .nav-item.active {
-                @apply text-blue-600;
-            }
-            .nav-item:not(.active) {
-                @apply text-gray-400 hover:text-gray-600;
-            }
-            .stat-value {
-                @apply text-2xl font-bold tracking-tight text-gray-900;
-            }
-            .stat-label {
-                @apply text-[10px] uppercase tracking-wider font-bold text-gray-400;
-            }
-            .rank-badge {
-                @apply px-3 py-1 rounded-full text-[10px] font-bold text-white shadow-sm;
-            }
-            /* Custom Gradients from DailyRemover */
-            .premium-gradient {
-                @apply bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700;
-            }
-            .ticker-wrap {
-                @apply w-full overflow-hidden bg-gray-900/5 py-2;
-            }
-            .ticker-move {
-                display: inline-block;
-                white-space: nowrap;
-                padding-right: 100%;
-                animation: ticker 30s linear infinite;
-            }
-            @keyframes ticker {
-                0% { transform: translate3d(0, 0, 0); }
-                100% { transform: translate3d(-100%, 0, 0); }
-            }
-            [x-cloak] { display: none !important; }
+        
+        .glass-card {
+            @apply bg-white rounded-lg border shadow-sm;
         }
+        
+        .remover-gradient {
+          @apply bg-clip-text text-transparent bg-gradient-to-r from-gray-500 to-gray-200 inline-block font-light;
+        }
+        
+        .premium-gradient {
+            @apply bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700;
+        }
+
+        .ticker-wrap {
+            @apply w-full overflow-hidden bg-gray-900/5 py-2;
+        }
+        .ticker-move {
+            display: inline-block;
+            white-space: nowrap;
+            padding-right: 100%;
+            animation: ticker 30s linear infinite;
+        }
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+
+        .info-title {
+          @apply text-sm font-bold text-gray-700 mb-2;
+        }
+        
+        .info-content {
+          @apply text-xs text-gray-600;
+        }
+        
+        [x-cloak] { display: none !important; }
+      }
     </style>
 </head>
 
-<body class="bg-slate-50 min-h-screen text-slate-900 font-sans pb-24" x-data="dailyApp()" x-init="init()">
+<body class="bg-[#F8F9FD] min-h-screen font-sans pb-12" x-data="dailyApp()" x-init="init()">
 
-  <!-- Top Header -->
-  <header class="premium-gradient text-white px-6 pt-8 pb-16 rounded-b-[3rem] shadow-2xl relative overflow-hidden">
-    <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-    <div class="absolute bottom-0 left-0 -ml-10 -mb-10 w-48 h-48 bg-blue-400/20 rounded-full blur-2xl"></div>
 
-    <div class="relative z-10 flex justify-between items-start">
-      <div>
-        <h1 class="text-xs font-bold uppercase tracking-[0.2em] opacity-80 mb-1">ยินดีต้อนรับ</h1>
-        <div class="flex items-center gap-2">
-          <span class="text-2xl font-black" x-text="profile.display_name || 'Loading...'"></span>
-          <i class="fa-solid fa-circle-check text-blue-300 text-sm"></i>
-        </div>
-        <p class="text-[10px] opacity-70 mt-1 font-medium" x-text="profile.email"></p>
-      </div>
-      <div class="text-right">
-        <div :class="'rank-badge ' + (rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500')">
-          <span x-text="rankConfig[profile.current_class]?.emoji || '⚪'"></span>
-          <span x-text="profile.current_class || 'UNRANKED'" class="ml-1"></span>
-        </div>
-        <div class="mt-2 text-[10px] font-bold opacity-80" x-text="profile.current_title || 'Novice'"></div>
-      </div>
-    </div>
-  </header>
+    <!-- Main Content Container -->
+    <main class="py-4">
+        <div class="container mx-auto px-4 max-w-md lg:max-w-[75%] space-y-4">
 
-  <!-- Main Content Container -->
-  <main class="px-5 -mt-8 relative z-20 space-y-4">
-
-    <!-- Dashboard Stats Row -->
-    <div class="grid grid-cols-3 gap-3">
-      <div class="glass-card p-3 flex flex-col items-center">
-        <div class="stat-label">Total MP</div>
-        <div class="stat-value text-blue-600" x-text="profile.total_mp?.toLocaleString() || '0'"></div>
-      </div>
-      <div class="glass-card p-3 flex flex-col items-center">
-        <div class="stat-label">Accuracy</div>
-        <div class="stat-value text-emerald-600" x-text="(profile.recent_acc || 0) + '%'"></div>
-      </div>
-      <div class="glass-card p-3 flex flex-col items-center">
-        <div class="stat-label">Streak</div>
-        <div class="stat-value text-orange-500">
-          <span x-text="profile.current_streak || 0"></span>
-          <i class="fa-solid fa-fire text-sm ml-0.5"></i>
-        </div>
-      </div>
-    </div>
-
-    <!-- Ticker Messages -->
-    <div class="ticker-wrap rounded-xl" x-show="system.ticker_messages?.length > 0">
-      <div class="ticker-move text-[11px] font-bold text-blue-900/60 uppercase tracking-wider">
-        <template x-for="msg in system.ticker_messages" :key="msg">
-          <span class="mx-8 flex-inline items-center">
-            <i class="fa-solid fa-bullhorn mr-2"></i>
-            <span x-text="msg"></span>
-          </span>
-        </template>
-      </div>
-    </div>
-
-    <!-- Dynamic Views -->
-    <div x-cloak>
-
-      <!-- Dashboard View -->
-      <div x-show="activeTab === 'dashboard'" class="space-y-4">
-
-        <!-- Experience Progress -->
-        <div class="glass-card p-4">
-          <div class="flex justify-between items-center mb-2">
-            <span class="text-[10px] font-bold uppercase text-gray-400">Experience Rank</span>
-            <span class="text-xs font-bold text-gray-700" x-text="profile.current_title"></span>
-          </div>
-          <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden mb-2">
-            <div class="h-full premium-gradient transition-all duration-1000" :style="'width: ' + expPercentage + '%'">
-            </div>
-          </div>
-          <div class="flex justify-between text-[9px] font-bold text-gray-400">
-            <span x-text="profile.total_mp?.toLocaleString() + ' MP'"></span>
-            <span x-text="'Next: ' + (profile.next_rank_mp?.toLocaleString() || 'MAX')"></span>
-          </div>
-        </div>
-
-        <!-- Department Comparison Chart -->
-        <div class="glass-card p-4">
-          <h3 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-chart-column text-blue-600"></i>
-            Department Performance (On-time Rate)
-          </h3>
-          <div class="h-48 relative">
-            <canvas id="deptChart"></canvas>
-          </div>
-          <p class="text-[10px] text-gray-400 mt-4 text-center italic">
-            * Average same-day submission percentage per instructor within department
-          </p>
-        </div>
-
-        <!-- Recent Activity (Minified) -->
-        <div class="glass-card p-4 overflow-hidden">
-          <div class="flex justify-between items-center mb-3">
-            <h3 class="text-sm font-bold text-gray-800">Recent Accuracy Score</h3>
-            <span class="text-[10px] font-bold text-gray-400 uppercase">Last 20 Cases</span>
-          </div>
-          <div class="flex gap-1 h-12 items-end">
-            <template x-for="(score, idx) in recentScores" :key="idx">
-              <div class="flex-1 rounded-t-sm"
-                :class="score >= 95 ? 'bg-emerald-400' : (score >= 70 ? 'bg-amber-400' : 'bg-rose-400')"
-                :style="'height: ' + Math.max(10, score) + '%'" :title="score + '%'"></div>
-            </template>
-          </div>
-        </div>
-      </div>
-
-      <!-- Leaderboard View -->
-      <div x-show="activeTab === 'ranking'" class="space-y-3">
-        <div class="flex justify-between items-end px-1">
-          <h2 class="text-xl font-black text-slate-800">Leaderboard</h2>
-          <span class="text-[10px] font-bold text-gray-400 uppercase mb-1">Top 20 Instructors</span>
-        </div>
-
-        <div class="glass-card overflow-hidden">
-          <template x-for="(user, idx) in leaderboard" :key="user.email">
-            <div class="flex items-center gap-3 p-3 border-b border-gray-100 last:border-0"
-              :class="user.email === profile.email ? 'bg-blue-50/50' : ''">
-              <div class="w-8 h-8 flex items-center justify-center font-black text-sm rounded-lg"
-                :class="idx === 0 ? 'bg-yellow-100 text-yellow-700' : (idx === 1 ? 'bg-slate-100 text-slate-500' : (idx === 2 ? 'bg-orange-100 text-orange-700' : 'text-gray-400'))">
-                <span x-show="idx > 2" x-text="idx + 1"></span>
-                <i x-show="idx === 0" class="fa-solid fa-crown"></i>
-                <span x-show="idx === 1 || idx === 2" x-text="idx + 1"></span>
-              </div>
-              <div class="flex-1">
-                <div class="text-sm font-bold text-gray-800" x-text="user.display_name"></div>
-                <div class="text-[10px] text-gray-400 font-bold uppercase" x-text="user.current_title">
+            <!-- Ticker Messages -->
+            <div class="ticker-wrap rounded-lg shadow-sm bg-white border" x-show="system.ticker_messages?.length > 0">
+                <div class="ticker-move text-xs font-medium text-blue-900/60">
+                    <template x-for="msg in system.ticker_messages" :key="msg">
+                        <span class="mx-8 flex-inline items-center">
+                            <i class="fa-solid fa-bullhorn mr-2"></i>
+                            <span x-text="msg"></span>
+                        </span>
+                    </template>
                 </div>
-              </div>
-              <div class="text-right">
-                <div class="text-sm font-black text-blue-600" x-text="user.total_mp.toLocaleString()">
-                </div>
-                <div class="text-[9px] font-bold text-gray-300 uppercase">MP Points</div>
-              </div>
             </div>
-          </template>
-        </div>
-      </div>
 
-      <!-- History View -->
-      <div x-show="activeTab === 'history'" class="space-y-4">
-        <div class="flex justify-between items-center px-1">
-          <h2 class="text-xl font-black text-slate-800">History</h2>
-          <span class="text-[10px] font-bold text-gray-400 uppercase"
-            x-text="'Total ' + (historyTotal || 0) + ' items'"></span>
-        </div>
-
-        <div class="space-y-6">
-          <template x-for="group in groupedHistory" :key="group.date">
-            <div class="space-y-2">
-              <div class="flex items-center gap-2 px-1">
-                <div class="h-px flex-1 bg-gray-200"></div>
-                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest"
-                  x-text="formatThaiDate(group.date)"></span>
-                <div class="h-px flex-1 bg-gray-200"></div>
-              </div>
-
-              <div class="space-y-2">
-                <template x-for="item in group.items" :key="item.time + item.student">
-                  <div
-                    class="glass-card p-3 flex justify-between items-center transition-transform active:scale-[0.98]">
-                    <div class="flex items-center gap-3">
-                      <div
-                        class="w-10 h-10 rounded-xl bg-slate-50 flex flex-col items-center justify-center border border-white">
-                        <span class="text-[9px] font-black text-gray-400" x-text="item.time"></span>
-                        <i class="fa-solid fa-file-signature text-blue-500/50 text-xs"></i>
-                      </div>
-                      <div>
-                        <div class="text-xs font-bold text-gray-800" x-text="item.student">
+            <!-- Profile Card (Mockup Style) -->
+            <div class="rounded-3xl p-6 text-white shadow-xl relative overflow-hidden"
+                :class="'bg-gradient-to-br ' + (profile.class_color_css || 'from-blue-600 via-indigo-600 to-violet-700')">
+                <div class="flex justify-between items-start mb-8">
+                    <div class="space-y-1">
+                        <h2 class="text-lg font-bold tracking-tight" x-text="profile.display_name"></h2>
+                    </div>
+                    <div class="text-right" x-show="profile.current_class !== 'UNRANKED'">
+                        <div class="text-5xl font-bold uppercase tracking-tighter mb-1" x-text="profile.current_class">
                         </div>
-                        <div class="text-[9px] text-gray-400 font-medium" x-text="item.session || 'Period'"></div>
-                      </div>
+                        <div
+                            class="text-sm font-bold uppercase tracking-wider opacity-80 flex items-center justify-end gap-1">
+                            <i class="fa-solid fa-book-bookmark text-xs"></i>
+                            <span x-text="profile.current_title"></span>
+                        </div>
                     </div>
-                    <div class="text-right">
-                      <div
-                        :class="'px-2 py-0.5 rounded-lg text-[9px] font-black uppercase text-white shadow-sm inline-block ' + statusColors[item.status]">
-                        <span x-text="item.status"></span>
-                      </div>
-                      <div class="text-[9px] font-bold text-gray-300 mt-1" x-text="'+' + item.score + ' MP'"></div>
+                </div>
+
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs font-bold uppercase tracking-widest opacity-90">
+                        <span>MP Progress</span>
+                        <span
+                            x-text="profile.total_mp?.toLocaleString() + ' / ' + (profile.next_rank_mp?.toLocaleString() || 'MAX')"></span>
                     </div>
-                  </div>
-                </template>
-              </div>
+                    <div class="w-full h-3 bg-white/20 rounded-full overflow-hidden">
+                        <div class="h-full bg-white transition-all duration-1000"
+                            :style="'width: ' + expPercentage + '%'"></div>
+                    </div>
+                </div>
             </div>
-          </template>
-        </div>
 
-        <div x-show="historyHasMore" class="pt-4 pb-8">
-          <button @click="loadMoreHistory()" :disabled="isLoadingHistory"
-            class="w-full py-3 glass-card text-xs font-bold text-blue-600 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2">
-            <span x-show="!isLoadingHistory">โหลดเพิ่มเติม</span>
-            <i x-show="!isLoadingHistory" class="fa-solid fa-chevron-down"></i>
-            <i x-show="isLoadingHistory" class="fa-solid fa-circle-notch fa-spin"></i>
-          </button>
-        </div>
-
-        <div x-show="!isLoading && history.length === 0" class="text-center py-20 text-gray-300">
-          <i class="fa-solid fa-folder-open block text-4xl mb-2 opacity-10"></i>
-          <p class="text-xs italic font-medium">ยังไม่มีประวัติการบันทึก</p>
-        </div>
-      </div>
-
-      <!-- Profile / Rewards View -->
-      <div x-show="activeTab === 'profile'" class="space-y-4">
-        <div class="glass-card p-6 flex flex-col items-center">
-          <div
-            class="w-20 h-20 rounded-full premium-gradient flex items-center justify-center text-3xl text-white shadow-xl mb-4 border-4 border-white">
-            <span x-text="profile.display_name?.charAt(0) || '?'"></span>
-          </div>
-          <h2 class="text-lg font-bold text-gray-800" x-text="profile.display_name"></h2>
-          <p class="text-xs text-gray-400 font-medium" x-text="profile.department || 'No Department'"></p>
-        </div>
-
-        <div class="glass-card p-4">
-          <h3 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-gift text-rose-500"></i>
-            Reward Box
-          </h3>
-          <div class="grid grid-cols-4 gap-2">
-            <template x-for="reward in profile.rewards || []" :key="reward">
-              <div
-                class="aspect-square bg-slate-50 rounded-xl flex items-center justify-center text-xl shadow-inner border border-white">
-                <span x-text="reward.split(' ')[0]"></span>
-              </div>
-            </template>
-            <div x-show="!profile.rewards?.length" class="col-span-4 py-8 text-center text-gray-300 text-xs italic">
-              No rewards yet. Keep it up!
+            <!-- Stat Summary Grid (3 Columns) -->
+            <div class="grid grid-cols-3 gap-3">
+                <div
+                    class="rounded-2xl p-4 flex flex-col items-center justify-center text-center shadow-sm border border-orange-100 bg-orange-50/50">
+                    <div class="text-2xl font-bold text-orange-600" x-text="profile.current_streak || 0"></div>
+                    <div class="text-xs font-bold text-orange-400 uppercase tracking-widest mt-1">
+                        Perfect Combo
+                    </div>
+                </div>
+                <div
+                    class="rounded-2xl p-4 flex flex-col items-center justify-center text-center shadow-sm border border-blue-100 bg-blue-50/50">
+                    <div class="text-2xl font-bold text-blue-600" x-text="(profile.recent_acc || 0) + '%'"></div>
+                    <div class="text-xs font-bold text-blue-400 uppercase tracking-widest mt-1">
+                        Recent Accuracy
+                    </div>
+                </div>
+                <div
+                    class="rounded-2xl p-4 flex flex-col items-center justify-center text-center shadow-sm border border-purple-100 bg-purple-50/50">
+                    <div class="text-2xl font-bold text-purple-600" x-text="(profile.alltime_acc || 0) + '%'"></div>
+                    <div class="text-xs font-bold text-purple-400 uppercase tracking-widest mt-1">
+                        All-time Accuracy
+                    </div>
+                </div>
             </div>
-          </div>
+
+
+            <!-- Rewards Card -->
+            <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100/50">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-lg">🎁</span>
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Rewards (<span
+                            x-text="profile.rewards?.length || 0"></span>)</h3>
+                </div>
+                <div class="flex flex-wrap gap-4 items-center">
+                    <template x-for="reward in groupedRewards" :key="reward.name">
+                        <div class="flex items-center gap-2">
+                            <span class="text-4xl" x-text="getRewardEmoji(reward.name)"></span>
+                            <span class="text-sm font-bold text-gray-400" x-show="reward.count > 1"
+                                x-text="'x' + reward.count"></span>
+                        </div>
+                    </template>
+                    <div x-show="!profile.rewards || profile.rewards.length === 0" class="text-xs text-gray-300 italic">
+                        No rewards unlocked yet...
+                    </div>
+                </div>
+            </div>
+
+            <!-- PERFORMANCE SECTION WITH HANDLE -->
+            <div class="relative pt-4">
+                <div
+                    class="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-gray-200/50 border-4 border-[#F8F9FD] z-10">
+                </div>
+
+                <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100/50 relative">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-chart-simple text-blue-400"></i>
+                            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Today's
+                                Performance</h3>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <template x-for="item in history" :key="item.date + item.session">
+                            <div
+                                class="bg-gray-50/50 border border-gray-100/50 rounded-2xl p-4 flex items-center justify-between group active:scale-[0.98] transition-all">
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-gray-800 leading-tight"
+                                        x-text="item.student || 'Unknown Student'"></span>
+                                    <div class="flex items-center gap-2 text-xs font-bold text-gray-400 mt-1">
+                                        <span x-text="item.time"></span>
+                                        <span>•</span>
+                                        <span x-text="Math.abs(item.delta) + 'm'"></span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div :class="'px-2 py-0.5 rounded-md text-xs font-bold uppercase ' + (item.status === 'perfect' ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-500')"
+                                        x-text="item.status"></div>
+                                    <div class="text-sm font-bold text-gray-800 w-8 text-right" x-text="item.score">
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <div x-show="historyHasMore" class="pt-2">
+                            <button @click="loadMoreHistory()" :disabled="isLoadingHistory"
+                                class="w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-widest text-blue-500/60 hover:text-blue-500 transition-colors">
+                                Load More Results
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Hall of Fame Card -->
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100/50 overflow-hidden">
+                <div class="p-5 border-b border-gray-50 bg-gray-50/30">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-crown text-yellow-500"></i>
+                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Hall of Fame</h3>
+                    </div>
+                </div>
+                <div class="divide-y divide-gray-50">
+                    <template x-for="(entry, index) in leaderboard" :key="entry.email">
+                        <div class="p-4 flex items-center justify-between hover:bg-gray-50/50 transition-colors">
+                            <div class="flex items-center gap-3">
+                                <div class="w-5 text-center text-xs font-bold text-gray-300" x-text="index + 1"></div>
+                                <div class="avatar-circle w-8 h-8 text-xs font-bold"
+                                    :class="'bg-gradient-to-br ' + entry.class_color_css"
+                                    x-text="getInitials(entry.email)"></div>
+                                <div class="flex flex-col">
+                                    <div class="text-xs font-bold text-gray-800" x-text="entry.display_name"></div>
+                                    <div class="text-xs font-bold text-gray-400 uppercase tracking-wider"
+                                        x-text="entry.current_title"></div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <div class="text-xs font-bold text-blue-600"
+                                    x-text="entry.total_mp.toLocaleString() + ' MP'"></div>
+                                <div class="text-xs font-bold text-emerald-500 mt-0.5"
+                                    x-text="entry.recent_acc + '% ACC'"></div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Community Rank (Chart) at very bottom -->
+            <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100/50">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-chart-simple text-blue-500"></i>
+                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Community Rank</h3>
+                    </div>
+                    <div class="px-3 py-1 bg-gray-50 rounded-full text-xs font-bold text-gray-400"
+                        x-text="profile.department"></div>
+                </div>
+                <div class="h-48 relative">
+                    <canvas id="deptChart"
+                        x-show="system.dept_stats && Object.keys(system.dept_stats).length > 0"></canvas>
+                    <div x-show="!system.dept_stats || Object.keys(system.dept_stats).length === 0"
+                        class="text-center py-10 opacity-30 absolute inset-0 flex flex-col items-center justify-center">
+                        <i class="fa-solid fa-hourglass-start text-2xl mb-2"></i>
+                        <p class="text-xs font-bold uppercase tracking-wider">Awaiting Daily Sync...</p>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-300 mt-4 text-center italic">
+                    * Averaged same-day performance across department instructors
+                </p>
+            </div>
+
         </div>
-      </div>
+    </main>
 
+
+    <!-- Rankup Celebration Modal -->
+    <div x-show="showRankup" x-cloak
+        class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm"
+        x-transition.opacity>
+        <div class="glass-card w-full max-w-sm p-8 text-center relative overflow-hidden"
+            x-transition:enter="transition ease-out duration-500 scale-90 opacity-0"
+            x-transition:enter-start="scale-90 opacity-0" x-transition:enter-end="scale-100 opacity-100">
+
+            <div class="absolute top-0 left-0 w-full h-2 premium-gradient"></div>
+
+            <div class="text-6xl mb-4 animate-bounce">🎊</div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2" x-text="'RANK UP: ' + profile.current_class"></h2>
+            <p class="text-gray-500 text-sm mb-6">ยินดีด้วย! คุณได้รับการเลื่อนขั้นที่สูงขึ้น</p>
+
+            <div
+                :class="'inline-flex items-center px-6 py-2 rounded-full text-white font-bold shadow-lg mb-8 bg-gradient-to-r ' + (rankConfig[profile.current_class]?.color || 'from-blue-600 to-indigo-600')">
+                <span x-text="rankConfig[profile.current_class]?.emoji || '🏆'"></span>
+                <span x-text="profile.current_class" class="ml-2 uppercase tracking-widest text-lg"></span>
+            </div>
+
+            <button @click="closeRankup()"
+                class="w-full py-4 premium-gradient text-white font-bold rounded-xl shadow-lg active:scale-95 transition-transform">
+                รับทราบ และไปต่อ!
+            </button>
+        </div>
     </div>
-  </main>
 
-  <!-- Bottom Navigation -->
-  <nav
-    class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-gray-100 px-6 safe-area-inset-bottom z-50">
-    <div class="container mx-auto max-w-md flex justify-between">
-      <button @click="activeTab = 'dashboard'" class="nav-item" :class="activeTab === 'dashboard' ? 'active' : ''">
-        <i class="fa-solid fa-house-chimney text-xl mb-1"></i>
-        <span>หน้าหลัก</span>
-        <div x-show="activeTab === 'dashboard'" class="w-1 h-1 rounded-full bg-blue-600 mt-1"></div>
-      </button>
-      <button @click="activeTab = 'ranking'" class="nav-item" :class="activeTab === 'ranking' ? 'active' : ''">
-        <i class="fa-solid fa-ranking-star text-xl mb-1"></i>
-        <span>จัดอันดับ</span>
-        <div x-show="activeTab === 'ranking'" class="w-1 h-1 rounded-full bg-blue-600 mt-1"></div>
-      </button>
-      <button @click="activeTab = 'history'" class="nav-item" :class="activeTab === 'history' ? 'active' : ''">
-        <i class="fa-solid fa-history text-xl mb-1"></i>
-        <span>ประวัติ</span>
-        <div x-show="activeTab === 'history'" class="w-1 h-1 rounded-full bg-blue-600 mt-1"></div>
-      </button>
-      <button @click="activeTab = 'profile'" class="nav-item" :class="activeTab === 'profile' ? 'active' : ''">
-        <i class="fa-solid fa-user-gear text-xl mb-1"></i>
-        <span>โปรไฟล์</span>
-        <div x-show="activeTab === 'profile'" class="w-1 h-1 rounded-full bg-blue-600 mt-1"></div>
-      </button>
+    <!-- Loading Overlay -->
+    <div x-show="isLoading" x-cloak
+        class="fixed inset-0 z-[200] bg-white flex flex-col items-center justify-center space-y-6">
+        <div class="spinner spinner-lg text-blue-600"></div>
+        <div class="text-xs font-bold text-gray-400 tracking-wider uppercase">NongDaily Stat</div>
     </div>
-  </nav>
 
-  <!-- Rankup Celebration Modal -->
-  <div x-show="showRankup" x-cloak
-    class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm"
-    x-transition.opacity>
-    <div class="glass-card w-full max-w-sm p-8 text-center relative overflow-hidden"
-      x-transition:enter="transition ease-out duration-500 scale-90 opacity-0"
-      x-transition:enter-start="scale-90 opacity-0" x-transition:enter-end="scale-100 opacity-100">
+    <script>
+        const WEB_APP_URL = 'https://script.google.com/a/macros/rsu.ac.th/s/AKfycbxWTt29Ry2K8upGAFQV1rnxFnDHB9IUb4ahim3tZXFVvOUZv3jqxrrQnZ61NbTz6CdmHA/exec'; // REPLACE WITH ACTUAL URL
 
-      <div class="absolute top-0 left-0 w-full h-2 premium-gradient"></div>
+        function dailyApp() {
+            return {
+                isLoading: true,
+                showRankup: false,
+                profile: {},
+                userId: null,
+                system: {},
+                leaderboard: [],
+                recentScores: [],
+                deptChart: null,
 
-      <div class="text-6xl mb-4 animate-bounce">🎊</div>
-      <h2 class="text-2xl font-black text-gray-800 mb-2" x-text="'RANK UP: ' + profile.current_class"></h2>
-      <p class="text-gray-500 text-sm mb-6">ยินดีด้วย! คุณได้รับการเลื่อนขั้นที่สูงขึ้น</p>
+                // History state
+                history: [],
+                historyPage: 1,
+                historyTotal: 0,
+                historyHasMore: false,
+                isLoadingHistory: false,
 
-      <div
-        :class="'inline-flex items-center px-6 py-2 rounded-full text-white font-black shadow-lg mb-8 bg-gradient-to-r ' + (rankConfig[profile.current_class]?.color || 'from-blue-600 to-indigo-600')">
-        <span x-text="rankConfig[profile.current_class]?.emoji || '🏆'"></span>
-        <span x-text="profile.current_class" class="ml-2 uppercase tracking-widest text-lg"></span>
-      </div>
-
-      <button @click="closeRankup()"
-        class="w-full py-4 premium-gradient text-white font-bold rounded-xl shadow-lg active:scale-95 transition-transform">
-        รับทราบ และไปต่อ!
-      </button>
-    </div>
-  </div>
-
-  <!-- Loading Overlay -->
-  <div x-show="isLoading" x-cloak
-    class="fixed inset-0 z-[200] bg-white flex flex-col items-center justify-center space-y-4">
-    <div class="w-16 h-16 relative">
-      <div class="absolute inset-0 border-4 border-blue-100 rounded-full"></div>
-      <div class="absolute inset-0 border-4 border-blue-600 rounded-full border-t-transparent animate-spin"></div>
-    </div>
-    <div class="text-sm font-bold text-gray-400 tracking-widest uppercase">NongDaily Stat</div>
-  </div>
-
-  <script>
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby5tXN6M9_3M6fP9L-f2A8-M0P9S6/exec'; // REPLACE WITH ACTUAL URL
-
-    function dailyApp() {
-      return {
-        activeTab: 'dashboard',
-        isLoading: true,
-        showRankup: false,
-        profile: {},
-        system: {},
-        leaderboard: [],
-        recentScores: [],
-        deptChart: null,
-        userEmail: null,
-        userId: null,
-
-        // History state
-        history: [],
-        historyPage: 1,
-        historyTotal: 0,
-        historyHasMore: false,
-        isLoadingHistory: false,
-
-        statusColors: {
-          'perfect': 'bg-gradient-to-r from-cyan-500 to-blue-500',
-          'good': 'bg-gradient-to-r from-emerald-500 to-teal-500',
-          'fair': 'bg-gradient-to-r from-amber-500 to-orange-500',
-          'overdue': 'bg-gradient-to-r from-rose-500 to-pink-500',
-          'error': 'bg-gray-400'
-        },
-
-        rankConfig: {
-          'DIAMOND': { emoji: '💎', color: 'from-cyan-400 to-blue-500' },
-          'PLATINUM': { emoji: '♦️', color: 'from-emerald-400 to-teal-500' },
-          'GOLD': { emoji: '🥇', color: 'from-yellow-400 to-orange-500' },
-          'SILVER': { emoji: '🥈', color: 'from-slate-300 to-slate-400' },
-          'BRONZE': { emoji: '🥉', color: 'from-orange-700 to-amber-900' },
-          'UNRANKED': { emoji: '⚪', color: 'from-gray-400 to-gray-500' }
-        },
-
-        get expPercentage() {
-          if (!this.profile.total_mp || !this.profile.next_rank_mp) return 0;
-          const current = this.profile.total_mp;
-          const next = this.profile.next_rank_mp;
-          if (next <= current) return 100;
-          return Math.min(100, Math.round((current / next) * 100));
-        },
-
-        get groupedHistory() {
-          const groups = {};
-          this.history.forEach(item => {
-            if (!groups[item.date]) groups[item.date] = [];
-            groups[item.date].push(item);
-          });
-          return Object.keys(groups).sort((a, b) => b.localeCompare(a)).map(date => ({
-            date,
-            items: groups[date]
-          }));
-        },
-
-        async init() {
-          try {
-            await liff.init({ liffId: '2008789653-1d4rx1nO' });
-            if (!liff.isLoggedIn()) {
-              liff.login();
-              return;
-            }
-
-            // Identity Fallback Pattern (from KnowledgeBase_LIFF_GAS.md)
-            const idToken = liff.getDecodedIDToken();
-            let email = idToken ? idToken.email : null;
-            let userId = null;
-
-            if (!email) {
-              // ถ้าไม่มี Email ให้ใช้ LINE User ID แทน
-              const profile = await liff.getProfile();
-              userId = profile.userId;
-              console.log('Email not available, using LINE User ID:', userId);
-            } else {
-              console.log('User Email:', email);
-            }
-
-            // ส่งทั้ง email และ userId ไปที่ fetchData
-            await Promise.all([
-              this.fetchData(email, userId),
-              this.fetchHistory(email, userId)
-            ]);
-
-            // Store for later use (e.g., pagination)
-            this.userEmail = email;
-            this.userId = userId;
-
-            this.isLoading = false;
-
-            // Check for rank up celebration
-            if (this.profile.is_rank_up) {
-              setTimeout(() => this.showRankup = true, 500);
-            }
-
-            // Render chart after DOM is ready
-            this.$nextTick(() => {
-              this.renderDeptChart();
-            });
-
-          } catch (err) {
-            console.error('Initialization failed', err);
-            alert('Initialization Error: ' + err.message);
-            this.isLoading = false;
-          }
-        },
-
-        async fetchData(email, userId) {
-          try {
-            const [profileRes, leaderboardRes, systemRes] = await Promise.all([
-              this.callAPI('getProfile', { email, userId }),
-              this.callAPI('getLeaderboard', { limit: 20 }),
-              this.callAPI('getSystemStatus')
-            ]);
-
-            if (profileRes.success) {
-              this.profile = profileRes.profile;
-              this.recentScores = JSON.parse(this.profile.recent_scores_json || '[]');
-            }
-
-            if (leaderboardRes.success) {
-              this.leaderboard = leaderboardRes.leaderboard;
-            }
-
-            if (systemRes.success) {
-              this.system = systemRes.system;
-            }
-          } catch (err) {
-            console.error('Fetch data failed', err);
-          }
-        },
-
-        async callAPI(action, params = {}) {
-          try {
-            // Clean parameters to avoid stringified null/undefined (from KnowledgeBase_LIFF_GAS.md)
-            const cleanParams = {};
-            Object.keys(params).forEach(key => {
-              const val = params[key];
-              if (val !== null && val !== undefined && val !== '' && val !== 'null' && val !== 'undefined') {
-                cleanParams[key] = val;
-              }
-            });
-
-            const query = new URLSearchParams({ action, ...cleanParams }).toString();
-            const response = await fetch(`${WEB_APP_URL}?${query}`);
-            return await response.json();
-          } catch (err) {
-            console.error(`API Call failed: ${action}`, err);
-            return { success: false, message: err.message };
-          }
-        },
-
-        async fetchHistory(email, userId, page = 1) {
-          this.isLoadingHistory = true;
-          try {
-            const res = await this.callAPI('getHistory', { email, userId, page, limit: 20 });
-            if (res.status === 'success') {
-              if (page === 1) this.history = [];
-              this.history = [...this.history, ...res.data.history];
-              this.historyTotal = res.data.total;
-              this.historyHasMore = res.data.hasMore;
-              this.historyPage = page;
-            }
-          } catch (err) {
-            console.error('History fetch failed', err);
-          } finally {
-            this.isLoadingHistory = false;
-          }
-        },
-
-        async loadMoreHistory() {
-          if (this.isLoadingHistory || !this.historyHasMore) return;
-          await this.fetchHistory(this.userEmail, this.userId, this.historyPage + 1);
-        },
-
-        formatThaiDate(dateStr) {
-          if (!dateStr) return '---';
-          const date = new Date(dateStr);
-          const day = date.getDate();
-          const monthNames = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
-          const month = monthNames[date.getMonth()];
-          const thaiYear = ((date.getFullYear() + 543) % 100).toString().padStart(2, '0');
-          return `${day} ${month} ${thaiYear}`;
-        },
-
-        async closeRankup() {
-          this.showRankup = false;
-          await this.callAPI('clearRankUp', { email: this.profile.email });
-        },
-
-        renderDeptChart() {
-          const ctx = document.getElementById('deptChart');
-          if (!ctx || !this.system.dept_stats) return;
-
-          const stats = this.system.dept_stats;
-          const labels = Object.keys(stats);
-          const data = labels.map(label => stats[label].on_time_rate);
-          const backgroundColors = labels.map(label =>
-            label === this.profile.department ? 'rgba(30, 64, 175, 0.8)' : 'rgba(148, 163, 184, 0.3)'
-          );
-          const borderColors = labels.map(label =>
-            label === this.profile.department ? 'rgba(30, 64, 175, 1)' : 'rgba(148, 163, 184, 0.5)'
-          );
-
-          if (this.deptChart) this.deptChart.destroy();
-
-          this.deptChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-              labels: labels,
-              datasets: [{
-                data: data,
-                backgroundColor: backgroundColors,
-                borderColor: borderColors,
-                borderWidth: 1,
-                borderRadius: 8,
-                barThickness: 25
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              indexAxis: 'y',
-              plugins: {
-                legend: { display: false },
-                tooltip: {
-                  callbacks: {
-                    label: (context) => ` ${context.parsed.x}% On-time`
-                  }
-                }
-              },
-              scales: {
-                x: {
-                  beginAtZero: true,
-                  max: 100,
-                  grid: { display: false },
-                  ticks: { font: { size: 9, weight: 'bold' } }
+                statusColors: {
+                    'perfect': 'bg-gradient-to-r from-cyan-500 to-blue-500',
+                    'good': 'bg-gradient-to-r from-emerald-500 to-teal-500',
+                    'fair': 'bg-gradient-to-r from-amber-500 to-orange-500',
+                    'overdue': 'bg-gradient-to-r from-rose-500 to-pink-500',
+                    'error': 'bg-gray-400'
                 },
-                y: {
-                  grid: { display: false },
-                  ticks: { font: { size: 10, weight: 'bold' } }
+
+                rankConfig: {
+                    'DIAMOND': { emoji: '💎', color: 'from-cyan-400 to-blue-500' },
+                    'PLATINUM': { emoji: '♦️', color: 'from-emerald-400 to-teal-500' },
+                    'GOLD': { emoji: '🥇', color: 'from-yellow-400 to-orange-500' },
+                    'SILVER': { emoji: '🥈', color: 'from-slate-300 to-slate-400' },
+                    'BRONZE': { emoji: '🥉', color: 'from-orange-700 to-amber-900' },
+                    'UNRANKED': { emoji: '⚪', color: 'from-gray-400 to-gray-500' }
+                },
+
+                get expPercentage() {
+                    if (!this.profile.total_mp || !this.profile.next_rank_mp) return 0;
+                    const current = this.profile.total_mp;
+                    const next = this.profile.next_rank_mp;
+                    if (next <= current) return 100;
+                    return Math.min(100, Math.round((current / next) * 100));
+                },
+
+                get groupedRewards() {
+                    if (!this.profile.rewards) return [];
+                    const counts = {};
+                    this.profile.rewards.forEach(r => {
+                        counts[r] = (counts[r] || 0) + 1;
+                    });
+                    return Object.entries(counts).map(([name, count]) => ({ name, count }));
+                },
+
+                getRewardEmoji(name) {
+                    const map = {
+                        'Rose': '🌹',
+                        'Heart': '❤️',
+                        'Diamond': '💎'
+                    };
+                    return map[name] || '🎁';
+                },
+
+                async init() {
+                    try {
+                        await liff.init({ liffId: '2008789653-GNraHzM6' });
+                        if (!liff.isLoggedIn()) {
+                            liff.login();
+                            return;
+                        }
+
+                        const idToken = liff.getDecodedIDToken();
+                        let email = idToken ? idToken.email : null;
+                        let userId = null;
+
+                        if (!email) {
+                            console.log('Email not found in ID Token, falling back to liff.getProfile()');
+                            const profile = await liff.getProfile();
+                            userId = profile.userId;
+                        }
+
+                        console.log('Auth Identifier:', email || userId);
+                        this.userId = userId; // Store for global use
+
+                        await Promise.all([
+                            this.fetchData(email || undefined, userId || undefined),
+                            this.fetchHistory(email || undefined, userId || undefined)
+                        ]);
+
+                        this.isLoading = false;
+
+                        // Check for rank up celebration
+                        if (this.profile.is_rank_up) {
+                            setTimeout(() => this.showRankup = true, 500);
+                        }
+
+                        // Render chart after DOM is ready
+                        this.$nextTick(() => {
+                            this.renderDeptChart();
+                        });
+
+                    } catch (err) {
+                        console.error('Initialization failed', err);
+                        alert('Initialization Error: ' + err.message);
+                        this.isLoading = false;
+                    }
+                },
+
+                async fetchData(email, userId) {
+                    try {
+                        const [profileRes, leaderboardRes, systemRes] = await Promise.all([
+                            this.callAPI('getProfile', { email, userId }),
+                            this.callAPI('getLeaderboard', { limit: 20 }),
+                            this.callAPI('getSystemStatus')
+                        ]);
+
+                        console.log('Profile Response:', profileRes);
+
+                        if (profileRes.success) {
+                            this.profile = profileRes.profile;
+                            // Also ensure userId is stored if it came back from backend
+                            if (!this.userId && this.profile.userId) this.userId = this.profile.userId;
+
+                            this.recentScores = JSON.parse(this.profile.recent_scores_json || '[]');
+                        } else {
+                            console.warn('Profile fetch failed:', profileRes);
+                        }
+
+                        if (leaderboardRes.success) {
+                            this.leaderboard = leaderboardRes.leaderboard;
+                        }
+
+                        if (systemRes.success) {
+                            this.system = systemRes.system;
+                        }
+                    } catch (err) {
+                        console.error('Fetch data failed', err);
+                    }
+                },
+
+                async callAPI(action, params = {}) {
+                    try {
+                        // Use userId from state if not provided and profile not yet set
+                        const activeUserId = params.userId || this.userId || (this.profile && this.profile.userId);
+                        if (activeUserId && !params.userId) {
+                            params.userId = activeUserId;
+                        }
+
+                        const query = new URLSearchParams({ action, ...params }).toString();
+                        const response = await fetch(`${WEB_APP_URL}?${query}`);
+                        return await response.json();
+                    } catch (err) {
+                        console.error(`API Call failed: ${action}`, err);
+                        return { success: false, message: err.message };
+                    }
+                },
+
+                async fetchHistory(email, userId, page = 1) {
+                    this.isLoadingHistory = true;
+                    try {
+                        const res = await this.callAPI('getHistory', { email, userId, page, limit: 20 });
+                        if (res.success) {
+                            if (page === 1) this.history = [];
+                            this.history = [...this.history, ...res.data.history];
+                            this.historyTotal = res.data.total;
+                            this.historyHasMore = res.data.hasMore;
+                            this.historyPage = page;
+                        }
+                    } catch (err) {
+                        console.error('History fetch failed', err);
+                    } finally {
+                        this.isLoadingHistory = false;
+                    }
+                },
+
+                async loadMoreHistory() {
+                    if (this.isLoadingHistory || !this.historyHasMore) return;
+                    await this.fetchHistory(this.profile.email, this.userId, this.historyPage + 1);
+                },
+
+                formatThaiDate(dateStr) {
+                    if (!dateStr) return '---';
+                    const date = new Date(dateStr);
+                    const day = date.getDate();
+                    const monthNames = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+                    const month = monthNames[date.getMonth()];
+                    const thaiYear = ((date.getFullYear() + 543) % 100).toString().padStart(2, '0');
+                    return `${day} ${month} ${thaiYear}`;
+                },
+
+                getInitials(email) {
+                    if (!email) return '??';
+                    // ตัดส่วน @rsu.ac.th ออก
+                    const username = email.split('@')[0];
+
+                    // กรณีที่ 1: มีจุด (.) ในชื่อ
+                    if (username.includes('.')) {
+                        const parts = username.split('.');
+                        return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
+                    }
+
+                    // กรณีที่ 2: ไม่มีจุด แต่มีสระ
+                    const vowels = ['a', 'e', 'i', 'o', 'u'];
+                    for (let i = 0; i < username.length - 1; i++) {
+                        if (vowels.includes(username[i].toLowerCase())) {
+                            return (username[0] + username[i + 1]).toUpperCase();
+                        }
+                    }
+
+                    // กรณีที่ 3: ใช้สองตัวแรก
+                    return username.substring(0, 2).toUpperCase();
+                },
+
+                async closeRankup() {
+                    this.showRankup = false;
+                    await this.callAPI('clearRankUp', { email: this.profile.email });
+                },
+
+                renderDeptChart() {
+                    const canvas = document.getElementById('deptChart');
+                    if (!canvas) return;
+
+                    const stats = this.system.dept_stats;
+                    if (!stats || Object.keys(stats).length === 0) return;
+
+                    const labels = Object.keys(stats);
+                    const data = labels.map(label => stats[label].on_time_rate);
+                    const backgroundColors = labels.map(label =>
+                        label === this.profile.department ? 'rgba(30, 64, 175, 0.8)' : 'rgba(148, 163, 184, 0.3)'
+                    );
+                    const borderColors = labels.map(label =>
+                        label === this.profile.department ? 'rgba(30, 64, 175, 1)' : 'rgba(148, 163, 184, 0.5)'
+                    );
+
+                    if (this.deptChart) this.deptChart.destroy();
+
+                    const ctx = canvas.getContext('2d');
+                    this.deptChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: data,
+                                backgroundColor: backgroundColors,
+                                borderColor: borderColors,
+                                borderWidth: 1,
+                                borderRadius: 8,
+                                barThickness: 25
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            indexAxis: 'y',
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (context) => ` ${context.parsed.x}% On-time`
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    max: 100,
+                                    grid: { display: false },
+                                    ticks: { font: { size: 9, weight: 'bold' } }
+                                },
+                                y: {
+                                    grid: { display: false },
+                                    ticks: { font: { size: 10, weight: 'bold' } }
+                                }
+                            }
+                        }
+                    });
                 }
-              }
             }
-          });
         }
-      }
-    }
-  </script>
+    </script>
 </body>
 
 </html>
