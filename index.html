@@ -15,343 +15,464 @@
 
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        rsu: {
-                            blue: '#1e40af',
-                            light: '#dbeafe',
-                            dark: '#1e3a8a'
-                        }
+                        primary: {
+                            DEFAULT: '#3b82f6',
+                            foreground: '#ffffff',
+                        },
+                        destructive: {
+                            DEFAULT: '#ef4444',
+                            foreground: '#ffffff',
+                        },
+                        muted: {
+                            DEFAULT: '#f3f4f6',
+                            foreground: '#6b7280',
+                        },
                     },
-                    animation: {
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    }
-                }
-            }
+                },
+            },
         }
     </script>
 
     <style type="text/tailwindcss">
         @layer components {
-            .glass-card {
-                @apply bg-white/90 backdrop-blur-md border border-white/20 shadow-xl rounded-2xl;
-            }
-            .nav-item {
-                @apply flex flex-col items-center justify-center pt-2 pb-1 text-xs font-medium transition-colors duration-200;
-            }
-            .nav-item.active {
-                @apply text-blue-600;
-            }
-            .nav-item:not(.active) {
-                @apply text-gray-400 hover:text-gray-600;
-            }
-            .stat-value {
-                @apply text-2xl font-bold tracking-tight text-gray-900;
-            }
-            .stat-label {
-                @apply text-[10px] uppercase tracking-wider font-bold text-gray-400;
-            }
-            .rank-badge {
-                @apply px-3 py-1 rounded-full text-[10px] font-bold text-white shadow-sm;
-            }
-            /* Custom Gradients from DailyRemover */
-            .premium-gradient {
-                @apply bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700;
-            }
-            .ticker-wrap {
-                @apply w-full overflow-hidden bg-gray-900/5 py-2;
-            }
-            .ticker-move {
-                display: inline-block;
-                white-space: nowrap;
-                padding-right: 100%;
-                animation: ticker 30s linear infinite;
-            }
-            @keyframes ticker {
-                0% { transform: translate3d(0, 0, 0); }
-                100% { transform: translate3d(-100%, 0, 0); }
-            }
-            [x-cloak] { display: none !important; }
+        .checkbox {
+          @apply h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500 checked:bg-red-600 checked:hover:bg-red-600;
         }
+        
+        .badge {
+          @apply inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-medium ring-1 ring-inset;
+        }
+        
+        .avatar-circle {
+          @apply w-6 h-6 rounded-full bg-gray-400 flex items-center justify-center text-xs font-light text-white;
+        }
+        
+        .badge-morning {
+          @apply bg-blue-50 text-blue-700 ring-blue-600/20;
+        }
+        
+        .badge-afternoon {
+          @apply bg-amber-50 text-amber-700 ring-amber-600/20;
+        }
+        
+        .badge-evening {
+          @apply bg-purple-50 text-purple-700 ring-purple-600/20;
+        }
+        
+        .count-badge {
+          @apply bg-gray-50 text-gray-700 ring-gray-600/20;
+        }
+        
+        .badge-work {
+          @apply bg-gray-100 text-gray-700 ring-gray-600/20;
+        }
+        
+        .badge-green {
+          @apply bg-green-50 text-green-700 ring-green-600/20;
+        }
+        
+        .badge-pink {
+          @apply bg-pink-50 text-pink-700 ring-pink-600/20;
+        }
+        
+        .badge-indigo {
+          @apply bg-indigo-50 text-indigo-700 ring-indigo-600/20;
+        }
+        
+        .badge-yellow {
+          @apply bg-yellow-50 text-yellow-700 ring-yellow-600/20;
+        }
+        
+        .badge-red {
+          @apply bg-red-50 text-red-700 ring-red-600/20;
+        }
+        
+        .badge-blue {
+          @apply bg-blue-50 text-blue-700 ring-blue-600/20;
+        }
+        
+        .badge-purple {
+          @apply bg-purple-50 text-purple-700 ring-purple-600/20;
+        }
+        
+        .badge-teal {
+          @apply bg-teal-50 text-teal-700 ring-teal-600/20;
+        }
+        
+        .spinner {
+          @apply inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em];
+        }
+        
+        .spinner-sm {
+          @apply h-3 w-3;
+        }
+        
+        .spinner-lg {
+          @apply h-8 w-8;
+        }
+        
+        .toast {
+          @apply fixed bottom-4 right-4 z-50 rounded-lg bg-white px-6 py-4 shadow-lg ring-1 ring-black/5;
+        }
+        
+        .toast-success {
+          @apply bg-green-50 text-green-800 ring-green-500/10;
+        }
+        
+        .badge-stat {
+          @apply inline-flex items-center text-xs text-gray-500 border border-gray-200 rounded-full px-2 py-1 bg-transparent;
+        }
+        
+        .badge-count {
+          @apply absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full bg-red-500 text-white text-[8px] min-w-3.5 h-3.5 font-medium p-0.5 leading-none;
+        }
+        
+        .badge-active .badge-count {
+          @apply bg-gray-700 text-white;
+        }
+        
+        .score-sum {
+          @apply text-xs text-gray-500 font-normal ml-1;
+        }
+        
+        .red-yellow-sum {
+          @apply text-xs text-gray-500 ml-1 flex items-center;
+        }
+        
+        .red-dot {
+          @apply w-2 h-2 rounded-full bg-red-500 mr-0.5;
+        }
+        
+        .yellow-dot {
+          @apply w-2 h-2 rounded-full bg-yellow-500 mr-0.5;
+        }
+        
+        .dot-loading {
+          display: inline-block;
+          position: relative;
+          width: 20px;
+          text-align: left;
+        }
+        
+        .dot-loading:after {
+          content: '.';
+          animation: dots 1.5s steps(3, end) infinite;
+        }
+        
+        @keyframes dots {
+          0%, 20% { content: '.'; }
+          40%, 60% { content: '..'; }
+          80%, 100% { content: '...'; }
+        }
+        
+        .help-icon {
+          @apply ml-1 text-gray-400 hover:text-gray-600 cursor-pointer transition-colors;
+        }
+        
+        .help-icon-pulse {
+          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+          @apply text-blue-500;
+        }
+        
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+          50% {
+            opacity: .8;
+            transform: scale(1.1);
+          }
+        }
+        
+        .glass-card {
+            @apply bg-white rounded-lg border shadow-sm;
+        }
+        
+        .remover-gradient {
+          @apply bg-clip-text text-transparent bg-gradient-to-r from-gray-500 to-gray-200 inline-block font-light;
+        }
+        
+        .premium-gradient {
+            @apply bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700;
+        }
+
+        .ticker-wrap {
+            @apply w-full overflow-hidden bg-gray-900/5 py-2;
+        }
+        .ticker-move {
+            display: inline-block;
+            white-space: nowrap;
+            padding-right: 100%;
+            animation: ticker 30s linear infinite;
+        }
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+
+        [x-cloak] { display: none !important; }
+      }
     </style>
 </head>
 
-<body class="bg-slate-50 min-h-screen text-slate-900 font-sans pb-24" x-data="dailyApp()" x-init="init()">
+<body class="bg-gray-100 min-h-screen font-sans pb-24" x-data="dailyApp()" x-init="init()">
 
-    <!-- Top Header -->
-    <header class="premium-gradient text-white px-6 pt-8 pb-16 rounded-b-[3rem] shadow-2xl relative overflow-hidden">
-        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 left-0 -ml-10 -mb-10 w-48 h-48 bg-blue-400/20 rounded-full blur-2xl"></div>
-
-        <div class="relative z-10 flex justify-between items-start">
-            <div>
-                <h1 class="text-xs font-bold uppercase tracking-[0.2em] opacity-80 mb-1">ยินดีต้อนรับ</h1>
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl font-black" x-text="profile.display_name || 'Loading...'"></span>
-                    <i class="fa-solid fa-circle-check text-blue-300 text-sm"></i>
+    <header class="border-b bg-white">
+        <div class="container mx-auto px-4 py-4 max-w-md lg:max-w-[75%]">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                <div class="flex justify-between items-center">
+                    <div class="flex flex-col">
+                        <h1 class="text-2xl font-bold text-gray-900">
+                            <i class="fa-solid fa-chart-line text-blue-600 mr-2"></i>Daily<span
+                                class="remover-gradient">Stat</span>
+                        </h1>
+                        <p class="text-[10px] text-gray-500 mt-0.5 font-bold uppercase tracking-wider"
+                            x-text="profile.display_name"></p>
+                    </div>
+                    <div class="text-right text-[10px] font-bold text-gray-400 md:hidden uppercase tracking-widest">
+                        <div x-text="profile.current_class"></div>
+                        <div x-text="profile.current_title"></div>
+                    </div>
                 </div>
-                <p class="text-[10px] opacity-70 mt-1 font-medium" x-text="profile.email"></p>
-            </div>
-            <div class="text-right">
-                <div :class="'rank-badge ' + (rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500')">
-                    <span x-text="rankConfig[profile.current_class]?.emoji || '⚪'"></span>
-                    <span x-text="profile.current_class || 'UNRANKED'" class="ml-1"></span>
+                <div class="flex flex-col items-start md:items-end mt-2 md:mt-0">
+                    <div
+                        class="flex items-center text-gray-400 flex-wrap justify-start md:justify-end gap-2 text-left md:text-right">
+                        <div class="avatar-circle" x-text="profile.display_name?.charAt(0)"></div>
+                        <div class="flex gap-2">
+                            <div class="badge-stat">
+                                <i class="fa-solid fa-fire text-orange-500 mr-1"></i>
+                                <span x-text="(profile.current_streak || 0) + ' Streak'"></span>
+                            </div>
+                            <div class="badge-stat">
+                                <i class="fa-solid fa-crosshairs text-emerald-500 mr-1"></i>
+                                <span x-text="(profile.recent_acc || 0) + '% Acc'"></span>
+                            </div>
+                            <div class="badge-stat">
+                                <i class="fa-solid fa-award text-blue-500 mr-1"></i>
+                                <span x-text="profile.current_class"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="mt-2 text-[10px] font-bold opacity-80" x-text="profile.current_title || 'Novice'"></div>
             </div>
         </div>
     </header>
 
     <!-- Main Content Container -->
-    <main class="px-5 -mt-8 relative z-20 space-y-4">
+    <main class="px-4 py-4">
+        <div class="container mx-auto w-full lg:max-w-[75%] space-y-4">
 
-        <!-- Dashboard Stats Row -->
-        <div class="grid grid-cols-3 gap-3">
-            <div class="glass-card p-3 flex flex-col items-center">
-                <div class="stat-label">Total MP</div>
-                <div class="stat-value text-blue-600" x-text="profile.total_mp?.toLocaleString() || '0'"></div>
-            </div>
-            <div class="glass-card p-3 flex flex-col items-center">
-                <div class="stat-label">Accuracy</div>
-                <div class="stat-value text-emerald-600" x-text="(profile.recent_acc || 0) + '%'"></div>
-            </div>
-            <div class="glass-card p-3 flex flex-col items-center">
-                <div class="stat-label">Streak</div>
-                <div class="stat-value text-orange-500">
-                    <span x-text="profile.current_streak || 0"></span>
-                    <i class="fa-solid fa-fire text-sm ml-0.5"></i>
+            <!-- Ticker Messages -->
+            <div class="ticker-wrap rounded-lg shadow-sm bg-white border" x-show="system.ticker_messages?.length > 0">
+                <div class="ticker-move text-[10px] font-bold text-blue-900/60 uppercase tracking-widest">
+                    <template x-for="msg in system.ticker_messages" :key="msg">
+                        <span class="mx-8 flex-inline items-center">
+                            <i class="fa-solid fa-bullhorn mr-2"></i>
+                            <span x-text="msg"></span>
+                        </span>
+                    </template>
                 </div>
             </div>
-        </div>
-
-        <!-- Ticker Messages -->
-        <div class="ticker-wrap rounded-xl" x-show="system.ticker_messages?.length > 0">
-            <div class="ticker-move text-[11px] font-bold text-blue-900/60 uppercase tracking-wider">
-                <template x-for="msg in system.ticker_messages" :key="msg">
-                    <span class="mx-8 flex-inline items-center">
-                        <i class="fa-solid fa-bullhorn mr-2"></i>
-                        <span x-text="msg"></span>
-                    </span>
-                </template>
-            </div>
-        </div>
-
-        <!-- Dynamic Views -->
-        <div x-cloak>
 
             <!-- Dashboard View -->
             <div x-show="activeTab === 'dashboard'" class="space-y-4">
 
                 <!-- Experience Progress -->
                 <div class="glass-card p-4">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[10px] font-bold uppercase text-gray-400">Experience Rank</span>
-                        <span class="text-xs font-bold text-gray-700" x-text="profile.current_title"></span>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Experience
+                            Journey</span>
+                        <div class="badge-stat font-bold" x-text="profile.current_title"></div>
                     </div>
-                    <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden mb-2">
-                        <div class="h-full premium-gradient transition-all duration-1000"
+                    <div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden mb-2">
+                        <div class="h-full bg-blue-500 transition-all duration-1000"
                             :style="'width: ' + expPercentage + '%'"></div>
                     </div>
-                    <div class="flex justify-between text-[9px] font-bold text-gray-400">
+                    <div class="flex justify-between text-[10px] font-medium text-gray-400 uppercase tracking-tighter">
                         <span x-text="profile.total_mp?.toLocaleString() + ' MP'"></span>
-                        <span x-text="'Next: ' + (profile.next_rank_mp?.toLocaleString() || 'MAX')"></span>
+                        <span x-text="'Next Rank: ' + (profile.next_rank_mp?.toLocaleString() || 'MAX')"></span>
                     </div>
                 </div>
 
                 <!-- Department Comparison Chart -->
                 <div class="glass-card p-4">
-                    <h3 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-chart-column text-blue-600"></i>
-                        Department Performance (On-time Rate)
-                    </h3>
-                    <div class="h-48 relative flex items-center justify-center">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-chart-simple text-blue-500"></i>
+                            Community Rank
+                        </h3>
+                        <div class="badge-stat text-[9px] uppercase font-black" x-text="profile.department"></div>
+                    </div>
+                    <div class="h-44 relative flex items-center justify-center">
                         <canvas id="deptChart"
                             x-show="system.dept_stats && Object.keys(system.dept_stats).length > 0"></canvas>
                         <div x-show="!system.dept_stats || Object.keys(system.dept_stats).length === 0"
-                            class="text-center py-10 opacity-40">
-                            <i class="fa-solid fa-clock-rotate-left text-3xl mb-2"></i>
-                            <p class="text-[10px] font-bold uppercase tracking-widest">Collecting Day 1 Data...</p>
-                            <p class="text-[9px] mt-1 italic">สถิติจะปรากฏหลังเริ่มมีการบันทึกงาน</p>
+                            class="text-center py-10 opacity-30">
+                            <i class="fa-solid fa-hourglass-start text-2xl mb-2"></i>
+                            <p class="text-[10px] font-bold uppercase tracking-widest">Awaiting Daily Sync...</p>
                         </div>
                     </div>
-                    <p class="text-[10px] text-gray-400 mt-4 text-center italic">
-                        * Average same-day submission percentage per instructor within department
+                    <p class="text-[9px] text-gray-300 mt-4 text-center italic">
+                        * Averaged same-day performance across department instructors
                     </p>
                 </div>
 
                 <!-- Recent Activity (Minified) -->
-                <div class="glass-card p-4 overflow-hidden">
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="text-sm font-bold text-gray-800">Recent Accuracy Score</h3>
-                        <span class="text-[10px] font-bold text-gray-400 uppercase">Last 20 Cases</span>
+                <div class="glass-card p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xs font-bold text-gray-700 uppercase tracking-wider">Consistency Score</h3>
+                        <span class="badge-stat text-[9px] uppercase font-bold">Last 20 Entries</span>
                     </div>
-                    <div class="flex gap-1 h-12 items-end">
+                    <div class="flex gap-1 h-10 items-end">
                         <template x-for="(score, idx) in recentScores" :key="idx">
-                            <div class="flex-1 rounded-t-sm"
-                                :class="score >= 95 ? 'bg-emerald-400' : (score >= 70 ? 'bg-amber-400' : 'bg-rose-400')"
-                                :style="'height: ' + Math.max(10, score) + '%'" :title="score + '%'"></div>
+                            <div class="flex-1 rounded-sm"
+                                :class="score >= 95 ? 'bg-blue-400' : (score >= 70 ? 'bg-gray-300' : 'bg-red-400')"
+                                :style="'height: ' + Math.max(15, score) + '%'" :title="score + '%'"></div>
                         </template>
                     </div>
                 </div>
             </div>
 
-            <!-- Leaderboard View -->
-            <div x-show="activeTab === 'ranking'" class="space-y-3">
-                <div class="flex justify-between items-end px-1">
-                    <h2 class="text-xl font-black text-slate-800">Leaderboard</h2>
-                    <span class="text-[10px] font-bold text-gray-400 uppercase mb-1">Top 20 Instructors</span>
-                </div>
-
+            <!-- Ranking View -->
+            <div x-show="activeTab === 'ranking'" class="space-y-4">
                 <div class="glass-card overflow-hidden">
-                    <template x-for="(user, idx) in leaderboard" :key="user.email">
-                        <div class="flex items-center gap-3 p-3 border-b border-gray-100 last:border-0"
-                            :class="user.email === profile.email ? 'bg-blue-50/50' : ''">
-                            <div class="w-8 h-8 flex items-center justify-center font-black text-sm rounded-lg"
-                                :class="idx === 0 ? 'bg-yellow-100 text-yellow-700' : (idx === 1 ? 'bg-slate-100 text-slate-500' : (idx === 2 ? 'bg-orange-100 text-orange-700' : 'text-gray-400'))">
-                                <span x-show="idx > 2" x-text="idx + 1"></span>
-                                <i x-show="idx === 0" class="fa-solid fa-crown"></i>
-                                <span x-show="idx === 1 || idx === 2" x-text="idx + 1"></span>
-                            </div>
-                            <div class="flex-1">
-                                <div class="text-sm font-bold text-gray-800" x-text="user.display_name"></div>
-                                <div class="text-[10px] text-gray-400 font-bold uppercase" x-text="user.current_title">
+                    <div class="p-4 border-b bg-gray-50/50">
+                        <h3 class="text-xs font-black text-gray-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                            <i class="fa-solid fa-crown text-yellow-500"></i>
+                            Hall of Pioneers
+                        </h3>
+                    </div>
+                    <div class="divide-y divide-gray-100">
+                        <template x-for="(entry, index) in leaderboard" :key="entry.email">
+                            <div class="p-3 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-6 text-center text-xs font-black text-gray-300" x-text="index + 1">
+                                    </div>
+                                    <div class="avatar-circle" x-text="entry.display_name.charAt(0)"></div>
+                                    <div class="flex flex-col">
+                                        <div class="text-xs font-bold text-gray-700" x-text="entry.display_name"></div>
+                                        <div class="text-[9px] text-gray-400 font-bold uppercase tracking-wider"
+                                            x-text="entry.current_title"></div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-end">
+                                    <div class="badge-stat font-black text-blue-600"
+                                        x-text="entry.total_mp.toLocaleString() + ' MP'"></div>
+                                    <div class="text-[8px] font-bold text-emerald-500 tracking-widest mt-0.5"
+                                        x-text="entry.recent_acc + '% ACC'"></div>
                                 </div>
                             </div>
-                            <div class="text-right">
-                                <div class="text-sm font-black text-blue-600" x-text="user.total_mp.toLocaleString()">
-                                </div>
-                                <div class="text-[9px] font-bold text-gray-300 uppercase">MP Points</div>
-                            </div>
-                        </div>
-                    </template>
+                        </template>
+                    </div>
                 </div>
             </div>
 
             <!-- History View -->
             <div x-show="activeTab === 'history'" class="space-y-4">
-                <div class="flex justify-between items-center px-1">
-                    <h2 class="text-xl font-black text-slate-800">History</h2>
-                    <span class="text-[10px] font-bold text-gray-400 uppercase"
-                        x-text="'Total ' + (historyTotal || 0) + ' items'"></span>
+            </div>
+            <div class="text-[9px] text-gray-400 font-medium" x-text="item.session || 'Period'"></div>
+        </div>
+        </div>
+        <div class="text-right">
+            <div
+                :class="'px-2 py-0.5 rounded-lg text-[9px] font-black uppercase text-white shadow-sm inline-block ' + statusColors[item.status]">
+                <span x-text="item.status"></span>
+            </div>
+            <div class="text-[9px] font-bold text-gray-300 mt-1" x-text="'+' + item.score + ' MP'"></div>
+        </div>
+        </div>
+        </template>
+        </div>
+        </div>
+        </template>
+        </div>
+
+        <div x-show="historyHasMore" class="pt-4 pb-8">
+            <button @click="loadMoreHistory()" :disabled="isLoadingHistory"
+                class="w-full py-3 glass-card text-xs font-bold text-blue-600 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2">
+                <span x-show="!isLoadingHistory">โหลดเพิ่มเติม</span>
+                <i x-show="!isLoadingHistory" class="fa-solid fa-chevron-down"></i>
+                <i x-show="isLoadingHistory" class="fa-solid fa-circle-notch fa-spin"></i>
+            </button>
+        </div>
+
+        <div x-show="!isLoading && history.length === 0" class="text-center py-20 text-gray-300">
+            <i class="fa-solid fa-folder-open block text-4xl mb-2 opacity-10"></i>
+            <p class="text-xs italic font-medium">ยังไม่มีประวัติการบันทึก</p>
+        </div>
+        </div>
+
+        <!-- Profile View -->
+        <div x-show="activeTab === 'profile'" class="space-y-4">
+            <div class="glass-card p-6 flex flex-col items-center text-center">
+                <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-3xl font-light mb-4"
+                    x-text="profile.display_name?.charAt(0)"></div>
+                <h2 class="text-xl font-bold text-gray-800" x-text="profile.display_name"></h2>
+                <p class="text-xs text-gray-400 mt-1 mb-6" x-text="profile.email"></p>
+
+                <div class="grid grid-cols-2 gap-4 w-full">
+                    <div class="p-3 rounded-xl bg-gray-50 border border-gray-100">
+                        <div class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Loyalty Rank
+                        </div>
+                        <div class="text-xs font-bold text-gray-700" x-text="profile.current_class"></div>
+                    </div>
+                    <div class="p-3 rounded-xl bg-gray-50 border border-gray-100">
+                        <div class="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1">Department</div>
+                        <div class="text-xs font-bold text-gray-700" x-text="profile.department"></div>
+                    </div>
                 </div>
+            </div>
 
-                <div class="space-y-6">
-                    <template x-for="group in groupedHistory" :key="group.date">
-                        <div class="space-y-2">
-                            <div class="flex items-center gap-2 px-1">
-                                <div class="h-px flex-1 bg-gray-200"></div>
-                                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest"
-                                    x-text="formatThaiDate(group.date)"></span>
-                                <div class="h-px flex-1 bg-gray-200"></div>
-                            </div>
-
-                            <div class="space-y-2">
-                                <template x-for="item in group.items" :key="item.time + item.student">
-                                    <div
-                                        class="glass-card p-3 flex justify-between items-center transition-transform active:scale-[0.98]">
-                                        <div class="flex items-center gap-3">
-                                            <div
-                                                class="w-10 h-10 rounded-xl bg-slate-50 flex flex-col items-center justify-center border border-white">
-                                                <span class="text-[9px] font-black text-gray-400"
-                                                    x-text="item.time"></span>
-                                                <i class="fa-solid fa-file-signature text-blue-500/50 text-xs"></i>
-                                            </div>
-                                            <div>
-                                                <div class="text-xs font-bold text-gray-800" x-text="item.student">
-                                                </div>
-                                                <div class="text-[9px] text-gray-400 font-medium"
-                                                    x-text="item.session || 'Period'"></div>
-                                            </div>
-                                        </div>
-                                        <div class="text-right">
-                                            <div
-                                                :class="'px-2 py-0.5 rounded-lg text-[9px] font-black uppercase text-white shadow-sm inline-block ' + statusColors[item.status]">
-                                                <span x-text="item.status"></span>
-                                            </div>
-                                            <div class="text-[9px] font-bold text-gray-300 mt-1"
-                                                x-text="'+' + item.score + ' MP'"></div>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
+            <!-- Rewards / Special Box -->
+            <div class="glass-card p-4 bg-gray-900 overflow-hidden relative group">
+                <div
+                    class="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-blue-500/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-1000">
+                </div>
+                <h3 class="text-xs font-black text-blue-400 uppercase tracking-widest mb-4">Instructor's Benefits</h3>
+                <div class="space-y-3 relative z-10">
+                    <template x-for="reward in profile.rewards || []" :key="reward">
+                        <div class="flex items-center gap-3 text-white/80">
+                            <i class="fa-solid fa-crown text-[10px] text-yellow-500/70"></i>
+                            <span class="text-[11px] font-medium" x-text="reward"></span>
                         </div>
                     </template>
-                </div>
-
-                <div x-show="historyHasMore" class="pt-4 pb-8">
-                    <button @click="loadMoreHistory()" :disabled="isLoadingHistory"
-                        class="w-full py-3 glass-card text-xs font-bold text-blue-600 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2">
-                        <span x-show="!isLoadingHistory">โหลดเพิ่มเติม</span>
-                        <i x-show="!isLoadingHistory" class="fa-solid fa-chevron-down"></i>
-                        <i x-show="isLoadingHistory" class="fa-solid fa-circle-notch fa-spin"></i>
-                    </button>
-                </div>
-
-                <div x-show="!isLoading && history.length === 0" class="text-center py-20 text-gray-300">
-                    <i class="fa-solid fa-folder-open block text-4xl mb-2 opacity-10"></i>
-                    <p class="text-xs italic font-medium">ยังไม่มีประวัติการบันทึก</p>
-                </div>
-            </div>
-
-            <!-- Profile / Rewards View -->
-            <div x-show="activeTab === 'profile'" class="space-y-4">
-                <div class="glass-card p-6 flex flex-col items-center">
-                    <div
-                        class="w-20 h-20 rounded-full premium-gradient flex items-center justify-center text-3xl text-white shadow-xl mb-4 border-4 border-white">
-                        <span x-text="profile.display_name?.charAt(0) || '?'"></span>
-                    </div>
-                    <h2 class="text-lg font-bold text-gray-800" x-text="profile.display_name"></h2>
-                    <p class="text-xs text-gray-400 font-medium" x-text="profile.department || 'No Department'"></p>
-                </div>
-
-                <div class="glass-card p-4">
-                    <h3 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-gift text-rose-500"></i>
-                        Reward Box
-                    </h3>
-                    <div class="grid grid-cols-4 gap-2">
-                        <template x-for="reward in profile.rewards || []" :key="reward">
-                            <div
-                                class="aspect-square bg-slate-50 rounded-xl flex items-center justify-center text-xl shadow-inner border border-white">
-                                <span x-text="reward.split(' ')[0]"></span>
-                            </div>
-                        </template>
-                        <div x-show="!profile.rewards?.length"
-                            class="col-span-4 py-8 text-center text-gray-300 text-xs italic">
-                            No rewards yet. Keep it up!
-                        </div>
+                    <div x-show="!profile.rewards || profile.rewards.length === 0"
+                        class="text-[10px] text-white/30 italic py-2">
+                        Rank up to unlock special instructor benefits...
                     </div>
                 </div>
             </div>
-
+        </div>
         </div>
     </main>
 
-    <!-- Bottom Navigation -->
-    <nav
-        class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-gray-100 px-6 safe-area-inset-bottom z-50">
-        <div class="container mx-auto max-w-md flex justify-between">
-            <button @click="activeTab = 'dashboard'" class="nav-item"
-                :class="activeTab === 'dashboard' ? 'active' : ''">
-                <i class="fa-solid fa-house-chimney text-xl mb-1"></i>
-                <span>หน้าหลัก</span>
-                <div x-show="activeTab === 'dashboard'" class="w-1 h-1 rounded-full bg-blue-600 mt-1"></div>
+    <!-- Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-100 px-6 py-2 z-40">
+        <div class="container mx-auto max-w-md lg:max-w-[75%] flex justify-between items-center">
+            <button @click="activeTab = 'dashboard'" class="flex flex-col items-center gap-1 transition-all"
+                :class="activeTab === 'dashboard' ? 'text-blue-600 scale-110' : 'text-gray-400'">
+                <i class="fa-solid fa-house text-lg"></i>
+                <span class="text-[8px] font-black uppercase tracking-widest">Dash</span>
             </button>
-            <button @click="activeTab = 'ranking'" class="nav-item" :class="activeTab === 'ranking' ? 'active' : ''">
-                <i class="fa-solid fa-ranking-star text-xl mb-1"></i>
-                <span>จัดอันดับ</span>
-                <div x-show="activeTab === 'ranking'" class="w-1 h-1 rounded-full bg-blue-600 mt-1"></div>
+            <button @click="activeTab = 'ranking'" class="flex flex-col items-center gap-1 transition-all"
+                :class="activeTab === 'ranking' ? 'text-blue-600 scale-110' : 'text-gray-400'">
+                <i class="fa-solid fa-ranking-star text-lg"></i>
+                <span class="text-[8px] font-black uppercase tracking-widest">Hall</span>
             </button>
-            <button @click="activeTab = 'history'" class="nav-item" :class="activeTab === 'history' ? 'active' : ''">
-                <i class="fa-solid fa-history text-xl mb-1"></i>
-                <span>ประวัติ</span>
-                <div x-show="activeTab === 'history'" class="w-1 h-1 rounded-full bg-blue-600 mt-1"></div>
+            <button @click="activeTab = 'history'" class="flex flex-col items-center gap-1 transition-all"
+                :class="activeTab === 'history' ? 'text-blue-600 scale-110' : 'text-gray-400'">
+                <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+                <span class="text-[8px] font-black uppercase tracking-widest">Past</span>
             </button>
-            <button @click="activeTab = 'profile'" class="nav-item" :class="activeTab === 'profile' ? 'active' : ''">
-                <i class="fa-solid fa-user-gear text-xl mb-1"></i>
-                <span>โปรไฟล์</span>
-                <div x-show="activeTab === 'profile'" class="w-1 h-1 rounded-full bg-blue-600 mt-1"></div>
+            <button @click="activeTab = 'profile'" class="flex flex-col items-center gap-1 transition-all"
+                :class="activeTab === 'profile' ? 'text-blue-600 scale-110' : 'text-gray-400'">
+                <i class="fa-solid fa-user text-lg"></i>
+                <span class="text-[8px] font-black uppercase tracking-widest">Me</span>
             </button>
         </div>
     </nav>
@@ -438,18 +559,6 @@
                     const next = this.profile.next_rank_mp;
                     if (next <= current) return 100;
                     return Math.min(100, Math.round((current / next) * 100));
-                },
-
-                get groupedHistory() {
-                    const groups = {};
-                    this.history.forEach(item => {
-                        if (!groups[item.date]) groups[item.date] = [];
-                        groups[item.date].push(item);
-                    });
-                    return Object.keys(groups).sort((a, b) => b.localeCompare(a)).map(date => ({
-                        date,
-                        items: groups[date]
-                    }));
                 },
 
                 async init() {
@@ -566,7 +675,7 @@
 
                 async loadMoreHistory() {
                     if (this.isLoadingHistory || !this.historyHasMore) return;
-                    await this.fetchHistory(this.profile.email, this.historyPage + 1);
+                    await this.fetchHistory(this.profile.email, this.userId, this.historyPage + 1);
                 },
 
                 formatThaiDate(dateStr) {
@@ -602,6 +711,7 @@
 
                     if (this.deptChart) this.deptChart.destroy();
 
+                    const ctx = canvas.getContext('2d');
                     this.deptChart = new Chart(ctx, {
                         type: 'bar',
                         data: {
