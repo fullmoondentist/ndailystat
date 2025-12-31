@@ -48,7 +48,7 @@
         }
         
         .avatar-circle {
-          @apply rounded-full flex items-center justify-center text-white shadow-sm;
+          @apply rounded-full flex items-center justify-center text-white shadow-sm font-black;
         }
         
         .badge-morning {
@@ -228,12 +228,11 @@
                 <div class="flex justify-between items-center">
                     <div class="flex flex-col">
                         <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div class="avatar-circle w-10 h-10 text-xl font-light"
+                            <div class="avatar-circle w-10 h-10 text-2xl"
                                 :class="'bg-gradient-to-br ' + profile.class_color_css"
                                 x-text="getInitials(profile.email)"></div>
                             <span x-text="profile.display_name"></span>
                         </h1>
-                        <p class="text-xs text-gray-500 mt-0.5 font-medium">สถิติผลการปฏิบัติงานรายวัน</p>
                     </div>
                     <div class="text-right text-xs font-medium text-gray-400 md:hidden">
                         <div x-text="profile.current_class"></div>
@@ -243,20 +242,20 @@
                 <div class="flex flex-col items-start md:items-end mt-2 md:mt-0">
                     <div
                         class="flex items-center text-gray-400 flex-wrap justify-start md:justify-end gap-2 text-left md:text-right">
-                        <div class="avatar-circle w-6 h-6 text-xs font-light"
+                        <div class="avatar-circle w-6 h-6 text-sm"
                             :class="'bg-gradient-to-br ' + profile.class_color_css" x-text="getInitials(profile.email)">
                         </div>
                         <div class="flex gap-2">
                             <div class="badge-stat">
-                                <i class="fa-solid fa-fire text-orange-500 mr-1"></i>
                                 <span x-text="(profile.current_streak || 0) + ' Streak'"></span>
                             </div>
                             <div class="badge-stat">
-                                <i class="fa-solid fa-crosshairs text-emerald-500 mr-1"></i>
-                                <span x-text="(profile.recent_acc || 0) + '% Acc'"></span>
+                                <span x-text="(profile.recent_acc || 0) + '% Recent Acc'"></span>
                             </div>
                             <div class="badge-stat">
-                                <i class="fa-solid fa-award text-blue-500 mr-1"></i>
+                                <span x-text="(profile.alltime_acc || 0) + '% All Time Acc'"></span>
+                            </div>
+                            <div class="badge-stat">
                                 <span x-text="profile.current_class"></span>
                             </div>
                         </div>
@@ -347,7 +346,7 @@
                     <div class="p-4 border-b bg-gray-50/50">
                         <h3 class="text-xs font-black text-gray-500 uppercase tracking-wider flex items-center gap-2">
                             <i class="fa-solid fa-crown text-yellow-500"></i>
-                            Hall of Pioneers
+                            Hall of Fame
                         </h3>
                     </div>
                     <div class="divide-y divide-gray-100">
@@ -356,7 +355,7 @@
                                 <div class="flex items-center gap-3">
                                     <div class="w-6 text-center text-sm font-black text-gray-300" x-text="index + 1">
                                     </div>
-                                    <div class="avatar-circle w-6 h-6 text-[10px] font-light"
+                                    <div class="avatar-circle w-6 h-6 text-xs"
                                         :class="'bg-gradient-to-br ' + entry.class_color_css"
                                         x-text="getInitials(entry.email)"></div>
                                     <div class="flex flex-col">
@@ -431,7 +430,7 @@
             <!-- Profile View -->
             <div x-show="activeTab === 'profile'" class="space-y-4">
                 <div class="glass-card p-6 flex flex-col items-center text-center">
-                    <div class="avatar-circle w-16 h-16 text-3xl font-light mb-4 shadow-md overflow-hidden"
+                    <div class="avatar-circle w-20 h-20 text-4xl mb-4 shadow-md overflow-hidden"
                         :class="'bg-gradient-to-br ' + profile.class_color_css" x-text="getInitials(profile.email)">
                     </div>
                     <h2 class="text-xl font-bold text-gray-800" x-text="profile.display_name"></h2>
@@ -529,12 +528,9 @@
 
     <!-- Loading Overlay -->
     <div x-show="isLoading" x-cloak
-        class="fixed inset-0 z-[200] bg-white flex flex-col items-center justify-center space-y-4">
-        <div class="w-16 h-16 relative">
-            <div class="absolute inset-0 border-4 border-blue-100 rounded-full"></div>
-            <div class="absolute inset-0 border-4 border-blue-600 rounded-full border-t-transparent animate-spin"></div>
-        </div>
-        <div class="text-sm font-bold text-gray-400 tracking-widest uppercase">NongDaily Stat</div>
+        class="fixed inset-0 z-[200] bg-white flex flex-col items-center justify-center space-y-6">
+        <div class="spinner spinner-lg text-blue-600"></div>
+        <div class="text-xs font-black text-gray-400 tracking-[0.2em] uppercase">NongDaily Stat</div>
     </div>
 
     <script>
