@@ -230,7 +230,7 @@
                         <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
                             <div class="avatar-circle w-10 h-10 text-xl font-light"
                                 :class="'bg-gradient-to-br ' + profile.class_color_css"
-                                x-text="getInitials(profile.display_name)"></div>
+                                x-text="getInitials(profile.email)"></div>
                             <span x-text="profile.display_name"></span>
                         </h1>
                         <p class="text-xs text-gray-500 mt-0.5 font-medium">สถิติผลการปฏิบัติงานรายวัน</p>
@@ -244,8 +244,8 @@
                     <div
                         class="flex items-center text-gray-400 flex-wrap justify-start md:justify-end gap-2 text-left md:text-right">
                         <div class="avatar-circle w-6 h-6 text-xs font-light"
-                            :class="'bg-gradient-to-br ' + profile.class_color_css"
-                            x-text="getInitials(profile.display_name)"></div>
+                            :class="'bg-gradient-to-br ' + profile.class_color_css" x-text="getInitials(profile.email)">
+                        </div>
                         <div class="flex gap-2">
                             <div class="badge-stat">
                                 <i class="fa-solid fa-fire text-orange-500 mr-1"></i>
@@ -358,7 +358,7 @@
                                     </div>
                                     <div class="avatar-circle w-6 h-6 text-[10px] font-light"
                                         :class="'bg-gradient-to-br ' + entry.class_color_css"
-                                        x-text="getInitials(entry.display_name)"></div>
+                                        x-text="getInitials(entry.email)"></div>
                                     <div class="flex flex-col">
                                         <div class="text-sm font-bold text-gray-700" x-text="entry.display_name"></div>
                                         <div class="text-xs text-gray-400 font-bold" x-text="entry.current_title"></div>
@@ -432,8 +432,7 @@
             <div x-show="activeTab === 'profile'" class="space-y-4">
                 <div class="glass-card p-6 flex flex-col items-center text-center">
                     <div class="avatar-circle w-16 h-16 text-3xl font-light mb-4 shadow-md overflow-hidden"
-                        :class="'bg-gradient-to-br ' + profile.class_color_css"
-                        x-text="getInitials(profile.display_name)">
+                        :class="'bg-gradient-to-br ' + profile.class_color_css" x-text="getInitials(profile.email)">
                     </div>
                     <h2 class="text-xl font-bold text-gray-800" x-text="profile.display_name"></h2>
                     <p class="text-xs text-gray-400 mt-1 mb-6" x-text="profile.email"></p>
@@ -712,13 +711,27 @@
                     return `${day} ${month} ${thaiYear}`;
                 },
 
-                getInitials(name) {
-                    if (!name) return '??';
-                    const parts = name.trim().split(/\s+/);
-                    if (parts.length >= 2) {
+                getInitials(email) {
+                    if (!email) return '??';
+                    // ตัดส่วน @rsu.ac.th ออก
+                    const username = email.split('@')[0];
+
+                    // กรณีที่ 1: มีจุด (.) ในชื่อ
+                    if (username.includes('.')) {
+                        const parts = username.split('.');
                         return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
                     }
-                    return name.substring(0, 2).toUpperCase();
+
+                    // กรณีที่ 2: ไม่มีจุด แต่มีสระ
+                    const vowels = ['a', 'e', 'i', 'o', 'u'];
+                    for (let i = 0; i < username.length - 1; i++) {
+                        if (vowels.includes(username[i].toLowerCase())) {
+                            return (username[0] + username[i + 1]).toUpperCase();
+                        }
+                    }
+
+                    // กรณีที่ 3: ใช้สองตัวแรก
+                    return username.substring(0, 2).toUpperCase();
                 },
 
                 async closeRankup() {
