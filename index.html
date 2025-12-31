@@ -244,13 +244,13 @@
                 :class="'bg-gradient-to-br ' + (profile.class_color_css || 'from-blue-600 via-indigo-600 to-violet-700')">
                 <div class="flex justify-between items-start mb-8">
                     <div class="space-y-1">
-                        <h2 class="text-lg font-black tracking-tight" x-text="profile.display_name"></h2>
+                        <h2 class="text-3xl font-black tracking-tight" x-text="profile.display_name"></h2>
                     </div>
-                    <div class="text-right" x-show="profile.current_class !== 'UNRANKED'">
-                        <div class="text-5xl font-black uppercase tracking-tighter mb-1" x-text="profile.current_class">
+                    <div class="text-right">
+                        <div class="text-3xl font-black uppercase tracking-tighter" x-text="profile.current_class">
                         </div>
                         <div
-                            class="text-sm font-black uppercase tracking-[0.2em] opacity-80 flex items-center justify-end gap-1">
+                            class="text-xs font-black uppercase tracking-[0.2em] opacity-80 flex items-center justify-end gap-1">
                             <i class="fa-solid fa-book-bookmark text-[10px]"></i>
                             <span x-text="profile.current_title"></span>
                         </div>
@@ -275,22 +275,28 @@
                 <div
                     class="rounded-2xl p-4 flex flex-col items-center justify-center text-center shadow-sm border border-orange-100 bg-orange-50/50">
                     <div class="text-2xl font-black text-orange-600" x-text="profile.current_streak || 0"></div>
-                    <div class="text-[9px] font-black text-orange-400 uppercase tracking-widest mt-1">
-                        Perfect Combo
+                    <div
+                        class="text-[9px] font-black text-orange-400 uppercase tracking-widest mt-1 flex items-center gap-1">
+                        <i class="fa-solid fa-fire text-[8px]"></i>
+                        Streak
                     </div>
                 </div>
                 <div
                     class="rounded-2xl p-4 flex flex-col items-center justify-center text-center shadow-sm border border-blue-100 bg-blue-50/50">
                     <div class="text-2xl font-black text-blue-600" x-text="(profile.recent_acc || 0) + '%'"></div>
-                    <div class="text-[9px] font-black text-blue-400 uppercase tracking-widest mt-1">
-                        Recent Accuracy
+                    <div
+                        class="text-[9px] font-black text-blue-400 uppercase tracking-widest mt-1 flex items-center gap-1">
+                        <i class="fa-solid fa-crosshairs text-[8px]"></i>
+                        Recent
                     </div>
                 </div>
                 <div
                     class="rounded-2xl p-4 flex flex-col items-center justify-center text-center shadow-sm border border-purple-100 bg-purple-50/50">
                     <div class="text-2xl font-black text-purple-600" x-text="(profile.alltime_acc || 0) + '%'"></div>
-                    <div class="text-[9px] font-black text-purple-400 uppercase tracking-widest mt-1">
-                        All-time Accuracy
+                    <div
+                        class="text-[9px] font-black text-purple-400 uppercase tracking-widest mt-1 flex items-center gap-1">
+                        <i class="fa-solid fa-chart-line text-[8px]"></i>
+                        All-Time
                     </div>
                 </div>
             </div>
@@ -303,12 +309,12 @@
                     <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Rewards (<span
                             x-text="profile.rewards?.length || 0"></span>)</h3>
                 </div>
-                <div class="flex flex-wrap gap-4 items-center">
-                    <template x-for="reward in groupedRewards" :key="reward.name">
-                        <div class="flex items-center gap-2">
-                            <span class="text-4xl" x-text="getRewardEmoji(reward.name)"></span>
-                            <span class="text-sm font-black text-gray-400" x-show="reward.count > 1"
-                                x-text="'x' + reward.count"></span>
+                <div class="flex flex-wrap gap-2">
+                    <template x-for="reward in profile.rewards || []" :key="reward">
+                        <div
+                            class="bg-gray-50/50 border border-gray-100 rounded-2xl px-4 py-3 flex items-center gap-3 shadow-sm active:scale-95 transition-transform">
+                            <span class="text-xl">🌹</span>
+                            <span class="text-xl font-bold text-gray-800" x-text="reward"></span>
                         </div>
                     </template>
                     <div x-show="!profile.rewards || profile.rewards.length === 0" class="text-xs text-gray-300 italic">
@@ -364,6 +370,20 @@
                 </div>
             </div>
 
+            <!-- Recent Activity (Minified) -->
+            <div class="glass-card p-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Consistency Score</h3>
+                    <span class="badge-stat text-xs font-bold">Last 20 Entries</span>
+                </div>
+                <div class="flex gap-1 h-10 items-end">
+                    <template x-for="(score, idx) in recentScores" :key="idx">
+                        <div class="flex-1 rounded-sm"
+                            :class="score >= 95 ? 'bg-blue-400' : (score >= 70 ? 'bg-gray-300' : 'bg-red-400')"
+                            :style="'height: ' + Math.max(15, score) + '%'" :title="score + '%'"></div>
+                    </template>
+                </div>
+            </div>
 
             <!-- Hall of Fame Card -->
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100/50 overflow-hidden">
@@ -422,6 +442,41 @@
                 </p>
             </div>
 
+            <!-- ACCOUNT & BENEFITS -->
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100/50 overflow-hidden">
+                <div class="p-5 border-b border-gray-50 bg-gray-900">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-user-gear text-blue-400"></i>
+                        <h3 class="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Instructor's
+                            Benefits</h3>
+                    </div>
+                </div>
+                <div class="p-5 space-y-4">
+                    <div class="space-y-2">
+                        <template x-for="reward in profile.rewards || []" :key="reward">
+                            <div class="flex items-center gap-3 text-gray-700">
+                                <i class="fa-solid fa-circle-check text-[10px] text-blue-500"></i>
+                                <span class="text-xs font-black" x-text="reward"></span>
+                            </div>
+                        </template>
+                        <div x-show="!profile.rewards || profile.rewards.length === 0"
+                            class="text-[10px] text-gray-400 italic">
+                            Rank up to unlock special performance bonuses...
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-gray-50 grid grid-cols-2 gap-4">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] font-black text-gray-300 uppercase">Department</span>
+                            <span class="text-xs font-black text-gray-700" x-text="profile.department"></span>
+                        </div>
+                        <div class="flex flex-col text-right">
+                            <span class="text-[10px] font-black text-gray-300 uppercase">Class Rank</span>
+                            <span class="text-xs font-black text-blue-600" x-text="profile.current_class"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -504,24 +559,6 @@
                     const next = this.profile.next_rank_mp;
                     if (next <= current) return 100;
                     return Math.min(100, Math.round((current / next) * 100));
-                },
-
-                get groupedRewards() {
-                    if (!this.profile.rewards) return [];
-                    const counts = {};
-                    this.profile.rewards.forEach(r => {
-                        counts[r] = (counts[r] || 0) + 1;
-                    });
-                    return Object.entries(counts).map(([name, count]) => ({ name, count }));
-                },
-
-                getRewardEmoji(name) {
-                    const map = {
-                        'Rose': '🌹',
-                        'Heart': '❤️',
-                        'Diamond': '💎'
-                    };
-                    return map[name] || '🎁';
                 },
 
                 async init() {
