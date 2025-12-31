@@ -48,7 +48,7 @@
         }
         
         .avatar-circle {
-          @apply w-6 h-6 rounded-full bg-gray-400 flex items-center justify-center text-xs font-light text-white;
+          @apply rounded-full flex items-center justify-center text-white shadow-sm;
         }
         
         .badge-morning {
@@ -228,7 +228,7 @@
                 <div class="flex justify-between items-center">
                     <div class="flex flex-col">
                         <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white text-lg shadow-sm"
+                            <div class="avatar-circle w-10 h-10 text-xl font-light"
                                 :class="'bg-gradient-to-br ' + profile.class_color_css"
                                 x-text="getInitials(profile.display_name)"></div>
                             <span x-text="profile.display_name"></span>
@@ -243,7 +243,7 @@
                 <div class="flex flex-col items-start md:items-end mt-2 md:mt-0">
                     <div
                         class="flex items-center text-gray-400 flex-wrap justify-start md:justify-end gap-2 text-left md:text-right">
-                        <div class="w-6 h-6 rounded-md flex items-center justify-center text-white text-[10px] font-bold shadow-sm"
+                        <div class="avatar-circle w-6 h-6 text-xs font-light"
                             :class="'bg-gradient-to-br ' + profile.class_color_css"
                             x-text="getInitials(profile.display_name)"></div>
                         <div class="flex gap-2">
@@ -356,7 +356,7 @@
                                 <div class="flex items-center gap-3">
                                     <div class="w-6 text-center text-sm font-black text-gray-300" x-text="index + 1">
                                     </div>
-                                    <div class="w-6 h-6 rounded-md flex items-center justify-center text-white text-[10px] font-bold shadow-sm"
+                                    <div class="avatar-circle w-6 h-6 text-[10px] font-light"
                                         :class="'bg-gradient-to-br ' + entry.class_color_css"
                                         x-text="getInitials(entry.display_name)"></div>
                                     <div class="flex flex-col">
@@ -378,81 +378,100 @@
 
             <!-- History View -->
             <div x-show="activeTab === 'history'" class="space-y-4">
-            </div>
-            <div class="text-xs text-gray-400 font-medium" x-text="item.session || 'Period'"></div>
-        </div>
-        </div>
-        <div class="text-right">
-            <div
-                :class="'px-2 py-0.5 rounded-lg text-xs font-black uppercase text-white shadow-sm inline-block ' + statusColors[item.status]">
-                <span x-text="item.status"></span>
-            </div>
-            <div class="text-xs font-bold text-gray-300 mt-1" x-text="'+' + item.score + ' MP'"></div>
-        </div>
-        </div>
-        </template>
-        </div>
-        </div>
-        </template>
-        </div>
-
-        <div x-show="historyHasMore" class="pt-4 pb-8">
-            <button @click="loadMoreHistory()" :disabled="isLoadingHistory"
-                class="w-full py-3 glass-card text-xs font-bold text-blue-600 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2">
-                <span x-show="!isLoadingHistory">โหลดเพิ่มเติม</span>
-                <i x-show="!isLoadingHistory" class="fa-solid fa-chevron-down"></i>
-                <i x-show="isLoadingHistory" class="fa-solid fa-circle-notch fa-spin"></i>
-            </button>
-        </div>
-
-        <div x-show="!isLoading && history.length === 0" class="text-center py-20 text-gray-300">
-            <i class="fa-solid fa-folder-open block text-4xl mb-2 opacity-10"></i>
-            <p class="text-xs italic font-medium">ยังไม่มีประวัติการบันทึก</p>
-        </div>
-        </div>
-
-        <!-- Profile View -->
-        <div x-show="activeTab === 'profile'" class="space-y-4">
-            <div class="glass-card p-6 flex flex-col items-center text-center">
-                <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mb-4 shadow-md"
-                    :class="'bg-gradient-to-br ' + profile.class_color_css" x-text="getInitials(profile.display_name)">
+                <div class="glass-card overflow-hidden">
+                    <div class="p-4 border-b bg-gray-50/50">
+                        <h3 class="text-xs font-black text-gray-500 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-clock-rotate-left text-blue-500"></i>
+                            Recent Performance Log
+                        </h3>
+                    </div>
+                    <div class="divide-y divide-gray-100">
+                        <template x-for="item in history" :key="item.date + item.session">
+                            <div class="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <div class="avatar-circle w-10 h-10 bg-blue-50 text-blue-500 text-lg">
+                                        <i class="fas" :class="item.session === 'Morning' ? 'fa-sun' : 'fa-moon'"></i>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <div class="text-sm font-bold text-gray-700" x-text="formatThaiDate(item.date)">
+                                        </div>
+                                        <div class="text-xs text-gray-400 font-medium"
+                                            x-text="item.session || 'Period'">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div
+                                        :class="'px-2 py-0.5 rounded-lg text-xs font-black uppercase text-white shadow-sm inline-block ' + statusColors[item.status]">
+                                        <span x-text="item.status"></span>
+                                    </div>
+                                    <div class="text-xs font-bold text-gray-300 mt-1" x-text="'+' + item.score + ' MP'">
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
                 </div>
-                <h2 class="text-xl font-bold text-gray-800" x-text="profile.display_name"></h2>
-                <p class="text-xs text-gray-400 mt-1 mb-6" x-text="profile.email"></p>
 
-                <div class="grid grid-cols-2 gap-4 w-full">
-                    <div class="p-3 rounded-xl bg-gray-50 border border-gray-100">
-                        <div class="text-xs font-black text-gray-400 uppercase tracking-wider mb-1">Loyalty Rank
+                <div x-show="historyHasMore" class="pt-4 pb-8">
+                    <button @click="loadMoreHistory()" :disabled="isLoadingHistory"
+                        class="w-full py-3 glass-card text-xs font-bold text-blue-600 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2">
+                        <span x-show="!isLoadingHistory">โหลดเพิ่มเติม</span>
+                        <i x-show="!isLoadingHistory" class="fa-solid fa-chevron-down"></i>
+                        <i x-show="isLoadingHistory" class="fa-solid fa-circle-notch fa-spin"></i>
+                    </button>
+                </div>
+
+                <div x-show="!isLoading && history.length === 0" class="text-center py-20 text-gray-300">
+                    <i class="fa-solid fa-folder-open block text-4xl mb-2 opacity-10"></i>
+                    <p class="text-xs italic font-medium">ยังไม่มีประวัติการบันทึก</p>
+                </div>
+            </div>
+
+            <!-- Profile View -->
+            <div x-show="activeTab === 'profile'" class="space-y-4">
+                <div class="glass-card p-6 flex flex-col items-center text-center">
+                    <div class="avatar-circle w-16 h-16 text-3xl font-light mb-4 shadow-md overflow-hidden"
+                        :class="'bg-gradient-to-br ' + profile.class_color_css"
+                        x-text="getInitials(profile.display_name)">
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-800" x-text="profile.display_name"></h2>
+                    <p class="text-xs text-gray-400 mt-1 mb-6" x-text="profile.email"></p>
+
+                    <div class="grid grid-cols-2 gap-4 w-full">
+                        <div class="p-3 rounded-xl bg-gray-50 border border-gray-100">
+                            <div class="text-xs font-black text-gray-400 uppercase tracking-wider mb-1">Loyalty Rank
+                            </div>
+                            <div class="text-xs font-bold text-gray-700" x-text="profile.current_class"></div>
                         </div>
-                        <div class="text-xs font-bold text-gray-700" x-text="profile.current_class"></div>
-                    </div>
-                    <div class="p-3 rounded-xl bg-gray-50 border border-gray-100">
-                        <div class="text-xs font-black text-gray-400 uppercase tracking-wider mb-1">Department</div>
-                        <div class="text-xs font-bold text-gray-700" x-text="profile.department"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Rewards / Special Box -->
-            <div class="glass-card p-4 bg-gray-900 overflow-hidden relative group">
-                <div
-                    class="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-blue-500/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-1000">
-                </div>
-                <h3 class="text-xs font-black text-blue-400 uppercase tracking-wider mb-4">Instructor's Benefits</h3>
-                <div class="space-y-3 relative z-10">
-                    <template x-for="reward in profile.rewards || []" :key="reward">
-                        <div class="flex items-center gap-3 text-white/80">
-                            <i class="fa-solid fa-crown text-xs text-yellow-500/70"></i>
-                            <span class="text-xs font-medium" x-text="reward"></span>
+                        <div class="p-3 rounded-xl bg-gray-50 border border-gray-100">
+                            <div class="text-xs font-black text-gray-400 uppercase tracking-wider mb-1">Department</div>
+                            <div class="text-xs font-bold text-gray-700" x-text="profile.department"></div>
                         </div>
-                    </template>
-                    <div x-show="!profile.rewards || profile.rewards.length === 0"
-                        class="text-xs text-white/30 italic py-2">
-                        Rank up to unlock special instructor benefits...
+                    </div>
+                </div>
+
+                <!-- Rewards / Special Box -->
+                <div class="glass-card p-4 bg-gray-900 overflow-hidden relative group">
+                    <div
+                        class="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-blue-500/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-1000">
+                    </div>
+                    <h3 class="text-xs font-black text-blue-400 uppercase tracking-wider mb-4">Instructor's Benefits
+                    </h3>
+                    <div class="space-y-3 relative z-10">
+                        <template x-for="reward in profile.rewards || []" :key="reward">
+                            <div class="flex items-center gap-3 text-white/80">
+                                <i class="fa-solid fa-crown text-xs text-yellow-500/70"></i>
+                                <span class="text-xs font-medium" x-text="reward"></span>
+                            </div>
+                        </template>
+                        <div x-show="!profile.rewards || profile.rewards.length === 0"
+                            class="text-xs text-white/30 italic py-2">
+                            Rank up to unlock special instructor benefits...
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     </main>
 
