@@ -317,7 +317,7 @@
     </main>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/a/macros/rsu.ac.th/s/AKfycbyk0TzBIdwD_7XjO6LgV79M_nQW_z1G0u_h_V6v6Z_z/exec";
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby5tXN6M9_3M6fP9L-f2A8-M0P9S6/exec';
 
         function dailyApp() {
             return {
@@ -326,24 +326,32 @@
                 userId: null,
 
                 async init() {
+                    console.log("Initializing App...");
                     try {
-                        await liff.init({ liffId: '2008789653-GNraHzM6' });
+                        // LIFF Initialization using the working ID from Fetch work Index.html
+                        await liff.init({ liffId: '2008789653-1d4rx1nO' });
                         if (!liff.isLoggedIn()) {
                             liff.login();
                             return;
                         }
-                        const it = liff.getDecodedIDToken();
-                        let email = it ? it.email : null;
+
+                        const idToken = liff.getDecodedIDToken();
+                        let email = idToken ? idToken.email : null;
                         let userId = null;
+
                         if (!email) {
+                            console.log('Email not found in ID Token, falling back to liff.getProfile()');
                             const p = await liff.getProfile();
                             userId = p.userId;
                         }
+
+                        console.log('Auth Identifier:', email || userId);
                         this.userId = userId;
                         await this.fetchData(email, userId);
                         this.isLoading = false;
                     } catch (err) {
-                        console.error(err);
+                        console.error("Init failed", err);
+                        alert('Initialization Error: ' + err.message);
                         this.isLoading = false;
                     }
                 },
@@ -351,23 +359,44 @@
                 async fetchData(email, userId) {
                     try {
                         const res = await this.callAPI('getProfile', { email, userId });
+                        console.log('Profile Response:', res);
                         if (res.success) {
                             this.profile = res.profile;
+                            // Ensure display_name is bridged if structure is slightly different
+                            if (!this.profile.display_name && res.data?.user?.display_name) {
+                                this.profile.display_name = res.data.user.display_name;
+                            }
+                        } else {
+                            console.warn('Profile fetch failed:', res);
                         }
                     } catch (err) {
-                        console.error(err);
+                        console.error("Fetch failed", err);
                     }
                 },
 
                 async callAPI(action, params = {}) {
-                    const query = new URLSearchParams({ action, ...params, userId: this.userId || '' }).toString();
-                    const response = await fetch(`${WEB_APP_URL}?${query}`);
-                    return await response.json();
+                    try {
+                        // Add action and params
+                        const queryParams = new URLSearchParams({ action, ...params });
+                        // Ensure userId is present if available
+                        if (this.userId && !queryParams.has('userId')) {
+                            queryParams.append('userId', this.userId);
+                        }
+
+                        const response = await fetch(`${WEB_APP_URL}?${queryParams.toString()}`);
+                        return await response.json();
+                    } catch (err) {
+                        console.error(`API Call failed: ${action}`, err);
+                        return { success: false, message: err.message };
+                    }
                 },
 
                 get expPercentage() {
                     if (!this.profile.total_mp || !this.profile.next_rank_mp) return 0;
-                    return Math.min(100, Math.round((this.profile.total_mp / this.profile.next_rank_mp) * 100));
+                    const current = this.profile.total_mp;
+                    const next = this.profile.next_rank_mp;
+                    if (next <= current) return 100;
+                    return Math.min(100, Math.round((current / next) * 100));
                 },
 
                 getInitials(email) {
@@ -375,7 +404,7 @@
                     const name = email.split('@')[0];
                     if (name.includes('.')) {
                         const parts = name.split('.');
-                        return (parts[0][0] + parts[1][0]).toUpperCase();
+                        return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
                     }
                     return name.substring(0, 2).toUpperCase();
                 }
