@@ -227,11 +227,13 @@
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
                 <div class="flex justify-between items-center">
                     <div class="flex flex-col">
-                        <h1 class="text-2xl font-bold text-gray-900">
-                            <i class="fa-solid fa-chart-line text-blue-600 mr-2"></i>Daily<span
-                                class="remover-gradient">Stat</span>
+                        <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white text-lg shadow-sm"
+                                :class="'bg-gradient-to-br ' + profile.class_color_css"
+                                x-text="getInitials(profile.display_name)"></div>
+                            <span x-text="profile.display_name"></span>
                         </h1>
-                        <p class="text-xs text-gray-500 mt-0.5 font-medium" x-text="profile.display_name"></p>
+                        <p class="text-xs text-gray-500 mt-0.5 font-medium">สถิติผลการปฏิบัติงานรายวัน</p>
                     </div>
                     <div class="text-right text-xs font-medium text-gray-400 md:hidden">
                         <div x-text="profile.current_class"></div>
@@ -241,7 +243,9 @@
                 <div class="flex flex-col items-start md:items-end mt-2 md:mt-0">
                     <div
                         class="flex items-center text-gray-400 flex-wrap justify-start md:justify-end gap-2 text-left md:text-right">
-                        <div class="avatar-circle" x-text="profile.display_name?.charAt(0)"></div>
+                        <div class="w-6 h-6 rounded-md flex items-center justify-center text-white text-[10px] font-bold shadow-sm"
+                            :class="'bg-gradient-to-br ' + profile.class_color_css"
+                            x-text="getInitials(profile.display_name)"></div>
                         <div class="flex gap-2">
                             <div class="badge-stat">
                                 <i class="fa-solid fa-fire text-orange-500 mr-1"></i>
@@ -352,7 +356,9 @@
                                 <div class="flex items-center gap-3">
                                     <div class="w-6 text-center text-sm font-black text-gray-300" x-text="index + 1">
                                     </div>
-                                    <div class="avatar-circle" x-text="entry.display_name.charAt(0)"></div>
+                                    <div class="w-6 h-6 rounded-md flex items-center justify-center text-white text-[10px] font-bold shadow-sm"
+                                        :class="'bg-gradient-to-br ' + entry.class_color_css"
+                                        x-text="getInitials(entry.display_name)"></div>
                                     <div class="flex flex-col">
                                         <div class="text-sm font-bold text-gray-700" x-text="entry.display_name"></div>
                                         <div class="text-xs text-gray-400 font-bold" x-text="entry.current_title"></div>
@@ -408,8 +414,9 @@
         <!-- Profile View -->
         <div x-show="activeTab === 'profile'" class="space-y-4">
             <div class="glass-card p-6 flex flex-col items-center text-center">
-                <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-3xl font-light mb-4"
-                    x-text="profile.display_name?.charAt(0)"></div>
+                <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mb-4 shadow-md"
+                    :class="'bg-gradient-to-br ' + profile.class_color_css" x-text="getInitials(profile.display_name)">
+                </div>
                 <h2 class="text-xl font-bold text-gray-800" x-text="profile.display_name"></h2>
                 <p class="text-xs text-gray-400 mt-1 mb-6" x-text="profile.email"></p>
 
@@ -684,6 +691,15 @@
                     const month = monthNames[date.getMonth()];
                     const thaiYear = ((date.getFullYear() + 543) % 100).toString().padStart(2, '0');
                     return `${day} ${month} ${thaiYear}`;
+                },
+
+                getInitials(name) {
+                    if (!name) return '??';
+                    const parts = name.trim().split(/\s+/);
+                    if (parts.length >= 2) {
+                        return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
+                    }
+                    return name.substring(0, 2).toUpperCase();
                 },
 
                 async closeRankup() {
