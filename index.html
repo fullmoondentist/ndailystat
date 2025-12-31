@@ -266,25 +266,41 @@
 
             <!-- Component: Name Card (Matching Template Main Container Style) -->
             <div id="nameCard" class="bg-white rounded-lg border shadow-sm p-8" x-cloak x-show="!isLoading">
-                <div class="flex justify-between items-start">
+                <div class="flex justify-between items-start mb-6">
                     <div class="flex flex-col">
-                        <h2 class="text-2xl font-bold text-gray-900" x-text="profile.display_name"></h2>
-                        <p class="text-sm text-gray-500" x-text="profile.department"></p>
+                        <!-- Rank Title -->
+                        <div class="text-sm font-bold text-gray-900 flex items-center gap-2">
+                            <span class="text-xl">🎖️</span>
+                            <span x-text="profile.current_title || 'Loading Rank...'"></span>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1" x-text="profile.department || '---'"></p>
                     </div>
                     <div class="text-right">
-                        <div class="text-3xl font-bold text-gray-900" x-text="profile.current_class"></div>
-                        <div class="text-sm text-gray-500" x-text="profile.current_title"></div>
+                        <!-- Class Rank -->
+                        <div class="text-3xl font-bold text-gray-900" x-text="profile.current_class || '---'"></div>
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Class Rank</div>
                     </div>
                 </div>
 
-                <!-- MP Progress (Simple Bar matching Template aesthetics) -->
-                <div class="mt-8">
+                <!-- Section: User Name (Font same as CasePresent) -->
+                <div class="mt-8 mb-2">
+                    <h2 class="text-2xl font-bold text-gray-900" x-text="profile.display_name || 'User Name'"></h2>
+                </div>
+
+                <!-- MP Progress Section -->
+                <div class="mt-2">
                     <div class="flex justify-between text-xs font-medium text-gray-500 mb-2">
-                        <span>MP Progress</span>
-                        <span
-                            x-text="profile.total_mp?.toLocaleString() + ' / ' + (profile.next_rank_mp?.toLocaleString() || 'MAX')"></span>
+                        <span class="flex items-center gap-1"><i class="fa-solid fa-star text-yellow-400"></i> MP
+                            Progress</span>
+                        <div class="flex items-center gap-1">
+                            <span class="font-bold text-gray-900"
+                                x-text="(profile.total_mp ?? 0).toLocaleString()"></span>
+                            <span class="text-gray-300">/</span>
+                            <span class="text-gray-500"
+                                x-text="(profile.next_rank_mp ?? 0).toLocaleString() || 'MAX'"></span>
+                        </div>
                     </div>
-                    <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden border">
+                    <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden border border-gray-100">
                         <div class="h-full bg-blue-500 transition-all duration-1000"
                             :style="'width: ' + expPercentage + '%'"></div>
                     </div>
