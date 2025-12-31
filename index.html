@@ -73,34 +73,46 @@
                 100% { transform: translate3d(-100%, 0, 0); }
             }
             [x-cloak] { display: none !important; }
+
+            .card {
+              @apply bg-white rounded-lg border p-4 shadow-sm;
+            }
         }
     </style>
 </head>
 
-<body class="bg-slate-50 min-h-screen text-slate-900 font-sans pb-24" x-data="dailyApp()" x-init="init()">
+<body class="bg-gray-100 min-h-screen" x-data="dailyApp()" x-init="init()">
 
-    <!-- Top Header -->
-    <header class="premium-gradient text-white px-6 pt-8 pb-16 rounded-b-[3rem] shadow-2xl relative overflow-hidden">
-        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 left-0 -ml-10 -mb-10 w-48 h-48 bg-blue-400/20 rounded-full blur-2xl"></div>
-
-        <div class="relative z-10 flex justify-between items-start">
-            <div>
-                <h1 class="text-xs font-bold uppercase tracking-[0.2em] opacity-80 mb-1">ยินดีต้อนรับ</h1>
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl font-black" x-text="profile.display_name || 'Loading...'"></span>
-                    <i class="fa-solid fa-circle-check text-blue-300 text-sm"></i>
-                </div>
-                <p class="text-[10px] opacity-70 mt-1 font-medium" x-text="profile.email"></p>
+    <header class="border-b bg-white">
+      <div class="container mx-auto px-4 py-4">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+          <div class="flex justify-between items-center">
+            <div class="flex flex-col">
+              <h1 class="text-2xl font-bold text-gray-900">
+                <i class="fa-solid fa-chart-line mr-2"></i>Daily<span class="font-light">Stat</span>
+              </h1>
+              <p class="text-sm text-gray-500 md:block hidden mt-1">RSU Dental</p>
             </div>
-            <div class="text-right">
-                <div :class="'rank-badge ' + (rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500')">
-                    <span x-text="rankConfig[profile.current_class]?.emoji || '⚪'"></span>
-                    <span x-text="profile.current_class || 'UNRANKED'" class="ml-1"></span>
-                </div>
-                <div class="mt-2 text-[10px] font-bold opacity-80" x-text="profile.current_title || 'Novice'"></div>
+            <div class="text-right text-xs text-gray-500 md:hidden">
+              <div>RSU Dental</div>
             </div>
+          </div>
+          <div class="flex flex-col items-start md:items-end mt-2 md:mt-0">
+            <div class="md:border-t-0 pt-2 md:pt-0 w-full">
+              <div class="flex items-center text-gray-400 flex-wrap justify-start md:justify-end gap-2 text-left md:text-right">
+                <div class="avatar-circle">
+                  <span x-text="profile.display_name?.charAt(0) || '?'"></span>
+                </div>
+                <div class="flex gap-2">
+                  <div class="help-icon" id="helpButton">
+                    <i class="fa-solid fa-circle-question"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </header>
 
     <!-- Main Content Container -->
