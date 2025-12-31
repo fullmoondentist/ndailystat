@@ -1,17 +1,14 @@
 <!DOCTYPE html>
-<html lang="th">
+<html>
 
 <head>
+    <base target="_top">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Daily Stat - RSU Dental</title>
-
-    <!-- Libraries -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css" rel="stylesheet">
-
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -35,613 +32,169 @@
             },
         }
     </script>
-
     <style type="text/tailwindcss">
         @layer components {
-        .checkbox {
-          @apply h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500 checked:bg-red-600 checked:hover:bg-red-600;
-        }
-        
-        .badge {
-          @apply inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-medium ring-1 ring-inset;
-        }
-        
-        .avatar-circle {
-          @apply rounded-full flex items-center justify-center text-white shadow-sm font-light;
-        }
-        
-        .badge-morning {
-          @apply bg-blue-50 text-blue-700 ring-blue-600/20;
-        }
-        
-        .badge-afternoon {
-          @apply bg-amber-50 text-amber-700 ring-amber-600/20;
-        }
-        
-        .badge-evening {
-          @apply bg-purple-50 text-purple-700 ring-purple-600/20;
-        }
-        
-        .count-badge {
-          @apply bg-gray-50 text-gray-700 ring-gray-600/20;
-        }
-        
-        .badge-work {
-          @apply bg-gray-100 text-gray-700 ring-gray-600/20;
-        }
-        
-        .badge-green {
-          @apply bg-green-50 text-green-700 ring-green-600/20;
-        }
-        
-        .badge-pink {
-          @apply bg-pink-50 text-pink-700 ring-pink-600/20;
-        }
-        
-        .badge-indigo {
-          @apply bg-indigo-50 text-indigo-700 ring-indigo-600/20;
-        }
-        
-        .badge-yellow {
-          @apply bg-yellow-50 text-yellow-700 ring-yellow-600/20;
-        }
-        
-        .badge-red {
-          @apply bg-red-50 text-red-700 ring-red-600/20;
-        }
-        
-        .badge-blue {
-          @apply bg-blue-50 text-blue-700 ring-blue-600/20;
-        }
-        
-        .badge-purple {
-          @apply bg-purple-50 text-purple-700 ring-purple-600/20;
-        }
-        
-        .badge-teal {
-          @apply bg-teal-50 text-teal-700 ring-teal-600/20;
-        }
-        
-        .spinner {
-          @apply inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em];
-        }
-        
-        .spinner-sm {
-          @apply h-3 w-3;
-        }
-        
-        .spinner-lg {
-          @apply h-8 w-8;
-        }
-        
-        .toast {
-          @apply fixed bottom-4 right-4 z-50 rounded-lg bg-white px-6 py-4 shadow-lg ring-1 ring-black/5;
-        }
-        
-        .toast-success {
-          @apply bg-green-50 text-green-800 ring-green-500/10;
-        }
-        
-        .badge-stat {
-          @apply inline-flex items-center text-xs text-gray-500 border border-gray-200 rounded-full px-2 py-1 bg-transparent;
-        }
-        
-        .badge-count {
-          @apply absolute -top-1.5 -right-1.5 flex items-center justify-center rounded-full bg-red-500 text-white text-[8px] min-w-3.5 h-3.5 font-medium p-0.5 leading-none;
-        }
-        
-        .badge-active .badge-count {
-          @apply bg-gray-700 text-white;
-        }
-        
-        .score-sum {
-          @apply text-xs text-gray-500 font-normal ml-1;
-        }
-        
-        .red-yellow-sum {
-          @apply text-xs text-gray-500 ml-1 flex items-center;
-        }
-        
-        .red-dot {
-          @apply w-2 h-2 rounded-full bg-red-500 mr-0.5;
-        }
-        
-        .yellow-dot {
-          @apply w-2 h-2 rounded-full bg-yellow-500 mr-0.5;
-        }
-        
-        .dot-loading {
-          display: inline-block;
-          position: relative;
-          width: 20px;
-          text-align: left;
-        }
-        
-        .dot-loading:after {
-          content: '.';
-          animation: dots 1.5s steps(3, end) infinite;
-        }
-        
-        @keyframes dots {
-          0%, 20% { content: '.'; }
-          40%, 60% { content: '..'; }
-          80%, 100% { content: '...'; }
-        }
-        
-        .help-icon {
-          @apply ml-1 text-gray-400 hover:text-gray-600 cursor-pointer transition-colors;
-        }
-        
-        .help-icon-pulse {
-          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-          @apply text-blue-500;
-        }
-        
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-            transform: scale(1);
-          }
-          50% {
-            opacity: .8;
-            transform: scale(1.1);
-          }
-        }
-        
-        .glass-card {
-            @apply bg-white rounded-lg border shadow-sm;
-        }
-        
-        .remover-gradient {
-          @apply bg-clip-text text-transparent bg-gradient-to-r from-gray-500 to-gray-200 inline-block font-light;
-        }
-        
-        .premium-gradient {
-            @apply bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-700;
-        }
+            .checkbox {
+                @apply h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500 checked:bg-red-600 checked:hover:bg-red-600;
+            }
 
-        .ticker-wrap {
-            @apply w-full overflow-hidden bg-gray-900/5 py-2;
-        }
-        .ticker-move {
-            display: inline-block;
-            white-space: nowrap;
-            padding-right: 100%;
-            animation: ticker 30s linear infinite;
-        }
-        @keyframes ticker {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-100%, 0, 0); }
-        }
+            .badge {
+                @apply inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-medium ring-1 ring-inset;
+            }
 
-        .info-title {
-          @apply text-sm font-bold text-gray-700 mb-2;
+            .avatar-circle {
+                @apply w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm;
+            }
+
+            .spinner {
+                @apply inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em];
+            }
+
+            .help-icon {
+                @apply ml-1 text-gray-400 hover:text-gray-600 cursor-pointer transition-colors;
+            }
+
+            .help-icon-pulse {
+                animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            }
+
+            @keyframes pulse {
+                0%, 100% { opacity: 1; transform: scale(1); }
+                50% { opacity: .8; transform: scale(1.1); }
+            }
+
+            .modal-backdrop {
+                @apply fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] transition-opacity;
+            }
+
+            .modal-bottom-sheet {
+                @apply fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl z-[101] transform transition-transform duration-300 ease-in-out;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            [x-cloak] { display: none !important; }
         }
-        
-        .info-content {
-          @apply text-xs text-gray-600;
-        }
-        
-        [x-cloak] { display: none !important; }
-      }
     </style>
 </head>
 
-<body class="bg-[#F8F9FD] min-h-screen font-sans pb-12" x-data="dailyApp()" x-init="init()">
-
-    <!-- Top Ticker (Fixed/Top) -->
-    <div class="ticker-wrap border-b border-gray-100/50 bg-white/80 backdrop-blur-md sticky top-0 z-50"
-        x-show="system.ticker_messages?.length > 0">
-        <div class="ticker-move text-xs font-bold text-slate-600">
-            <template x-for="msg in system.ticker_messages" :key="msg">
-                <span class="mx-6 inline-flex items-center">
-                    <span class="w-1.5 h-1.5 rounded-full bg-orange-500 mr-2"></span>
-                    <span x-text="msg"></span>
-                </span>
-            </template>
-        </div>
-    </div>
-
-    <!-- Minimal Header / Greeting -->
-    <div class="container mx-auto px-4 pt-6 pb-4 max-w-md lg:max-w-[75%]">
-        <div class="flex items-center justify-between">
-            <div class="animate-fade-in-down">
-                <div class="text-sm text-slate-500 font-medium mb-0.5">👋 สวัสดีครับ,</div>
-                <h1 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                    <div class="flex items-baseline gap-2">
-                        <span x-text="profile.display_name || 'อาจารย์'"
-                            class="bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-600"></span>
-                        <span
-                            class="text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100"
-                            x-text="profile.department"></span>
+<body class="bg-gray-100 min-h-screen text-slate-900 font-sans" x-data="dailyApp()" x-init="init()">
+    <!-- Header -->
+    <header class="border-b bg-white sticky top-0 z-[60]">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                <div class="flex justify-between items-center">
+                    <div class="flex flex-col">
+                        <h1 class="text-2xl font-bold text-gray-900 tracking-tight">
+                            <i class="fa-solid fa-person-chalkboard text-blue-600 mr-2"></i>Case<span
+                                class="font-light">Present</span>
+                        </h1>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 md:block hidden mt-1">
+                            Dental Medicine RSU</p>
                     </div>
-                </h1>
-            </div>
-            <div class="bg-white p-2 rounded-full shadow-sm border border-slate-100 relative">
-                <i class="fa-regular fa-bell text-slate-400"></i>
-                <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+                    <div class="text-right text-[10px] font-bold uppercase tracking-widest text-slate-400 md:hidden">
+                        <div>Dental Medicine RSU</div>
+                    </div>
+                </div>
+                <!-- User Profile Header Section -->
+                <div class="flex flex-col items-start md:items-end mt-2 md:mt-0">
+                    <div class="flex items-center gap-3">
+                        <div class="flex flex-col items-end">
+                            <div class="text-xs font-bold text-slate-700" x-text="profile.display_name || 'Loading...'">
+                            </div>
+                            <div class="text-[9px] font-black uppercase tracking-widest text-blue-600 px-1.5 py-0.5 bg-blue-50 rounded"
+                                x-text="profile.department || '---'"></div>
+                        </div>
+                        <div class="avatar-circle"
+                            :class="profile.class_color_css ? ('bg-gradient-to-br ' + profile.class_color_css) : 'bg-slate-300'">
+                            <span x-text="getInitials(profile.email || '')"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- Main Content Container -->
-    <main class="px-4 pb-20">
-        <div class="container mx-auto max-w-md lg:max-w-[75%] space-y-6">
+    <main class="px-4 py-6">
+        <div class="container mx-auto w-full lg:max-w-[75%] space-y-6">
 
-            <!-- Component: Name Card (DailyRemover Style) -->
-            <div class="rounded-2xl p-6 text-white shadow-xl relative overflow-hidden transition-all duration-300 transform hover:scale-[1.01]"
-                :class="'bg-gradient-to-br ' + (profile.class_color_css || 'from-blue-600 via-indigo-600 to-violet-700')">
-
-                <div class="flex justify-between items-start mb-4">
-                    <!-- Left: Display Name -->
-                    <div class="flex flex-col pt-2">
-                        <h2 class="text-3xl font-extrabold tracking-tight drop-shadow-md" x-text="profile.display_name">
+            <!-- Component: Name Card (User Requested Style) -->
+            <div id="nameCard"
+                class="bg-white rounded-2xl border shadow-sm p-6 relative overflow-hidden transition-all duration-300"
+                x-cloak x-show="!isLoading">
+                <div class="flex justify-between items-start">
+                    <!-- Left: Profile Info -->
+                    <div class="flex flex-col">
+                        <div class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1">User Profile
+                        </div>
+                        <h2 class="text-3xl font-black text-slate-900 tracking-tight" x-text="profile.display_name">
                         </h2>
+                        <div class="text-xs font-bold text-blue-600 mt-1 flex items-center gap-1.5">
+                            <i class="fa-solid fa-building-columns"></i>
+                            <span x-text="profile.department"></span>
+                        </div>
                     </div>
 
                     <!-- Right: Rank Info -->
                     <div class="text-right flex flex-col items-end">
-                        <div class="text-[2.5rem] font-black leading-none mb-1 drop-shadow-lg uppercase tracking-tight"
+                        <div class="text-[2.5rem] font-black leading-none tracking-tighter"
+                            :class="profile.class_color_css ? 'bg-clip-text text-transparent bg-gradient-to-br ' + profile.class_color_css : 'text-slate-800'"
                             x-text="profile.current_class"></div>
                         <div
-                            class="flex items-center gap-1.5 text-[10px] font-black bg-black/20 backdrop-blur-md px-2.5 py-1 rounded-md mt-1 border border-white/10 uppercase tracking-widest text-blue-50">
-                            <i class="fa-solid fa-bookmark text-[10px] text-yellow-300"></i>
+                            class="flex items-center gap-1.5 text-[10px] font-black bg-slate-900 text-white px-3 py-1.5 rounded-full mt-2 uppercase tracking-widest">
+                            <i class="fa-solid fa-bookmark text-yellow-400"></i>
                             <span x-text="profile.current_title"></span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Bottom: MP Progress -->
-                <div class="mt-8 space-y-2">
+                <!-- MP Progress Bar -->
+                <div class="mt-8 pt-6 border-t border-slate-50">
                     <div
-                        class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest opacity-90">
-                        <span>MP Progress</span>
-                        <div class="flex items-center gap-1.5 font-bold">
-                            <span class="text-xs" x-text="profile.total_mp?.toLocaleString()"></span>
-                            <span class="opacity-50">/</span>
-                            <span class="text-xs" x-text="profile.next_rank_mp?.toLocaleString()"></span>
+                        class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2.5">
+                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-star text-yellow-500"></i> MP
+                            Progress</span>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-xs text-slate-900" x-text="profile.total_mp?.toLocaleString()"></span>
+                            <span class="text-slate-300 font-normal">/</span>
+                            <span class="text-xs text-slate-400"
+                                x-text="profile.next_rank_mp?.toLocaleString() || 'MAX'"></span>
                         </div>
                     </div>
-                    <!-- Progress Bar -->
-                    <div class="h-2 w-full bg-black/20 rounded-full overflow-hidden shadow-inner">
-                        <div class="h-full bg-white rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+                    <!-- The Bar -->
+                    <div class="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner flex">
+                        <div class="h-full rounded-full transition-all duration-1000 ease-out"
+                            :class="profile.class_color_css ? 'bg-gradient-to-r ' + profile.class_color_css : 'bg-blue-600'"
                             :style="'width: ' + expPercentage + '%'"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Stats Grid (New Layout) -->
-            <div class="flex items-end gap-2 mb-2 px-1">
-                <h3 class="text-sm font-bold text-slate-700">📊 สถิติวันนี้ (Today's Stats)</h3>
-            </div>
-            <div class="grid grid-cols-3 gap-3">
-                <!-- Streak -->
-                <div
-                    class="bg-white rounded-xl p-3 flex flex-col items-center justify-center text-center shadow-sm border border-slate-100">
-                    <div class="mb-1 text-lg">🔥</div>
-                    <div class="text-xl font-bold text-slate-800" x-text="profile.current_streak || 0"></div>
-                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Streak</div>
-                </div>
-                <!-- Accuracy -->
-                <div
-                    class="bg-white rounded-xl p-3 flex flex-col items-center justify-center text-center shadow-sm border border-slate-100">
-                    <div class="mb-1 text-lg">🎯</div>
-                    <div class="text-xl font-bold text-slate-800" x-text="(profile.recent_acc || 0) + '%'"></div>
-                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Accuracy</div>
-                </div>
-                <!-- Class -->
-                <div
-                    class="bg-white rounded-xl p-3 flex flex-col items-center justify-center text-center shadow-sm border border-slate-100">
-                    <div class="mb-1 text-lg">💎</div>
-                    <div class="text-xl font-bold text-slate-800 truncate w-full px-1"
-                        x-text="(profile.current_class || 'NONE').split(' ')[0]"></div>
-                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Class</div>
-                </div>
-            </div>
-
-            <!-- Rewards Box (Clean) -->
-            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100/60">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-sm font-bold text-slate-700">🎁 กล่องของรางวัล (Reward Box)</h3>
-                    <span class="text-xs font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-md"
-                        x-text="profile.rewards?.length + ' ชิ้น'"></span>
-                </div>
-
-                <div class="bg-slate-50/50 rounded-xl p-4 border border-dashed border-slate-200">
-                    <div class="flex flex-wrap gap-3 items-center justify-start">
-                        <template x-for="reward in groupedRewards" :key="reward.name">
-                            <div class="relative group cursor-help">
-                                <span class="text-3xl filter drop-shadow-sm transition-transform hover:scale-110"
-                                    x-text="getRewardEmoji(reward.name)"></span>
-                                <span
-                                    class="absolute -top-2 -right-2 bg-slate-800 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-sm"
-                                    x-show="reward.count > 1" x-text="reward.count"></span>
-                            </div>
-                        </template>
-                        <div x-show="!profile.rewards || profile.rewards.length === 0"
-                            class="text-xs text-slate-400 italic w-full text-center py-2">
-                            สะสม MP เพื่อรับของรางวัล...
-                        </div>
-                    </div>
-                    <div class="mt-3 text-[10px] text-slate-400 text-center font-medium">
-                        ได้จากวันที่ทำคะแนน 100% Perfect
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Actions -->
-            <div class="grid grid-cols-2 gap-3">
-                <button
-                    class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center justify-center gap-2 active:scale-95 transition-transform hover:bg-slate-50 text-slate-700">
-                    <i class="fa-solid fa-stethoscope text-blue-500"></i>
-                    <span class="text-sm font-bold">ตรวจงาน</span>
-                </button>
-                <a href="#history-section"
-                    @click.prevent="document.getElementById('history-section').scrollIntoView({behavior: 'smooth'})"
-                    class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center justify-center gap-2 active:scale-95 transition-transform hover:bg-slate-50 text-slate-700">
-                    <i class="fa-solid fa-clock-rotate-left text-orange-500"></i>
-                    <span class="text-sm font-bold">ประวัติวันนี้</span>
-                </a>
-            </div>
-
-            <!-- Department Overview (Preview) -->
-            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100/60">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-sm font-bold text-slate-700">🏢 Department Overview</h3>
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Preview</span>
-                </div>
-                <div class="space-y-3">
-                    <!-- Loop simplified standard stats or manual top 3 -->
-                    <template x-for="(stat, dept) in system.dept_stats" :key="dept">
-                        <div x-show="Object.keys(system.dept_stats).indexOf(dept) < 3" class="flex items-center gap-3">
-                            <div class="w-6 text-[10px] font-bold text-slate-400 text-center"
-                                x-text="['🥇','🥈','🥉'][Object.keys(system.dept_stats).indexOf(dept)]"></div>
-                            <div class="flex-1">
-                                <div class="flex justify-between text-xs mb-1">
-                                    <span class="font-bold text-slate-700" x-text="dept"></span>
-                                    <span class="font-bold"
-                                        :class="stat.on_time_rate >= 80 ? 'text-green-600' : 'text-slate-500'"
-                                        x-text="stat.on_time_rate + '%'"></span>
-                                </div>
-                                <div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                                    <div class="h-full rounded-full"
-                                        :class="dept === profile.department ? 'bg-blue-500' : (stat.on_time_rate >= 80 ? 'bg-green-400' : 'bg-slate-300')"
-                                        :style="'width: ' + stat.on_time_rate + '%'"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                    <div class="pt-2 text-center">
-                        <button class="text-xs font-bold text-blue-500 hover:text-blue-600 transition-colors">View Full
-                            Leaderboard</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Department Leaderboard (Full View) -->
-            <div id="dept-leaderboard-section"
-                class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100/60 scroll-mt-20">
-                <div
-                    class="bg-gradient-to-r from-slate-50 to-white p-3 rounded-xl border border-slate-100 mb-4 text-center">
-                    <h3 class="text-sm font-bold text-slate-700">🏢 ภาพรวมความแม่นยำ (วันนี้)</h3>
-                    <div class="text-[10px] text-slate-400">Department Leaderboard</div>
-                </div>
-
-                <div class="space-y-6">
-                    <template x-for="(stat, dept) in system.dept_stats" :key="dept">
-                        <div>
-                            <div class="flex items-center justify-between mb-1">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-lg"
-                                        x-text="['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣'][Object.keys(system.dept_stats).indexOf(dept)] || (Object.keys(system.dept_stats).indexOf(dept)+1) + '.'"></span>
-                                    <span class="text-sm font-bold text-slate-700" x-text="dept"></span>
-                                    <span x-show="dept === profile.department"
-                                        class="text-[10px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded font-bold">You</span>
-                                </div>
-                                <div class="text-xs font-bold"
-                                    x-text="stat.on_time_rate + '% (' + (stat.on_time_rate >= 80 ? 'Excellent' : (stat.on_time_rate >= 50 ? 'Good' : 'Need Help')) + ')'"
-                                    :class="stat.on_time_rate >= 80 ? 'text-green-600' : (stat.on_time_rate >= 50 ? 'text-yellow-600' : 'text-red-500')">
-                                </div>
-                            </div>
-                            <div class="w-full h-4 bg-slate-100 rounded-sm overflow-hidden flex">
-                                <!-- Bar segments mimicking mockup -->
-                                <div class="h-full"
-                                    :class="stat.on_time_rate >= 80 ? 'bg-blue-500' : (stat.on_time_rate >= 60 ? 'bg-green-500' : (stat.on_time_rate >= 40 ? 'bg-yellow-400' : 'bg-red-400'))"
-                                    :style="'width: ' + stat.on_time_rate + '%'"></div>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-
-                <!-- Insight Box -->
-                <div class="mt-6 bg-yellow-50/50 border border-yellow-100 rounded-xl p-4 relative">
-                    <div class="absolute -top-3 left-4 bg-white px-2 text-lg">💡</div>
-                    <div class="mt-2 text-xs text-slate-600 italic">
-                        "สาขาที่ทำผลงานได้ดีที่สุดวันนี้คือ <span class="font-bold text-slate-800"
-                            x-text="Object.keys(system.dept_stats)[0]"></span> สุดยอดครับ! 🦷"
-                    </div>
-                </div>
-            </div>
-
-            <!-- History / Logs -->
-            <div id="history-section"
-                class="bg-white rounded-2xl shadow-sm border border-slate-100/60 overflow-hidden scroll-mt-24">
-                <div
-                    class="bg-slate-50 border-b border-slate-100 p-4 sticky top-14 z-10 flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-clock-rotate-left text-slate-400"></i>
-                        <h3 class="text-sm font-bold text-slate-700">ประวัติวันนี้ (Today)</h3>
-                    </div>
-                </div>
-
-                <div class="divide-y divide-slate-50">
-                    <template x-for="item in history" :key="item.date + item.session">
-                        <div class="p-4 bg-white">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-[10px] font-bold text-slate-400"
-                                    x-text="'รายการที่ ' + item.session + ': ' + item.time + ' น.'"></span>
-                                <span class="text-xs font-bold text-slate-800" x-text="'นศ. ' + item.student"></span>
-                            </div>
-
-                            <!-- Card Content based on Status -->
-                            <div class="rounded-lg p-3 border-l-4"
-                                :class="item.status === 'perfect' ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'">
-                                <div class="flex justify-between items-center mb-1">
-                                    <div class="flex items-center gap-2">
-                                        <i class="fa-solid"
-                                            :class="item.status === 'perfect' ? 'fa-circle-check text-green-500' : 'fa-circle-exclamation text-red-500'"></i>
-                                        <span class="text-xs font-bold"
-                                            :class="item.status === 'perfect' ? 'text-green-700' : 'text-red-700'"
-                                            x-text="item.status === 'perfect' ? 'PERFECT (+100 คะแนน)' : 'OVERDUE (0 คะแนน)'"></span>
-                                    </div>
-                                    <div class="text-lg" x-text="item.status === 'perfect' ? '✅' : '❌'"></div>
-                                </div>
-                                <div class="text-[10px]"
-                                    :class="item.status === 'perfect' ? 'text-green-600' : 'text-red-600'">
-                                    <div x-show="item.status === 'perfect'" class="flex items-center gap-1">
-                                        ⏱️ ส่งตรงเวลา (Delta <span x-text="Math.abs(item.delta)"></span> min)
-                                    </div>
-                                    <div x-show="item.status !== 'perfect'">
-                                        🕒 ล่าช้า: <span x-text="Math.floor(Math.abs(item.delta)/60) + ' ชม.'"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-
-                <div x-show="historyHasMore" class="p-4 bg-slate-50">
-                    <button @click="loadMoreHistory()" :disabled="isLoadingHistory"
-                        class="w-full py-3 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-500 hover:text-blue-500 transition-colors shadow-sm">
-                        โหลดเพิ่มเติม...
-                    </button>
-                </div>
+            <!-- Loading State -->
+            <div x-show="isLoading"
+                class="flex flex-col items-center justify-center p-20 bg-white rounded-2xl border shadow-sm">
+                <div class="spinner h-8 w-8 text-blue-600 mb-4"></div>
+                <div class="text-sm font-bold text-slate-500 uppercase tracking-widest">Loading Data...</div>
             </div>
 
         </div>
     </main>
 
-
-    <!-- Rankup Celebration Modal (Screen 1) -->
-    <div x-show="showRankup" x-cloak
-        class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm"
-        x-transition.opacity>
-        <div class="bg-white rounded-2xl w-full max-w-sm p-6 text-center relative overflow-hidden shadow-2xl"
-            x-transition:enter="transition ease-out duration-500 scale-90 opacity-0"
-            x-transition:enter-start="scale-90 opacity-0" x-transition:enter-end="scale-100 opacity-100">
-
-            <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500">
-            </div>
-
-            <div class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">✨ CONGRATULATIONS ✨</div>
-            <div class="text-4xl mb-4 animate-bounce">🎉</div>
-
-            <h2 class="text-lg font-bold text-slate-600 mb-2">คุณได้รับการเลื่อนขั้นเป็น:</h2>
-
-            <div
-                :class="'inline-flex items-center px-5 py-2 rounded-full text-white font-bold shadow-lg mb-6 bg-gradient-to-r ' + (rankConfig[profile.current_class]?.color || 'from-blue-600 to-indigo-600')">
-                <span x-text="rankConfig[profile.current_class]?.emoji || '🏆'"></span>
-                <span x-text="profile.current_class" class="ml-2 uppercase tracking-widest text-lg"></span>
-            </div>
-
-            <div class="border-t border-slate-100 py-4 mb-4">
-                <h3 class="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wider">📊 สถิติใหม่ของคุณ</h3>
-                <div class="space-y-2 text-sm text-slate-700">
-                    <div class="flex justify-between px-4">
-                        <span class="text-slate-500">Total MP:</span>
-                        <span class="font-bold" x-text="profile.total_mp?.toLocaleString() || 0"></span>
-                    </div>
-                    <div class="flex justify-between px-4">
-                        <span class="text-slate-500">Bonus:</span>
-                        <span class="font-bold text-green-600">x1.2 Multiplier</span>
-                    </div>
-                    <div class="flex justify-between px-4">
-                        <span class="text-slate-500">Unlock:</span>
-                        <span class="font-bold text-orange-500">กรอบโปรไฟล์ทอง ⭐</span>
-                    </div>
-                </div>
-            </div>
-
-            <button @click="closeRankup()"
-                class="w-full py-3.5 bg-slate-800 text-white font-bold rounded-xl shadow-lg active:scale-95 transition-transform hover:bg-slate-900">
-                รับทราบและลุยต่อ! 🚀
-            </button>
-        </div>
-    </div>
-
-    <!-- Loading Overlay -->
-    <div x-show="isLoading" x-cloak
-        class="fixed inset-0 z-[200] bg-white flex flex-col items-center justify-center space-y-6">
-        <div class="spinner spinner-lg text-blue-600"></div>
-        <div class="text-xs font-bold text-gray-400 tracking-wider uppercase">NongDaily Stat</div>
-    </div>
-
     <script>
-        const WEB_APP_URL = 'https://script.google.com/a/macros/rsu.ac.th/s/AKfycbxWTt29Ry2K8upGAFQV1rnxFnDHB9IUb4ahim3tZXFVvOUZv3jqxrrQnZ61NbTz6CdmHA/exec'; // REPLACE WITH ACTUAL URL
+        const WEB_APP_URL = "https://script.google.com/a/macros/rsu.ac.th/s/AKfycbyk0TzBIdwD_7XjO6LgV79M_nQW_z1G0u_h_V6v6Z_z/exec"; // PLACEHOLDER - ScriptApp.getService().getUrl() actually used in template logic usually
 
         function dailyApp() {
             return {
-                isLoading: true,
-                showRankup: false,
                 profile: {},
-                userId: null,
                 system: {},
                 leaderboard: [],
-                recentScores: [],
-                deptChart: null,
-
-                // History state
-                history: [],
-                historyPage: 1,
-                historyTotal: 0,
-                historyHasMore: false,
-                isLoadingHistory: false,
-
-                statusColors: {
-                    'perfect': 'bg-gradient-to-r from-cyan-500 to-blue-500',
-                    'good': 'bg-gradient-to-r from-emerald-500 to-teal-500',
-                    'fair': 'bg-gradient-to-r from-amber-500 to-orange-500',
-                    'overdue': 'bg-gradient-to-r from-rose-500 to-pink-500',
-                    'error': 'bg-gray-400'
-                },
-
-                rankConfig: {
-                    'DIAMOND': { emoji: '💎', color: 'from-cyan-400 to-blue-500' },
-                    'PLATINUM': { emoji: '♦️', color: 'from-emerald-400 to-teal-500' },
-                    'GOLD': { emoji: '🥇', color: 'from-yellow-400 to-orange-500' },
-                    'SILVER': { emoji: '🥈', color: 'from-slate-300 to-slate-400' },
-                    'BRONZE': { emoji: '🥉', color: 'from-orange-700 to-amber-900' },
-                    'UNRANKED': { emoji: '⚪', color: 'from-gray-400 to-gray-500' }
-                },
-
-                get expPercentage() {
-                    if (!this.profile.total_mp || !this.profile.next_rank_mp) return 0;
-                    const current = this.profile.total_mp;
-                    const next = this.profile.next_rank_mp;
-                    if (next <= current) return 100;
-                    return Math.min(100, Math.round((current / next) * 100));
-                },
-
-                get groupedRewards() {
-                    if (!this.profile.rewards) return [];
-                    const counts = {};
-                    this.profile.rewards.forEach(r => {
-                        counts[r] = (counts[r] || 0) + 1;
-                    });
-                    return Object.entries(counts).map(([name, count]) => ({ name, count }));
-                },
-
-                getRewardEmoji(name) {
-                    const map = {
-                        'Rose': '🌹',
-                        'Heart': '❤️',
-                        'Diamond': '💎'
-                    };
-                    return map[name] || '🎁';
-                },
+                isLoading: true,
+                userId: null,
 
                 async init() {
+                    console.log("Initializing App...");
                     try {
+                        // LIFF Initialization
                         await liff.init({ liffId: '2008789653-GNraHzM6' });
                         if (!liff.isLoggedIn()) {
                             liff.login();
@@ -653,145 +206,59 @@
                         let userId = null;
 
                         if (!email) {
-                            console.log('Email not found in ID Token, falling back to liff.getProfile()');
-                            const profile = await liff.getProfile();
-                            userId = profile.userId;
+                            const p = await liff.getProfile();
+                            userId = p.userId;
                         }
 
-                        console.log('Auth Identifier:', email || userId);
-                        this.userId = userId; // Store for global use
-
-                        await Promise.all([
-                            this.fetchData(email || undefined, userId || undefined),
-                            this.fetchHistory(email || undefined, userId || undefined)
-                        ]);
-
+                        this.userId = userId;
+                        await this.fetchData(email, userId);
                         this.isLoading = false;
-
-                        // Check for rank up celebration
-                        if (this.profile.is_rank_up) {
-                            setTimeout(() => this.showRankup = true, 500);
-                        }
-
-                        // Chart render removed
-
                     } catch (err) {
-                        console.error('Initialization failed', err);
-                        alert('Initialization Error: ' + err.message);
+                        console.error("Init failed", err);
                         this.isLoading = false;
                     }
                 },
 
                 async fetchData(email, userId) {
                     try {
-                        const [profileRes, leaderboardRes, systemRes] = await Promise.all([
+                        const [profileRes, systemRes, leaderboardRes] = await Promise.all([
                             this.callAPI('getProfile', { email, userId }),
-                            this.callAPI('getLeaderboard', { limit: 20 }),
-                            this.callAPI('getSystemStatus')
+                            this.callAPI('getSystemStatus'),
+                            this.callAPI('getLeaderboard', { limit: 10 })
                         ]);
-
-                        console.log('Profile Response:', profileRes);
 
                         if (profileRes.success) {
                             this.profile = profileRes.profile;
-                            // Also ensure userId is stored if it came back from backend
-                            if (!this.userId && this.profile.userId) this.userId = this.profile.userId;
-
-                            this.recentScores = JSON.parse(this.profile.recent_scores_json || '[]');
-                        } else {
-                            console.warn('Profile fetch failed:', profileRes);
+                            if (this.profile.userId) this.userId = this.profile.userId;
                         }
-
-                        if (leaderboardRes.success) {
-                            this.leaderboard = leaderboardRes.leaderboard;
-                        }
-
-                        if (systemRes.success) {
-                            this.system = systemRes.system;
-                        }
+                        if (systemRes.success) this.system = systemRes.system;
+                        if (leaderboardRes.success) this.leaderboard = leaderboardRes.leaderboard;
                     } catch (err) {
-                        console.error('Fetch data failed', err);
+                        console.error("Fetch failed", err);
                     }
                 },
 
                 async callAPI(action, params = {}) {
-                    try {
-                        // Use userId from state if not provided and profile not yet set
-                        const activeUserId = params.userId || this.userId || (this.profile && this.profile.userId);
-                        if (activeUserId && !params.userId) {
-                            params.userId = activeUserId;
-                        }
-
-                        const query = new URLSearchParams({ action, ...params }).toString();
-                        const response = await fetch(`${WEB_APP_URL}?${query}`);
-                        return await response.json();
-                    } catch (err) {
-                        console.error(`API Call failed: ${action}`, err);
-                        return { success: false, message: err.message };
-                    }
+                    const activeUserId = params.userId || this.userId;
+                    const query = new URLSearchParams({ action, ...params, userId: activeUserId || '' }).toString();
+                    const response = await fetch(`${WEB_APP_URL}?${query}`);
+                    return await response.json();
                 },
 
-                async fetchHistory(email, userId, page = 1) {
-                    this.isLoadingHistory = true;
-                    try {
-                        const res = await this.callAPI('getHistory', { email, userId, page, limit: 20 });
-                        if (res.success) {
-                            if (page === 1) this.history = [];
-                            this.history = [...this.history, ...res.data.history];
-                            this.historyTotal = res.data.total;
-                            this.historyHasMore = res.data.hasMore;
-                            this.historyPage = page;
-                        }
-                    } catch (err) {
-                        console.error('History fetch failed', err);
-                    } finally {
-                        this.isLoadingHistory = false;
-                    }
-                },
-
-                async loadMoreHistory() {
-                    if (this.isLoadingHistory || !this.historyHasMore) return;
-                    await this.fetchHistory(this.profile.email, this.userId, this.historyPage + 1);
-                },
-
-                formatThaiDate(dateStr) {
-                    if (!dateStr) return '---';
-                    const date = new Date(dateStr);
-                    const day = date.getDate();
-                    const monthNames = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
-                    const month = monthNames[date.getMonth()];
-                    const thaiYear = ((date.getFullYear() + 543) % 100).toString().padStart(2, '0');
-                    return `${day} ${month} ${thaiYear}`;
+                get expPercentage() {
+                    if (!this.profile.total_mp || !this.profile.next_rank_mp) return 0;
+                    return Math.min(100, Math.round((this.profile.total_mp / this.profile.next_rank_mp) * 100));
                 },
 
                 getInitials(email) {
-                    if (!email) return '??';
-                    // ตัดส่วน @rsu.ac.th ออก
-                    const username = email.split('@')[0];
-
-                    // กรณีที่ 1: มีจุด (.) ในชื่อ
-                    if (username.includes('.')) {
-                        const parts = username.split('.');
-                        return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
+                    if (!email) return '..';
+                    const name = email.split('@')[0];
+                    if (name.includes('.')) {
+                        const parts = name.split('.');
+                        return (parts[0][0] + parts[1][0]).toUpperCase();
                     }
-
-                    // กรณีที่ 2: ไม่มีจุด แต่มีสระ
-                    const vowels = ['a', 'e', 'i', 'o', 'u'];
-                    for (let i = 0; i < username.length - 1; i++) {
-                        if (vowels.includes(username[i].toLowerCase())) {
-                            return (username[0] + username[i + 1]).toUpperCase();
-                        }
-                    }
-
-                    // กรณีที่ 3: ใช้สองตัวแรก
-                    return username.substring(0, 2).toUpperCase();
-                },
-
-                async closeRankup() {
-                    this.showRankup = false;
-                    await this.callAPI('clearRankUp', { email: this.profile.email });
-                },
-
+                    return name.substring(0, 2).toUpperCase();
+                }
             }
         }
     </script>
