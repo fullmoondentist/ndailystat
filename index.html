@@ -586,87 +586,101 @@
           await this.callAPI('clearRankUp', { email: this.profile.email });
         },
 
-        renderDeptChart() {
-          const ctx = document.getElementById('deptChart');
-          if (!ctx || !this.system.dept_stats) return;
+  renderDeptChart() {
+    const ctx = document.getElementById('deptChart');
+    if (!ctx || !this.system.dept_stats) return;
 
-          const stats = this.system.dept_stats;
-          const labels = Object.keys(stats);
-          const data = labels.map(label => stats[label].on_time_rate);
-          const backgroundColors = labels.map(label => {
-            if (label === this.profile.department) {
-              // Gradient for user's department
-              const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 200, 0);
-              gradient.addColorStop(0, 'rgba(30, 64, 175, 0.9)');
-              gradient.addColorStop(1, 'rgba(14, 165, 233, 0.9)');
-              return gradient;
-            } else {
-              // Gradient for other departments
-              const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 200, 0);
-              gradient.addColorStop(0, 'rgba(148, 163, 184, 0.4)');
-              gradient.addColorStop(1, 'rgba(156, 163, 175, 0.2)');
-              return gradient;
-            }
-          });
-          const borderColors = labels.map(label =>
-            label === this.profile.department ? 'rgba(30, 64, 175, 1)' : 'rgba(148, 163, 184, 0.5)'
-          );
+    const stats = this.system.dept_stats;
+    const labels = Object.keys(stats);
+    const data = labels.map(label => stats[label].on_time_rate);
+    
+    // สร้างสี (เหมือนเดิม)
+    const backgroundColors = labels.map(label => {
+        const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 200, 0);
+        if (label === this.profile.department) {
+            gradient.addColorStop(0, 'rgba(30, 64, 175, 0.9)');
+            gradient.addColorStop(1, 'rgba(14, 165, 233, 0.9)');
+        } else {
+            gradient.addColorStop(0, 'rgba(148, 163, 184, 0.4)');
+            gradient.addColorStop(1, 'rgba(156, 163, 175, 0.2)');
+        }
+        return gradient;
+    });
 
-          if (this.deptChart) this.deptChart.destroy();
+    if (this.deptChart) this.deptChart.destroy();
 
-          this.deptChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-              labels: labels,
-              datasets: [{
+    this.deptChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
                 data: data,
                 backgroundColor: backgroundColors,
                 borderRadius: 4,
-                borderSkipped: false,
                 barThickness: 8,
                 maxBarThickness: 8
-              }]
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            
+            // ⭐ 1. ต้องเผื่อที่ขวานิดนึง ไม่งั้นตัวเลขตกขอบ
+            layout: {
+                padding: { right: 35 } 
             },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              indexAxis: 'y',
-              animation: {
-                duration: 1500,
-                easing: 'easeOutQuart',
-                x: {
-                  from: 0
-                }
-              },
-              plugins: {
+            
+            plugins: {
                 legend: { display: false },
-                tooltip: {
-                  callbacks: {
-                    label: (context) => ` ${context.parsed.x}% On-time`
-                  }
-                }
-              },
-              scales: {
-                x: {
-                  beginAtZero: true,
-                  max: 100,
-                  grid: { display: false },
-                  border: { display: false },
-                  ticks: { display: false }
+                tooltip: { enabled: false } // ปิด Tooltip เพราะเราจะโชว์เลขแล้ว
+            },
+            scales: {
+                x: { 
+                    display: false, 
+                    max: 100 // บังคับสเกลเต็ม 100 เสมอ
                 },
                 y: {
-                  grid: { display: false },
-                  border: { display: false },
-                  ticks: {
-                    display: true,
-                    font: { size: 12, weight: 'bold' },
-                    color: '#9CA3AF'
-                  }
+                    grid: { display: false },
+                    border: { display: false },
+                    ticks: {
+                        color: '#9CA3AF', // สีเทา
+                        font: { size: 12, weight: 'bold' }
+                    }
                 }
-              }
+            },
+            
+            // ⭐ 2. พระเอกของเรา: สั่งวาดตัวเลขเมื่อกราฟขยับเสร็จ
+            animation: {
+                onComplete: function() {
+                    const chart = this;
+                    const ctx = chart.ctx;
+                    
+                    // ตั้งค่าฟอนต์สำหรับตัวเลขเปอร์เซ็นต์
+                    ctx.font = "bold 10px sans-serif";
+                    ctx.fillStyle = "#9CA3AF"; // สีเทา
+                    ctx.textAlign = "left";
+                    ctx.textBaseline = "middle";
+
+                    // วนลูปทุกแท่งกราฟ
+                    chart.data.datasets.forEach(function(dataset, i) {
+                        const meta = chart.getDatasetMeta(i);
+                        meta.data.forEach(function(bar, index) {
+                            const dataVal = dataset.data[index];
+                            
+                            // คำนวณตำแหน่ง (ปลายแท่ง + ห่างออกมา 5px)
+                            const xPosition = bar.x + 5;
+                            const yPosition = bar.y;
+                            
+                            // สั่งวาดข้อความลงไป
+                            ctx.fillText(dataVal + "%", xPosition, yPosition);
+                        });
+                    });
+                }
             }
-          });
         }
+    });
+  }
       }
     }
   </script>
