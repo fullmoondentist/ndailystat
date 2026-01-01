@@ -173,6 +173,30 @@
           </div>
         </div>
 
+        <!-- Reward box -->
+        <div class="glass-card p-4">
+          <h3 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-gift text-rose-500"></i>
+            Reward Box
+          </h3>
+          <div class="grid grid-cols-8 gap-2">
+            <template x-for="item in groupedRewards" :key="item.name">
+              <div
+                class="aspect-square flex items-center justify-center text-xl relative">
+                <span x-text="item.emoji"></span>
+                <div x-show="item.count > 1"
+                  class="absolute -top-1 -right-1 text-gray-500 text-[10px] font-bold"
+                  x-text="'x' + item.count">
+                </div>
+              </div>
+            </template>
+            <div x-show="!profile.rewards?.length" class="col-span-8 py-8 text-center text-gray-300 text-xs italic">
+              No rewards yet. Keep it up!
+            </div>
+          </div>
+        </div>
+
+
         <!-- Accuracy Trend Graph -->
         <div class="glass-card p-4 pb-2 overflow-hidden">
           <div class="flex justify-between items-end mb-2">
@@ -209,29 +233,6 @@
 
           <div x-show="!profile.daily_history || profile.daily_history.length < 2" class="h-16 flex items-center justify-center text-xs text-gray-300 italic">
             Not enough data for trend graph
-          </div>
-        </div>
-
-        <!-- Reward box -->
-        <div class="glass-card p-4">
-          <h3 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-gift text-rose-500"></i>
-            Reward Box
-          </h3>
-          <div class="grid grid-cols-8 gap-2">
-            <template x-for="item in groupedRewards" :key="item.name">
-              <div
-                class="aspect-square flex items-center justify-center text-xl relative">
-                <span x-text="item.emoji"></span>
-                <div x-show="item.count > 1"
-                  class="absolute -top-1 -right-1 text-gray-500 text-[10px] font-bold"
-                  x-text="'x' + item.count">
-                </div>
-              </div>
-            </template>
-            <div x-show="!profile.rewards?.length" class="col-span-8 py-8 text-center text-gray-300 text-xs italic">
-              No rewards yet. Keep it up!
-            </div>
           </div>
         </div>
       </div>
@@ -379,7 +380,6 @@
         </div>
 
       </div>
-
     </div>
   </main>
 
