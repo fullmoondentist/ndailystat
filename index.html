@@ -95,14 +95,11 @@
         <p class="text-[10px] opacity-70 mt-1 font-medium" x-text="profile.email"></p>
       </div>
       <div class="text-right">
-        <div class="flex justify-end space-x-2 mb-1">
-          <div class="text-lg" x-text="rankConfig[profile.current_class]?.emoji || '⚪'"></div>
-          <div class="text-lg" x-text="profile.title_emoji || '⚪'"></div>
+        <div class="rank-badge bg-transparent">
+          <span x-text="rankConfig[profile.current_class]?.emoji || '⚪'"></span>
+          <span x-text="profile.current_class || 'UNRANKED'" class="ml-1"></span>
         </div>
-        <div class="flex justify-end space-x-2">
-          <div class="text-xs font-bold opacity-80" x-text="profile.current_class || 'UNRANKED'"></div>
-          <div class="text-xs font-bold opacity-80" x-text="profile.current_title || 'Novice'"></div>
-        </div>
+        <div class="mt-2 text-[10px] font-bold opacity-80 bg-transparent rounded-full px-3 py-1" x-text="profile.current_title || 'Novice'"></div>
       </div>
     </div>
   </header>
