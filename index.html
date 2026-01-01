@@ -185,8 +185,11 @@
 
         <!-- EXPERIENCE_PROGRESS START -->
         <div class="glass-card p-4">
-          <div class="flex justify-between items-center mb-2">
-            <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Experience Rank</span>
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2">
+              <i class="fa-solid fa-bars-progress text-purple-500"></i>
+              Experience
+            </h3>
             <span class="text-xs font-bold text-gray-700" x-text="profile.current_title"></span>
           </div>
           <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden mb-2">
@@ -423,7 +426,7 @@
   </div>
   <!-- LOADING_OVERLAY END -->
 
-<script>
+  <script>
     const WEB_APP_URL = 'https://script.google.com/a/macros/rsu.ac.th/s/AKfycbxWTt29Ry2K8upGAFQV1rnxFnDHB9IUb4ahim3tZXFVvOUZv3jqxrrQnZ61NbTz6CdmHA/exec'; // REPLACE WITH ACTUAL URL
 
     function dailyApp() {
@@ -431,17 +434,17 @@
         activeTab: 'dashboard',
         isLoading: true,
         showRankup: false,
-        
+
         // กำหนดค่าเริ่มต้น (Placeholder) เพื่อให้หน้าเว็บไม่พังระหว่างรอข้อมูล
         profile: {
-            display_name: 'Loading...', 
-            current_class: 'UNRANKED'
+          display_name: 'Loading...',
+          current_class: 'UNRANKED'
         },
         userId: null,
         system: {},
         leaderboard: [],
         recentScores: [],
-        
+
         // Animation States
         showTrend: true,
         showExp: true,
@@ -550,48 +553,48 @@
             // วิธีนี้เร็วกว่ารอ liff.getProfile() ประมาณ 1-2 วินาที
             const idToken = liff.getDecodedIDToken();
             let userId = idToken ? idToken.sub : null;
-            
+
             // Fallback: กรณี Token ไม่มีข้อมูล (Rare Case) ลองหาจาก Context
             if (!userId) {
-                const context = liff.getContext();
-                userId = context?.userId;
+              const context = liff.getContext();
+              userId = context?.userId;
             }
 
             let dataFetchPromise = null;
 
             // 3. 🔥 FIRE AND FORGET: ยิง Google Apps Script ทันทีที่มี UserId
             if (userId) {
-                this.userId = userId;
-                console.log("🚀 Fast Fetching with UserId:", userId);
-                // ไม่ต้อง await ตรงนี้ ปล่อยให้มันวิ่งไปก่อน (Parallel)
-                dataFetchPromise = this.fetchData(undefined, userId);
+              this.userId = userId;
+              console.log("🚀 Fast Fetching with UserId:", userId);
+              // ไม่ต้อง await ตรงนี้ ปล่อยให้มันวิ่งไปก่อน (Parallel)
+              dataFetchPromise = this.fetchData(undefined, userId);
             }
 
             // 4. 🖼️ LAZY LOAD PROFILE: โหลดรูปและชื่อแยกมาอีกทาง (ไม่บล็อกการทำงานหลัก)
             // ถ้าเน็ตช้า กราฟจะขึ้นก่อน แล้วรูปโปรไฟล์ค่อยตามมาทีหลัง
             liff.getProfile().then(p => {
-                this.profile.display_name = p.displayName;
-                this.profile.pictureUrl = p.pictureUrl;
-                
-                // Safety Net: ถ้าขั้นตอนที่ 2 หา UserId ไม่เจอจริงๆ ให้ใช้จากตรงนี้แทน
-                if (!userId) {
-                    userId = p.userId;
-                    this.userId = userId;
-                    // เพิ่งมายิง GAS ตอนนี้ (ช้าหน่อยแต่ชัวร์)
-                    this.fetchData(undefined, userId).then(() => {
-                        this.finishLoading();
-                    });
-                }
+              this.profile.display_name = p.displayName;
+              this.profile.pictureUrl = p.pictureUrl;
+
+              // Safety Net: ถ้าขั้นตอนที่ 2 หา UserId ไม่เจอจริงๆ ให้ใช้จากตรงนี้แทน
+              if (!userId) {
+                userId = p.userId;
+                this.userId = userId;
+                // เพิ่งมายิง GAS ตอนนี้ (ช้าหน่อยแต่ชัวร์)
+                this.fetchData(undefined, userId).then(() => {
+                  this.finishLoading();
+                });
+              }
             }).catch(e => console.warn('Profile fetch ignored:', e));
 
             // 5. รอข้อมูลสำคัญจาก GAS (ซึ่งน่าจะถูกยิงไปตั้งแต่ขั้นตอนที่ 3 แล้ว)
             if (dataFetchPromise) {
-                await dataFetchPromise;
-                this.finishLoading();
+              await dataFetchPromise;
+              this.finishLoading();
             } else if (userId) {
-                // กรณี Code หลุด Flow ปกติ ให้ยิงซ้ำอีกทีเพื่อความชัวร์
-                await this.fetchData(undefined, userId);
-                this.finishLoading();
+              // กรณี Code หลุด Flow ปกติ ให้ยิงซ้ำอีกทีเพื่อความชัวร์
+              await this.fetchData(undefined, userId);
+              this.finishLoading();
             }
 
           } catch (err) {
@@ -603,32 +606,32 @@
 
         // ฟังก์ชันจบการโหลดและเริ่ม Animation
         finishLoading() {
-            this.isLoading = false;
-            
-            // Trigger Rank Up Modal (ถ้ามี)
-            if (this.profile.is_rank_up) {
-              setTimeout(() => this.showRankup = true, 500);
-            }
+          this.isLoading = false;
 
-            // ตั้งค่า Watcher สำหรับ Reset Animation เมื่อเปลี่ยนแท็บ
-            this.$watch('activeTab', (value) => {
-              if (value === 'dashboard') {
-                this.showTrend = false; this.showExp = false;
-                this.$nextTick(() => { setTimeout(() => { this.showTrend = true; this.showExp = true; }, 50); });
-              } else if (value === 'ranking') {
-                this.showDeptAnim = false;
-                this.$nextTick(() => { setTimeout(() => this.showDeptAnim = true, 50); });
-              }
-            });
-            
-            // เริ่ม Animation ครั้งแรก
-            this.$nextTick(() => { setTimeout(() => { this.showTrend = true; this.showExp = true; }, 50); });
+          // Trigger Rank Up Modal (ถ้ามี)
+          if (this.profile.is_rank_up) {
+            setTimeout(() => this.showRankup = true, 500);
+          }
+
+          // ตั้งค่า Watcher สำหรับ Reset Animation เมื่อเปลี่ยนแท็บ
+          this.$watch('activeTab', (value) => {
+            if (value === 'dashboard') {
+              this.showTrend = false; this.showExp = false;
+              this.$nextTick(() => { setTimeout(() => { this.showTrend = true; this.showExp = true; }, 50); });
+            } else if (value === 'ranking') {
+              this.showDeptAnim = false;
+              this.$nextTick(() => { setTimeout(() => this.showDeptAnim = true, 50); });
+            }
+          });
+
+          // เริ่ม Animation ครั้งแรก
+          this.$nextTick(() => { setTimeout(() => { this.showTrend = true; this.showExp = true; }, 50); });
         },
 
         async fetchData(email, userId) {
           try {
             const activeUserId = userId || this.userId;
-            
+
             // ส่ง Parameter ไป GAS (เน้น UserId เป็นหลัก)
             const params = { action: 'getProfile', userId: activeUserId };
             if (email) params.email = email;
@@ -642,23 +645,23 @@
             if (profileRes.success) {
               // แยกข้อมูลเพื่อ Merge ระวังอย่าทับ display_name ที่อาจจะได้จาก LIFF แล้ว
               const { display_name, pictureUrl, ...rest } = profileRes.profile;
-              
+
               this.profile = {
-                  ...this.profile, // เก็บค่าเดิม (เช่น ชื่อ/รูปจาก LIFF)
-                  ...rest, // อัปเดต Stat ใหม่
-                  // ถ้า GAS ส่งชื่อมาและใน LIFF ยังโหลดไม่เสร็จ ให้ใช้จาก GAS แก้ขัดไปก่อน
-                  display_name: this.profile.display_name === 'Loading...' ? (display_name || 'Unknown') : this.profile.display_name
+                ...this.profile, // เก็บค่าเดิม (เช่น ชื่อ/รูปจาก LIFF)
+                ...rest, // อัปเดต Stat ใหม่
+                // ถ้า GAS ส่งชื่อมาและใน LIFF ยังโหลดไม่เสร็จ ให้ใช้จาก GAS แก้ขัดไปก่อน
+                display_name: this.profile.display_name === 'Loading...' ? (display_name || 'Unknown') : this.profile.display_name
               };
-              
+
               // ถ้า GAS มีรูปและใน LIFF ไม่มี ให้ใช้จาก GAS
               if (!this.profile.pictureUrl && pictureUrl) {
-                  this.profile.pictureUrl = pictureUrl;
+                this.profile.pictureUrl = pictureUrl;
               }
 
               this.system = profileRes.system || {};
               this.recentScores = JSON.parse(this.profile.recent_scores_json || '[]');
             } else {
-               console.warn('Profile fetch error:', profileRes);
+              console.warn('Profile fetch error:', profileRes);
             }
 
             if (leaderboardRes.success) {
@@ -685,7 +688,7 @@
           this.showRankup = false;
           await this.callAPI('clearRankUp', { userId: this.userId });
         },
-        
+
         // ฟังก์ชันแปลงวันที่เป็นภาษาไทย (เช่น 12 ม.ค. 67)
         formatThaiDate(dateStr) {
           if (!dateStr) return '---';
