@@ -594,7 +594,7 @@
     const labels = Object.keys(stats);
     const data = labels.map(label => stats[label].on_time_rate);
     
-    // สร้างสี (เหมือนเดิม)
+    // สร้างสี Gradient
     const backgroundColors = labels.map(label => {
         const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 200, 0);
         if (label === this.profile.department) {
@@ -616,7 +616,17 @@
             datasets: [{
                 data: data,
                 backgroundColor: backgroundColors,
-                borderRadius: 4,
+                
+                // ⭐ จุดแก้ที่ 1: ทำให้กลมที่สุด
+                // ใส่ค่าเยอะๆ ไปเลยเพื่อให้เป็นครึ่งวงกลม (Pill shape)
+                borderRadius: 100, 
+                
+                // ถ้าอยากให้กลมเฉพาะ "ขอบขวา" (หัวกระสุน) ให้ใช้บรรทัดนี้:
+                // borderSkipped: 'start', 
+                
+                // แต่ถ้าอยากให้กลมทั้งแท่ง (แคปซูล) ให้ใช้:
+                borderSkipped: false,
+
                 barThickness: 8,
                 maxBarThickness: 8
             }]
@@ -626,53 +636,53 @@
             responsive: true,
             maintainAspectRatio: false,
             
-            // ⭐ 1. ต้องเผื่อที่ขวานิดนึง ไม่งั้นตัวเลขตกขอบ
+            // ⭐ จุดแก้ที่ 2: เผื่อที่ขวาเยอะหน่อย สำหรับวางตัวเลข
             layout: {
-                padding: { right: 35 } 
+                padding: { right: 45 } 
             },
             
             plugins: {
                 legend: { display: false },
-                tooltip: { enabled: false } // ปิด Tooltip เพราะเราจะโชว์เลขแล้ว
+                tooltip: { enabled: false }
             },
             scales: {
                 x: { 
                     display: false, 
-                    max: 100 // บังคับสเกลเต็ม 100 เสมอ
+                    max: 100 
                 },
                 y: {
                     grid: { display: false },
                     border: { display: false },
                     ticks: {
-                        color: '#9CA3AF', // สีเทา
+                        color: '#9CA3AF',
                         font: { size: 12, weight: 'bold' }
                     }
                 }
             },
             
-            // ⭐ 2. พระเอกของเรา: สั่งวาดตัวเลขเมื่อกราฟขยับเสร็จ
+            // ⭐ จุดแก้ที่ 3: Logic การวาดตัวเลข
             animation: {
                 onComplete: function() {
                     const chart = this;
                     const ctx = chart.ctx;
                     
-                    // ตั้งค่าฟอนต์สำหรับตัวเลขเปอร์เซ็นต์
-                    ctx.font = "bold 10px sans-serif";
-                    ctx.fillStyle = "#9CA3AF"; // สีเทา
-                    ctx.textAlign = "left";
+                    ctx.font = "bold 11px sans-serif";
+                    ctx.fillStyle = "#9CA3AF";
+                    ctx.textAlign = "right"; // จัดชิดขวา
                     ctx.textBaseline = "middle";
 
-                    // วนลูปทุกแท่งกราฟ
                     chart.data.datasets.forEach(function(dataset, i) {
                         const meta = chart.getDatasetMeta(i);
                         meta.data.forEach(function(bar, index) {
                             const dataVal = dataset.data[index];
                             
-                            // คำนวณตำแหน่ง (ปลายแท่ง + ห่างออกมา 5px)
-                            const xPosition = bar.x + 5;
+                            // คำนวณตำแหน่ง:
+                            // chart.chartArea.right = ขอบขวาสุดของพื้นที่กราฟ (เส้น 100%)
+                            // + 35 = ดันออกไปในพื้นที่ padding ที่เราเผื่อไว้
+                            const xPosition = chart.chartArea.right + 35;
                             const yPosition = bar.y;
                             
-                            // สั่งวาดข้อความลงไป
+                            // สั่งวาด
                             ctx.fillText(dataVal + "%", xPosition, yPosition);
                         });
                     });
@@ -680,7 +690,7 @@
             }
         }
     });
-  }
+}
       }
     }
   </script>
