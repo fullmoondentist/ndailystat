@@ -586,98 +586,105 @@
           await this.callAPI('clearRankUp', { email: this.profile.email });
         },
 
-        renderDeptChart() {
-          const ctx = document.getElementById('deptChart');
-          if (!ctx || !this.system.dept_stats) return;
+renderDeptChart() {
+    const ctx = document.getElementById('deptChart');
+    if (!ctx || !this.system.dept_stats) return;
 
-          const stats = this.system.dept_stats;
-          const labels = Object.keys(stats);
-          const data = labels.map(label => stats[label].on_time_rate);
-          
-          // สร้างสี Gradient
-          const backgroundColors = labels.map(label => {
-              const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 200, 0);
-              if (label === this.profile.department) {
-                  gradient.addColorStop(0, 'rgba(30, 64, 175, 0.9)');
-                  gradient.addColorStop(1, 'rgba(14, 165, 233, 0.9)');
-              } else {
-                  gradient.addColorStop(0, 'rgba(148, 163, 184, 0.4)');
-                  gradient.addColorStop(1, 'rgba(156, 163, 175, 0.2)');
-              }
-              return gradient;
-          });
+    const stats = this.system.dept_stats;
+    const labels = Object.keys(stats);
+    const data = labels.map(label => stats[label].on_time_rate);
+    
+    // สร้างสี Gradient
+    const backgroundColors = labels.map(label => {
+        const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 200, 0);
+        if (label === this.profile.department) {
+            gradient.addColorStop(0, 'rgba(30, 64, 175, 0.9)');
+            gradient.addColorStop(1, 'rgba(14, 165, 233, 0.9)');
+        } else {
+            gradient.addColorStop(0, 'rgba(148, 163, 184, 0.4)');
+            gradient.addColorStop(1, 'rgba(156, 163, 175, 0.2)');
+        }
+        return gradient;
+    });
 
-          if (this.deptChart) this.deptChart.destroy();
+    if (this.deptChart) this.deptChart.destroy();
 
-          this.deptChart = new Chart(ctx, {
-              type: 'bar',
-              data: {
-                  labels: labels,
-                  datasets: [{
-                      data: data,
-                      backgroundColor: backgroundColors,
-                      borderRadius: 100, // กลมดิ๊ก
-                      borderSkipped: false,
-                      barThickness: 8,
-                      maxBarThickness: 8
-                  }]
-              },
-              options: {
-                  indexAxis: 'y',
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  
-                  // ⭐ จุดแก้หลัก: ปิดการรับรู้ Touch/Click ทั้งหมด
-                  events: [], 
-                  
-                  // ⭐ ปิด Hover Mode สำทับอีกที
-                  hover: { mode: null },
+    this.deptChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: backgroundColors,
+                borderRadius: 100,
+                borderSkipped: false,
+                barThickness: 8,
+                maxBarThickness: 8
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            
+            // ยังคงปิด Event เพื่อกันกระพริบ
+            events: [], 
+            hover: { mode: null },
 
-                  layout: {
-                      padding: { right: 45 } 
-                  },
-                  plugins: {
-                      legend: { display: false },
-                      tooltip: { enabled: false } // ปิด Tooltip ถาวร
-                  },
-                  scales: {
-                      x: { 
-                          display: false, 
-                          max: 100 
-                      },
-                      y: {
-                          grid: { display: false },
-                          border: { display: false },
-                          ticks: {
-                              color: '#9CA3AF',
-                              font: { size: 12, weight: 'bold' }
-                          }
-                      }
-                  },
-                  animation: {
-                      onComplete: function() {
-                          const chart = this;
-                          const ctx = chart.ctx;
-                          
-                          ctx.font = "bold 11px sans-serif";
-                          ctx.fillStyle = "#9CA3AF";
-                          ctx.textAlign = "right";
-                          ctx.textBaseline = "middle";
+            layout: {
+                padding: { right: 45 } 
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false }
+            },
+            scales: {
+                x: { display: false, max: 100 },
+                y: {
+                    grid: { display: false },
+                    border: { display: false },
+                    ticks: {
+                        color: '#9CA3AF',
+                        font: { size: 12, weight: 'bold' }
+                    }
+                }
+            },
+            
+            // ⭐ กู้คืน Animation Setting กลับมาตรงนี้ครับ
+            animation: {
+                duration: 1500,           // ระยะเวลา 1.5 วินาที
+                easing: 'easeOutQuart',   // พุ่งออกแบบนุ่มๆ
+                x: {
+                    from: 0               // เริ่มยืดจาก 0
+                },
+                
+                // Logic วาดตัวเลขทำงานหลังจาก Animation จบ
+                onComplete: function() {
+                    const chart = this;
+                    const ctx = chart.ctx;
+                    
+                    ctx.font = "bold 11px sans-serif";
+                    ctx.fillStyle = "#9CA3AF";
+                    ctx.textAlign = "right";
+                    ctx.textBaseline = "middle";
 
-                          chart.data.datasets.forEach(function(dataset, i) {
-                              const meta = chart.getDatasetMeta(i);
-                              meta.data.forEach(function(bar, index) {
-                                  const dataVal = dataset.data[index];
-                                  const xPosition = chart.chartArea.right + 35;
-                                  const yPosition = bar.y;
-                                  ctx.fillText(dataVal + "%", xPosition, yPosition);
-                              });
-                          });
-                      }
-                  }
-              }
-          });
-      }
+                    chart.data.datasets.forEach(function(dataset, i) {
+                        const meta = chart.getDatasetMeta(i);
+                        // เช็คว่ากราฟวาดเสร็จหรือยัง เพื่อความชัวร์
+                        if (!meta.hidden) {
+                            meta.data.forEach(function(bar, index) {
+                                const dataVal = dataset.data[index];
+                                const xPosition = chart.chartArea.right + 35;
+                                const yPosition = bar.y;
+                                ctx.fillText(dataVal + "%", xPosition, yPosition);
+                            });
+                        }
+                    });
+                }
+            }
+        }
+    });
+}
 
       }
     }
