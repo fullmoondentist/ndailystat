@@ -227,7 +227,7 @@
               <!-- Area Fill -->
               <path :d="trendFill" fill="url(#trendGradient)" stroke="none" />
               <!-- Line -->
-              <path :d="trendPath" fill="none" stroke="#2563eb" stroke-width="1" stroke-opacity="0.5" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" />
+              <path :d="trendPath" fill="none" stroke="#2563eb" stroke-width="2" stroke-opacity="0.2" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </div>
 
@@ -606,15 +606,18 @@
             }
 
             // Watch for tab changes to reset animations
+            // Watch for tab changes to reset animations
             this.$watch('activeTab', (value) => {
               if (value === 'dashboard') {
                 this.showTrend = false;
                 this.showExp = false;
                 this.$nextTick(() => {
+                  // Start Experience Bar immediately
+                  this.showExp = true;
+                  // Wait for Experience Bar animation (1000ms) to finish before starting Trend Graph
                   setTimeout(() => {
                     this.showTrend = true;
-                    this.showExp = true;
-                  }, 50);
+                  }, 1000);
                 });
               } else if (value === 'ranking') {
                 this.showDeptAnim = false;
