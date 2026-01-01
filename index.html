@@ -80,7 +80,8 @@
 <body class="bg-slate-50 min-h-screen text-slate-900 font-sans pb-24" x-data="dailyApp()" x-init="init()">
 
   <!-- Top Header -->
-  <header class="premium-gradient text-white px-6 pt-8 pb-16 rounded-b-[3rem] shadow-2xl relative overflow-hidden">
+  <header
+    :class="'bg-gradient-to-br ' + (rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500') + ' text-white px-6 py-6 mx-5 mt-5 rounded-2xl shadow-xl relative overflow-hidden'">
     <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
     <div class="absolute bottom-0 left-0 -ml-10 -mb-10 w-48 h-48 bg-blue-400/20 rounded-full blur-2xl"></div>
 
@@ -104,7 +105,7 @@
   </header>
 
   <!-- Main Content Container -->
-  <main class="px-5 -mt-8 relative z-20 space-y-4">
+  <main class="px-5 mt-4 relative z-20 space-y-4">
 
     <!-- Dashboard Stats Row -->
     <div class="grid grid-cols-3 gap-3">
