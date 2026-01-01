@@ -173,19 +173,24 @@
           </div>
         </div>
 
+        <!-- Reward box -->
         <div class="glass-card p-4">
           <h3 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
             <i class="fa-solid fa-gift text-rose-500"></i>
             Reward Box
           </h3>
-          <div class="grid grid-cols-4 gap-2">
-            <template x-for="reward in profile.rewards || []" :key="reward">
+          <div class="grid grid-cols-8 gap-2">
+            <template x-for="item in groupedRewards" :key="item.name">
               <div
-                class="aspect-square bg-slate-50 rounded-xl flex items-center justify-center text-xl shadow-inner border border-white">
-                <span x-text="reward.split(' ')[0]"></span>
+                class="aspect-square bg-slate-50 rounded-xl flex items-center justify-center text-xl shadow-inner border border-white relative">
+                <span x-text="item.emoji"></span>
+                <div x-show="item.count > 1"
+                  class="absolute -top-1 -right-1 bg-white border border-gray-100 text-gray-400 text-[9px] font-bold px-1 rounded-full shadow-sm"
+                  x-text="'x' + item.count">
+                </div>
               </div>
             </template>
-            <div x-show="!profile.rewards?.length" class="col-span-4 py-8 text-center text-gray-300 text-xs italic">
+            <div x-show="!profile.rewards?.length" class="col-span-8 py-8 text-center text-gray-300 text-xs italic">
               No rewards yet. Keep it up!
             </div>
           </div>
@@ -470,6 +475,19 @@
           return Object.keys(groups).sort((a, b) => b.localeCompare(a)).map(date => ({
             date,
             items: groups[date]
+          }));
+        },
+
+        get groupedRewards() {
+          const rewards = this.profile.rewards || [];
+          const counts = {};
+          rewards.forEach(r => {
+            counts[r] = (counts[r] || 0) + 1;
+          });
+          return Object.keys(counts).map(key => ({
+            name: key,
+            count: counts[key],
+            emoji: key.split(' ')[0]
           }));
         },
 
