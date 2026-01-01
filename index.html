@@ -78,43 +78,6 @@
 
 <body class="bg-slate-50 min-h-screen text-slate-900 font-sans pb-24" x-data="dailyApp()" x-init="init()">
 
-<!-- Top Header -->
-<header
-    :class="'bg-gradient-to-br ' + (rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500') + ' text-white px-6 py-6 mx-5 mt-5 rounded-2xl shadow-xl relative overflow-hidden'">
-    
-    <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-    <div class="absolute bottom-0 left-0 -ml-10 -mb-10 w-48 h-48 bg-blue-400/20 rounded-full blur-2xl"></div>
-
-    <div class="relative z-10 flex justify-between items-stretch">
-      
-      <div class="text-left flex flex-col justify-center">
-        <h1 class="text-xs font-bold uppercase tracking-[0.2em] opacity-80 mb-1">ยินดีต้อนรับ</h1>
-        <div class="flex items-center gap-2">
-          <span class="text-2xl font-black" x-text="profile.display_name || 'Loading...'"></span>
-          <i class="fa-solid fa-circle-check text-blue-300 text-sm"></i>
-        </div>
-        <p class="text-[12px] opacity-70 mt-1 font-medium" x-text="profile.email" x-text=" - profile.department || ''"></p>
-      </div>
-
-      <div class="flex flex-col items-end justify-between text-right">
-        
-        <div class="flex items-center justify-end gap-1 w-fit ml-auto bg-transparent">
-          <span class="text-base" x-text="rankConfig[profile.current_class]?.emoji || '🐣'"></span>
-          <span x-text="profile.current_class || 'UNRANKED'" class="text-xs font-bold uppercase tracking-wider"></span>
-        </div>
-
-        <div class="text-2xl leading-none scale-110 origin-right drop-shadow-sm filter py-1" 
-             x-text="profile.current_title ? profile.current_title.replace(/[a-zA-Z].*/, '') : '🌱'">
-        </div>
-
-        <div class="text-[11px] font-bold opacity-90 uppercase tracking-wide" 
-             x-text="profile.current_title ? profile.current_title.replace(/^[^a-zA-Z]*/, '') : 'Novice'">
-        </div>
-
-      </div>
-
-    </div>
-</header>
 
   <!-- Main Content Container -->
   <main class="px-5 mt-4 relative z-20 space-y-4">
@@ -155,6 +118,44 @@
 
       <!-- Dashboard View -->
       <div x-show="activeTab === 'dashboard'" class="space-y-4">
+
+        <!-- Top Header -->
+        <header
+            :class="'bg-gradient-to-br ' + (rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500') + ' text-white px-6 py-6 rounded-2xl shadow-xl relative overflow-hidden'">
+            
+            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 -ml-10 -mb-10 w-48 h-48 bg-blue-400/20 rounded-full blur-2xl"></div>
+
+            <div class="relative z-10 flex justify-between items-stretch">
+              
+              <div class="text-left flex flex-col justify-center">
+                <h1 class="text-xs font-bold uppercase tracking-[0.2em] opacity-80 mb-1">ยินดีต้อนรับ</h1>
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl font-black" x-text="profile.display_name || 'Loading...'"></span>
+                  <i class="fa-solid fa-circle-check text-blue-300 text-sm"></i>
+                </div>
+                <p class="text-[12px] opacity-70 mt-1 font-medium" x-text="profile.email"></p>
+              </div>
+
+              <div class="flex flex-col items-end justify-between text-right">
+                
+                <div class="flex items-center justify-end gap-1 w-fit ml-auto bg-transparent">
+                  <span class="text-base" x-text="rankConfig[profile.current_class]?.emoji || '🐣'"></span>
+                  <span x-text="profile.current_class || 'UNRANKED'" class="text-xs font-bold uppercase tracking-wider"></span>
+                </div>
+
+                <div class="text-2xl leading-none scale-110 origin-right drop-shadow-sm filter py-1"
+                     x-text="profile.current_title ? profile.current_title.replace(/[a-zA-Z].*/, '') : '🌱'">
+                </div>
+
+                <div class="text-[11px] font-bold opacity-90 uppercase tracking-wide"
+                     x-text="profile.current_title ? profile.current_title.replace(/^[^a-zA-Z]*/, '') : 'Novice'">
+                </div>
+
+              </div>
+
+            </div>
+        </header>
 
         <!-- Dashboard Stats Row -->
         <div class="grid grid-cols-3 gap-3">
@@ -221,6 +222,26 @@
           </div>
         </div>
 
+
+        <!-- Recent Activity (Minified) -->
+        <div class="glass-card p-4 overflow-hidden">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-sm font-bold text-gray-800">Recent Accuracy Score</h3>
+            <span class="text-[10px] font-bold text-gray-400 uppercase">Last 20 Cases</span>
+          </div>
+          <div class="flex gap-1 h-12 items-end">
+            <template x-for="(score, idx) in recentScores" :key="idx">
+              <div class="flex-1 rounded-t-sm"
+                :class="score >= 95 ? 'bg-emerald-400' : (score >= 70 ? 'bg-amber-400' : 'bg-rose-400')"
+                :style="'height: ' + Math.max(10, score) + '%'" :title="score + '%'"></div>
+            </template>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leaderboard View -->
+      <div x-show="activeTab === 'ranking'" class="space-y-3">
+
         <!-- Department Comparison Chart -->
         <div class="glass-card p-4">
           <h3 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
@@ -253,24 +274,6 @@
           </div>
         </div>
 
-        <!-- Recent Activity (Minified) -->
-        <div class="glass-card p-4 overflow-hidden">
-          <div class="flex justify-between items-center mb-3">
-            <h3 class="text-sm font-bold text-gray-800">Recent Accuracy Score</h3>
-            <span class="text-[10px] font-bold text-gray-400 uppercase">Last 20 Cases</span>
-          </div>
-          <div class="flex gap-1 h-12 items-end">
-            <template x-for="(score, idx) in recentScores" :key="idx">
-              <div class="flex-1 rounded-t-sm"
-                :class="score >= 95 ? 'bg-emerald-400' : (score >= 70 ? 'bg-amber-400' : 'bg-rose-400')"
-                :style="'height: ' + Math.max(10, score) + '%'" :title="score + '%'"></div>
-            </template>
-          </div>
-        </div>
-      </div>
-
-      <!-- Leaderboard View -->
-      <div x-show="activeTab === 'ranking'" class="space-y-3">
         <div class="flex justify-between items-end px-1">
           <h2 class="text-xl font-black text-slate-800">Leaderboard</h2>
           <span class="text-[10px] font-bold text-gray-400 uppercase mb-1">Top 20 Instructors</span>
