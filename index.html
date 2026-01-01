@@ -618,11 +618,10 @@
             options: {
               responsive: true,
               maintainAspectRatio: false,
-              indexAxis: 'y',
               animation: {
                 duration: 1500,
                 easing: 'easeOutQuart',
-                x: {
+                y: {
                   from: 0
                 }
               },
@@ -636,14 +635,16 @@
               },
               scales: {
                 x: {
-                  beginAtZero: true,
-                  max: 100,
+                  display: false,
                   grid: { display: false },
-                  ticks: { font: { size: 9, weight: 'bold' } }
+                  ticks: { display: false }
                 },
                 y: {
+                  display: false,
                   grid: { display: false },
-                  ticks: { font: { size: 10, weight: 'bold' } }
+                  ticks: { display: false },
+                  min: 0,
+                  max: 100
                 }
               }
             }
