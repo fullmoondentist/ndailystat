@@ -342,69 +342,6 @@
       </div>
       <!-- LEADERBOARD_VIEW END -->
 
-      <!-- HISTORY_VIEW START -->
-      <div x-show="activeTab === 'history'" class="space-y-4">
-        <div class="flex justify-between items-center px-1">
-          <h2 class="text-xl font-black text-slate-800">History</h2>
-          <span class="text-[10px] font-bold text-gray-400 uppercase"
-            x-text="'Total ' + (historyTotal || 0) + ' items'"></span>
-        </div>
-
-        <div class="space-y-6">
-          <template x-for="group in groupedHistory" :key="group.date">
-            <div class="space-y-2">
-              <div class="flex items-center gap-2 px-1">
-                <div class="h-px flex-1 bg-gray-200"></div>
-                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest"
-                  x-text="formatThaiDate(group.date)"></span>
-                <div class="h-px flex-1 bg-gray-200"></div>
-              </div>
-
-              <div class="space-y-2">
-                <template x-for="item in group.items" :key="item.time + item.student">
-                  <div
-                    class="glass-card p-3 flex justify-between items-center transition-transform active:scale-[0.98]">
-                    <div class="flex items-center gap-3">
-                      <div
-                        class="w-10 h-10 rounded-xl bg-slate-50 flex flex-col items-center justify-center border border-white">
-                        <span class="text-[9px] font-black text-gray-400" x-text="item.time"></span>
-                        <i class="fa-solid fa-file-signature text-blue-500/50 text-xs"></i>
-                      </div>
-                      <div>
-                        <div class="text-xs font-bold text-gray-800" x-text="item.student">
-                        </div>
-                        <div class="text-[9px] text-gray-400 font-medium" x-text="item.session || 'Period'"></div>
-                      </div>
-                    </div>
-                    <div class="text-right">
-                      <div
-                        :class="'px-2 py-0.5 rounded-lg text-[9px] font-black uppercase text-white shadow-sm inline-block ' + statusColors[item.status]">
-                        <span x-text="item.status"></span>
-                      </div>
-                      <div class="text-[9px] font-bold text-gray-300 mt-1" x-text="'+' + item.score + ' MP'"></div>
-                    </div>
-                  </div>
-                </template>
-              </div>
-            </div>
-          </template>
-        </div>
-
-        <div x-show="historyHasMore" class="pt-4 pb-8">
-          <button @click="loadMoreHistory()" :disabled="isLoadingHistory"
-            class="w-full py-3 glass-card text-xs font-bold text-blue-600 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2">
-            <span x-show="!isLoadingHistory">โหลดเพิ่มเติม</span>
-            <i x-show="!isLoadingHistory" class="fa-solid fa-chevron-down"></i>
-            <i x-show="isLoadingHistory" class="fa-solid fa-circle-notch fa-spin"></i>
-          </button>
-        </div>
-
-        <div x-show="!isLoading && history.length === 0" class="text-center py-20 text-gray-300">
-          <i class="fa-solid fa-folder-open block text-4xl mb-2 opacity-10"></i>
-          <p class="text-xs italic font-medium">ยังไม่มีประวัติการบันทึก</p>
-        </div>
-      </div>
-      <!-- HISTORY_VIEW END -->
 
       <!-- PROFILE_VIEW START -->
       <div x-show="activeTab === 'profile'" class="space-y-4">
@@ -441,11 +378,6 @@
         <i class="fa-solid fa-ranking-star text-xl mb-1"></i>
         <span>จัดอันดับ</span>
         <div x-show="activeTab === 'ranking'" class="w-1 h-1 rounded-full bg-blue-600 mt-1"></div>
-      </button>
-      <button @click="activeTab = 'history'" class="nav-item" :class="activeTab === 'history' ? 'active' : ''">
-        <i class="fa-solid fa-history text-xl mb-1"></i>
-        <span>ประวัติ</span>
-        <div x-show="activeTab === 'history'" class="w-1 h-1 rounded-full bg-blue-600 mt-1"></div>
       </button>
       <button @click="activeTab = 'profile'" class="nav-item" :class="activeTab === 'profile' ? 'active' : ''">
         <i class="fa-solid fa-user-gear text-xl mb-1"></i>
@@ -511,12 +443,6 @@
         showExp: true,
         showDeptAnim: true,
 
-        // History state
-        history: [],
-        historyPage: 1,
-        historyTotal: 0,
-        historyHasMore: false,
-        isLoadingHistory: false,
 
         statusColors: {
           'perfect': 'bg-gradient-to-r from-cyan-500 to-blue-500',
@@ -564,17 +490,6 @@
           return Math.min(100, Math.round((current / next) * 100));
         },
 
-        get groupedHistory() {
-          const groups = {};
-          this.history.forEach(item => {
-            if (!groups[item.date]) groups[item.date] = [];
-            groups[item.date].push(item);
-          });
-          return Object.keys(groups).sort((a, b) => b.localeCompare(a)).map(date => ({
-            date,
-            items: groups[date]
-          }));
-        },
 
         get groupedRewards() {
           const rewards = this.profile.rewards || [];
@@ -667,10 +582,7 @@
             this.userId = userId;
             this.pictureUrl = pictureUrl; // Store for merging later
 
-            await Promise.all([
-              this.fetchData(email || undefined, userId || undefined),
-              this.fetchHistory(email || undefined, userId || undefined)
-            ]);
+            this.fetchData(email || undefined, userId || undefined)
 
             // Merge profile picture into profile object
             if (this.pictureUrl) {
@@ -763,28 +675,6 @@
           }
         },
 
-        async fetchHistory(email, userId, page = 1) {
-          this.isLoadingHistory = true;
-          try {
-            const res = await this.callAPI('getHistory', { email, userId, page, limit: 20 });
-            if (res.success) {
-              if (page === 1) this.history = [];
-              this.history = [...this.history, ...res.data.history];
-              this.historyTotal = res.data.total;
-              this.historyHasMore = res.data.hasMore;
-              this.historyPage = page;
-            }
-          } catch (err) {
-            console.error('History fetch failed', err);
-          } finally {
-            this.isLoadingHistory = false;
-          }
-        },
-
-        async loadMoreHistory() {
-          if (this.isLoadingHistory || !this.historyHasMore) return;
-          await this.fetchHistory(this.profile.email, this.historyPage + 1);
-        },
 
         formatThaiDate(dateStr) {
           if (!dateStr) return '---';
