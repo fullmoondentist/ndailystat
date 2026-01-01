@@ -199,9 +199,17 @@
 
         <!-- Accuracy Trend Graph -->
         <div class="glass-card p-4 pb-2 overflow-hidden">
-          <div class="flex justify-between items-center mb-2">
+          <div class="flex justify-between items-end mb-2">
             <h3 class="text-sm font-bold text-gray-800">Accuracy Trend</h3>
-            <span class="text-[10px] font-bold text-gray-400 uppercase">Daily History</span>
+            <div class="flex items-center gap-1.5" x-show="profile.daily_history?.length > 1">
+              <span class="text-xs font-black text-slate-700" x-text="(profile.alltime_acc || 0) + '%'"></span>
+              <i class="fa-solid"
+                 :class="{
+                   'fa-chevron-up text-emerald-500': trendDirection === 'up',
+                   'fa-chevron-down text-rose-500': trendDirection === 'down',
+                   'fa-minus text-gray-300': trendDirection === 'none'
+                 }"></i>
+            </div>
           </div>
           
           <div class="h-16 w-full relative" x-show="profile.daily_history && profile.daily_history.length > 1">
@@ -546,6 +554,16 @@
             const path = this.trendPath;
             if (!path) return '';
             return `${path} L 100,40 L 0,40 Z`;
+        },
+
+        get trendDirection() {
+          const history = this.profile.daily_history || [];
+          if (history.length < 2) return 'none';
+          const last = history[history.length - 1].a;
+          const prev = history[history.length - 2].a;
+          if (last > prev) return 'up';
+          if (last < prev) return 'down';
+          return 'none';
         },
 
         async init() {
