@@ -232,7 +232,7 @@
         <div class="glass-card p-4">
           <h3 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
             <i class="fa-solid fa-chart-column text-blue-600"></i>
-            Department Same-day Rate
+            Department All-time Accuracy
           </h3>
           <div class="space-y-2 mt-4" x-data="{ showAnim: false }"
                x-init="$watch('system.dept_stats', () => { showAnim = false; setTimeout(() => showAnim = true, 300) })">
@@ -245,7 +245,7 @@
                 <!-- Progress Bar -->
                 <div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden relative">
                   <div class="h-full rounded-full transition-all duration-[1500ms] cubic-bezier(0.4, 0, 0.2, 1)"
-                    :style="`width: ${showAnim ? stat.on_time_rate : 0}%;`"
+                    :style="`width: ${showAnim ? stat.accuracy : 0}%;`"
                     :class="deptName === profile.department
                       ? 'bg-gradient-to-r from-blue-600 to-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.6)]'
                       : 'bg-gradient-to-r from-slate-300 to-slate-400 opacity-60'">
@@ -253,7 +253,7 @@
                 </div>
 
                 <!-- Percentage -->
-                <div class="w-8 text-[12px] font-bold text-gray-400 text-right shrink-0" x-text="stat.on_time_rate + '%'"></div>
+                <div class="w-8 text-[12px] font-bold text-gray-400 text-right shrink-0" x-text="stat.accuracy + '%'"></div>
 
               </div>
             </template>
