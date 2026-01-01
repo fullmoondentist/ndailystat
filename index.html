@@ -197,18 +197,30 @@
         </div>
 
 
-        <!-- Recent Activity (Minified) -->
-        <div class="glass-card p-4 overflow-hidden">
-          <div class="flex justify-between items-center mb-3">
-            <h3 class="text-sm font-bold text-gray-800">Recent Accuracy Score</h3>
-            <span class="text-[10px] font-bold text-gray-400 uppercase">Last 20 Cases</span>
+        <!-- Accuracy Trend Graph -->
+        <div class="glass-card p-4 pb-2 overflow-hidden">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-sm font-bold text-gray-800">Accuracy Trend</h3>
+            <span class="text-[10px] font-bold text-gray-400 uppercase">Daily History</span>
           </div>
-          <div class="flex gap-1 h-12 items-end">
-            <template x-for="(score, idx) in recentScores" :key="idx">
-              <div class="flex-1 rounded-t-sm"
-                :class="score >= 95 ? 'bg-emerald-400' : (score >= 70 ? 'bg-amber-400' : 'bg-rose-400')"
-                :style="'height: ' + Math.max(10, score) + '%'" :title="score + '%'"></div>
-            </template>
+          
+          <div class="h-16 w-full relative" x-show="profile.daily_history && profile.daily_history.length > 1">
+            <svg class="w-full h-full overflow-visible" viewBox="0 0 100 40" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="trendGradient" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.5" />
+                  <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+              <!-- Area Fill -->
+              <path :d="trendFill" fill="url(#trendGradient)" stroke="none" />
+              <!-- Line -->
+              <path :d="trendPath" fill="none" stroke="#2563eb" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+
+          <div x-show="!profile.daily_history || profile.daily_history.length < 2" class="h-16 flex items-center justify-center text-xs text-gray-300 italic">
+            Not enough data for trend graph
           </div>
         </div>
       </div>
@@ -489,6 +501,32 @@
             count: counts[key],
             emoji: key.split(' ')[0]
           }));
+        },
+
+        get trendPath() {
+            const history = this.profile.daily_history || [];
+            if (history.length < 2) return '';
+            
+            const width = 100;
+            const height = 40; // SVG height
+            const step = width / (history.length - 1);
+            
+            let path = `M 0,${height - (history[0].a / 100 * height)}`;
+            
+            for (let i = 1; i < history.length; i++) {
+                const x = i * step;
+                const y = height - (history[i].a / 100 * height);
+                // Simple line to
+                path += ` L ${x},${y}`;
+                // Optional: Bezier curve for smoothness? L is simpler and sharper.
+            }
+            return path;
+        },
+
+        get trendFill() {
+            const path = this.trendPath;
+            if (!path) return '';
+            return `${path} L 100,40 L 0,40 Z`;
         },
 
         async init() {
