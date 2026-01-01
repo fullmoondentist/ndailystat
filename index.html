@@ -611,8 +611,9 @@
               datasets: [{
                 data: data,
                 backgroundColor: backgroundColors,
-                borderRadius: 8,
-                barPercentage: 0.6
+                borderRadius: 4,
+                barThickness: 8,
+                maxBarThickness: 8
               }]
             },
             options: {
@@ -639,11 +640,11 @@
                   beginAtZero: true,
                   max: 100,
                   grid: { display: false },
-                  ticks: { font: { size: 9, weight: 'bold' } }
+                  ticks: { display: false }
                 },
                 y: {
                   grid: { display: false },
-                  ticks: { font: { size: 10, weight: 'bold' } }
+                  ticks: { display: false }
                 }
               }
             }
