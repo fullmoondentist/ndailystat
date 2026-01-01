@@ -74,34 +74,25 @@
             }
             [x-cloak] { display: none !important; }
 
-            .animate-path {
-                stroke-dasharray: 1000;       /* กำหนดความยาวเส้นสมมติ */
-                stroke-dashoffset: 1000;      /* ดึงเส้นหลบไปให้หมดก่อน */
-                animation: drawLine 2.5s ease-out forwards; /* สั่งวาดใน 2.5 วิ */
-              }
+           .animate-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 2.5s ease-out forwards;
+            }
 
-              @keyframes drawLine {
-                to { stroke-dashoffset: 0; }  /* ค่อยๆ คืนค่าเส้นกลับมา */
-              }
-              
-              /* แถม: Keyframes สำหรับ Area ให้ค่อยๆ ชัดขึ้น */
-              @keyframes fadeInArea {
-                from { opacity: 0; }
-                to { opacity: 1; }
-              }
-              /* Animation ขยายหน้ากาก (สำหรับ Gradient) */
-                .animate-mask {
-                  width: 0; /* เริ่มต้นความกว้าง 0 */
-                  animation: expandWidth 2.5s ease-out forwards; /* เวลาเท่ากับเส้น เพื่อให้วิ่งไปพร้อมกัน */
-                }
+            @keyframes drawLine {
+              to { stroke-dashoffset: 0; }
+            }
 
-                @keyframes drawLine {
-                  to { stroke-dashoffset: 0; }
-                }
+            /* 2. ส่วนของหน้ากากเงา (Mask for Gradient) */
+            .animate-mask {
+              width: 0; /* เริ่มที่ 0 */
+              animation: expandWidth 2.5s ease-out forwards;
+            }
 
-                @keyframes expandWidth {
-                  to { width: 100%; } /* ขยายจนเต็ม 100% */
-                }
+            @keyframes expandWidth {
+              to { width: 100%; } /* ขยายไปจนเต็ม */
+            }
         }
     </style>
 </head>
