@@ -370,16 +370,16 @@
     class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-gray-100 px-10 safe-area-inset-bottom z-50">
     <div class="container mx-auto max-w-sm flex justify-between">
       <button @click="activeTab = 'dashboard'" class="nav-item" :class="activeTab === 'dashboard' ? 'active' : ''">
-        <i class="fa-solid fa-house-chimney text-xl mb-1"></i>
-        <span>หน้าหลัก</span>
+        <i class="fa-solid fa-gauge-high text-xl mb-1"></i>
+        <span>Dashboard</span>
       </button>
       <button @click="activeTab = 'ranking'" class="nav-item" :class="activeTab === 'ranking' ? 'active' : ''">
         <i class="fa-solid fa-ranking-star text-xl mb-1"></i>
-        <span>จัดอันดับ</span>
+        <span>Ranking</span>
       </button>
       <button @click="activeTab = 'profile'" class="nav-item" :class="activeTab === 'profile' ? 'active' : ''">
-        <i class="fa-solid fa-user-gear text-xl mb-1"></i>
-        <span>โปรไฟล์</span>
+        <i class="fa-solid fa-user text-xl mb-1"></i>
+        <span>Profile</span>
       </button>
     </div>
   </nav>
