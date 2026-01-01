@@ -215,7 +215,7 @@
               <!-- Area Fill -->
               <path :d="trendFill" fill="url(#trendGradient)" stroke="none" />
               <!-- Line -->
-              <path :d="trendPath" fill="none" stroke="#2563eb" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" />
+              <path :d="trendPath" fill="none" stroke="#2563eb" stroke-width="1" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </div>
 
@@ -511,15 +511,34 @@
             const height = 40; // SVG height
             const step = width / (history.length - 1);
             
-            let path = `M 0,${height - (history[0].a / 100 * height)}`;
+            // คำนวณจุดแรก
+            let prevX = 0;
+            let prevY = height - (history[0].a / 100 * height);
             
+            let path = `M ${prevX},${prevY}`;
+            
+            // วนลูปจุดที่เหลือ เพื่อสร้างเส้นโค้ง
             for (let i = 1; i < history.length; i++) {
-                const x = i * step;
-                const y = height - (history[i].a / 100 * height);
-                // Simple line to
-                path += ` L ${x},${y}`;
-                // Optional: Bezier curve for smoothness? L is simpler and sharper.
+                const currentX = i * step;
+                const currentY = height - (history[i].a / 100 * height);
+                
+                // เทคนิค: สร้าง Control Point ที่กึ่งกลางระหว่าง 2 จุด
+                // cp1X = ดึงออกจากจุดเดิมไปทางขวาครึ่งทาง
+                // cp2X = ดึงออกจากจุดใหม่ไปทางซ้ายครึ่งทาง
+                const cp1X = prevX + (currentX - prevX) / 2;
+                const cp1Y = prevY; // ระดับความสูงเท่าจุดเดิม
+                
+                const cp2X = prevX + (currentX - prevX) / 2;
+                const cp2Y = currentY; // ระดับความสูงเท่าจุดใหม่
+
+                // C = Cubic Bezier Curve
+                path += ` C ${cp1X},${cp1Y} ${cp2X},${cp2Y} ${currentX},${currentY}`;
+                
+                // อัปเดตจุดล่าสุดเพื่อใช้ในรอบถัดไป
+                prevX = currentX;
+                prevY = currentY;
             }
+            
             return path;
         },
 
