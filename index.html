@@ -586,111 +586,99 @@
           await this.callAPI('clearRankUp', { email: this.profile.email });
         },
 
-  renderDeptChart() {
-    const ctx = document.getElementById('deptChart');
-    if (!ctx || !this.system.dept_stats) return;
+        renderDeptChart() {
+          const ctx = document.getElementById('deptChart');
+          if (!ctx || !this.system.dept_stats) return;
 
-    const stats = this.system.dept_stats;
-    const labels = Object.keys(stats);
-    const data = labels.map(label => stats[label].on_time_rate);
-    
-    // สร้างสี Gradient
-    const backgroundColors = labels.map(label => {
-        const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 200, 0);
-        if (label === this.profile.department) {
-            gradient.addColorStop(0, 'rgba(30, 64, 175, 0.9)');
-            gradient.addColorStop(1, 'rgba(14, 165, 233, 0.9)');
-        } else {
-            gradient.addColorStop(0, 'rgba(148, 163, 184, 0.4)');
-            gradient.addColorStop(1, 'rgba(156, 163, 175, 0.2)');
-        }
-        return gradient;
-    });
+          const stats = this.system.dept_stats;
+          const labels = Object.keys(stats);
+          const data = labels.map(label => stats[label].on_time_rate);
+          
+          // สร้างสี Gradient
+          const backgroundColors = labels.map(label => {
+              const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 200, 0);
+              if (label === this.profile.department) {
+                  gradient.addColorStop(0, 'rgba(30, 64, 175, 0.9)');
+                  gradient.addColorStop(1, 'rgba(14, 165, 233, 0.9)');
+              } else {
+                  gradient.addColorStop(0, 'rgba(148, 163, 184, 0.4)');
+                  gradient.addColorStop(1, 'rgba(156, 163, 175, 0.2)');
+              }
+              return gradient;
+          });
 
-    if (this.deptChart) this.deptChart.destroy();
+          if (this.deptChart) this.deptChart.destroy();
 
-    this.deptChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                data: data,
-                backgroundColor: backgroundColors,
-                
-                // ⭐ จุดแก้ที่ 1: ทำให้กลมที่สุด
-                // ใส่ค่าเยอะๆ ไปเลยเพื่อให้เป็นครึ่งวงกลม (Pill shape)
-                borderRadius: 100, 
-                
-                // ถ้าอยากให้กลมเฉพาะ "ขอบขวา" (หัวกระสุน) ให้ใช้บรรทัดนี้:
-                // borderSkipped: 'start', 
-                
-                // แต่ถ้าอยากให้กลมทั้งแท่ง (แคปซูล) ให้ใช้:
-                borderSkipped: false,
+          this.deptChart = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                  labels: labels,
+                  datasets: [{
+                      data: data,
+                      backgroundColor: backgroundColors,
+                      borderRadius: 100, // กลมดิ๊ก
+                      borderSkipped: false,
+                      barThickness: 8,
+                      maxBarThickness: 8
+                  }]
+              },
+              options: {
+                  indexAxis: 'y',
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  
+                  // ⭐ จุดแก้หลัก: ปิดการรับรู้ Touch/Click ทั้งหมด
+                  events: [], 
+                  
+                  // ⭐ ปิด Hover Mode สำทับอีกที
+                  hover: { mode: null },
 
-                barThickness: 8,
-                maxBarThickness: 8
-            }]
-        },
-        options: {
-            indexAxis: 'y',
-            responsive: true,
-            maintainAspectRatio: false,
-            
-            // ⭐ จุดแก้ที่ 2: เผื่อที่ขวาเยอะหน่อย สำหรับวางตัวเลข
-            layout: {
-                padding: { right: 45 } 
-            },
-            
-            plugins: {
-                legend: { display: false },
-                tooltip: { enabled: false }
-            },
-            scales: {
-                x: { 
-                    display: false, 
-                    max: 100 
-                },
-                y: {
-                    grid: { display: false },
-                    border: { display: false },
-                    ticks: {
-                        color: '#9CA3AF',
-                        font: { size: 12, weight: 'bold' }
-                    }
-                }
-            },
-            
-            // ⭐ จุดแก้ที่ 3: Logic การวาดตัวเลข
-            animation: {
-                onComplete: function() {
-                    const chart = this;
-                    const ctx = chart.ctx;
-                    
-                    ctx.font = "bold 11px sans-serif";
-                    ctx.fillStyle = "#9CA3AF";
-                    ctx.textAlign = "right"; // จัดชิดขวา
-                    ctx.textBaseline = "middle";
+                  layout: {
+                      padding: { right: 45 } 
+                  },
+                  plugins: {
+                      legend: { display: false },
+                      tooltip: { enabled: false } // ปิด Tooltip ถาวร
+                  },
+                  scales: {
+                      x: { 
+                          display: false, 
+                          max: 100 
+                      },
+                      y: {
+                          grid: { display: false },
+                          border: { display: false },
+                          ticks: {
+                              color: '#9CA3AF',
+                              font: { size: 12, weight: 'bold' }
+                          }
+                      }
+                  },
+                  animation: {
+                      onComplete: function() {
+                          const chart = this;
+                          const ctx = chart.ctx;
+                          
+                          ctx.font = "bold 11px sans-serif";
+                          ctx.fillStyle = "#9CA3AF";
+                          ctx.textAlign = "right";
+                          ctx.textBaseline = "middle";
 
-                    chart.data.datasets.forEach(function(dataset, i) {
-                        const meta = chart.getDatasetMeta(i);
-                        meta.data.forEach(function(bar, index) {
-                            const dataVal = dataset.data[index];
-                            
-                            // คำนวณตำแหน่ง:
-                            // chart.chartArea.right = ขอบขวาสุดของพื้นที่กราฟ (เส้น 100%)
-                            // + 35 = ดันออกไปในพื้นที่ padding ที่เราเผื่อไว้
-                            const xPosition = chart.chartArea.right + 35;
-                            const yPosition = bar.y;
-                            
-                            // สั่งวาด
-                            ctx.fillText(dataVal + "%", xPosition, yPosition);
-                        });
-                    });
-                }
-            }
-        }
-    });
-}
+                          chart.data.datasets.forEach(function(dataset, i) {
+                              const meta = chart.getDatasetMeta(i);
+                              meta.data.forEach(function(bar, index) {
+                                  const dataVal = dataset.data[index];
+                                  const xPosition = chart.chartArea.right + 35;
+                                  const yPosition = bar.y;
+                                  ctx.fillText(dataVal + "%", xPosition, yPosition);
+                              });
+                          });
+                      }
+                  }
+              }
+          });
+      }
+
       }
     }
   </script>
