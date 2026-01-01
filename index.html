@@ -196,7 +196,8 @@
             <i class="fa-solid fa-chart-column text-blue-600"></i>
             Department Same-day Rate
           </h3>
-          <div class="space-y-2 mt-4" x-data="{ showAnim: false }" x-init="setTimeout(() => showAnim = true, 100)">
+          <div class="space-y-2 mt-4" x-data="{ showAnim: false }"
+               x-init="$watch('system.dept_stats', () => { showAnim = false; setTimeout(() => showAnim = true, 300) })">
             <template x-for="(stat, deptName) in system.dept_stats" :key="deptName">
               <div class="flex items-center gap-3">
                 
