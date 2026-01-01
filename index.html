@@ -79,6 +79,19 @@
 
 <body class="bg-slate-50 min-h-screen text-slate-900 font-sans pb-24" x-data="dailyApp()" x-init="init()">
 
+
+    <!-- Ticker Messages -->
+    <div class="ticker-wrap rounded-xl" x-show="system.ticker_messages?.length > 0">
+      <div class="ticker-move text-[11px] font-bold text-blue-900/60 uppercase tracking-wider">
+        <template x-for="msg in system.ticker_messages" :key="msg">
+          <span class="mx-8 flex-inline items-center">
+            <i class="fa-solid fa-bullhorn mr-2"></i>
+            <span x-text="msg"></span>
+          </span>
+        </template>
+      </div>
+    </div>  
+
   <!-- Top Header -->
 <header
     :class="'bg-gradient-to-br ' + (rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500') + ' text-white px-6 py-6 mx-5 mt-5 rounded-2xl shadow-xl relative overflow-hidden'">
@@ -100,7 +113,7 @@
       <div class="flex flex-col items-end justify-between text-right">
         
         <div class="flex items-center justify-end gap-1 w-fit ml-auto bg-transparent">
-          <span class="text-base" x-text="rankConfig[profile.current_class]?.emoji || '⚪'"></span>
+          <span class="text-base" x-text="rankConfig[profile.current_class]?.emoji || '🪨'"></span>
           <span x-text="profile.current_class || 'UNRANKED'" class="text-xs font-bold uppercase tracking-wider"></span>
         </div>
 
@@ -127,7 +140,7 @@
         <div class="stat-value text-purple-600" x-text="(profile.recent_acc || 0) + '%'"></div>
       </div>
       <div class="glass-card p-3 flex flex-col items-center">
-        <div class="stat-label">All-time Acc</div>
+        <div class="stat-label">All-time Accu</div>
         <div class="stat-value text-emerald-600" x-text="(profile.alltime_acc || 0) + '%'"></div>
       </div>
       <div class="glass-card p-3 flex flex-col items-center">
@@ -139,17 +152,7 @@
       </div>
     </div>
 
-    <!-- Ticker Messages -->
-    <div class="ticker-wrap rounded-xl" x-show="system.ticker_messages?.length > 0">
-      <div class="ticker-move text-[11px] font-bold text-blue-900/60 uppercase tracking-wider">
-        <template x-for="msg in system.ticker_messages" :key="msg">
-          <span class="mx-8 flex-inline items-center">
-            <i class="fa-solid fa-bullhorn mr-2"></i>
-            <span x-text="msg"></span>
-          </span>
-        </template>
-      </div>
-    </div>
+
 
     <!-- Dynamic Views -->
     <div x-cloak>
