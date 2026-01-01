@@ -103,8 +103,13 @@
                 <span class="text-2xl font-black" x-text="profile.display_name || 'Loading...'"></span>
                 <i class="fa-solid fa-circle-check text-blue-300 text-sm"></i>
               </div>
-              <p class="text-[12px] opacity-70 mt-1 font-medium" x-text="profile.email"
-                x-text="profile.department || 'No Department'"></p>
+              <p class="text-[11px] opacity-70 mt-0.5 font-medium" x-text="profile.email"></p>
+              <div class="flex items-center gap-1 mt-1 opacity-90">
+                <span x-html="deptIconMap[profile.department] || '<i class=\'fa-solid fa-building-user\'></i>'"
+                  class="text-[10px] text-blue-200"></span>
+                <span class="text-[11px] font-black uppercase tracking-wider"
+                  x-text="profile.department || 'RSU Dental'"></span>
+              </div>
             </div>
 
             <div class="flex flex-col items-end justify-between text-right">
@@ -488,6 +493,18 @@
           'SILVER': { emoji: '🥈', color: 'from-slate-300 to-slate-400' },
           'BRONZE': { emoji: '🥉', color: 'from-orange-700 to-amber-900' },
           'UNRANKED': { emoji: '⚪', color: 'from-gray-400 to-gray-500' }
+        },
+
+        deptIconMap: {
+          'Endo': '<i class="fa-solid fa-thumbtack"></i>',
+          'Oper': '<i class="fa-solid fa-tooth"></i>',
+          'Oral Med': '<i class="fa-solid fa-magnifying-glass"></i>',
+          'Ortho': '<i class="fa-solid fa-face-grimace"></i>',
+          'Pediatric': '<i class="fa-solid fa-children"></i>',
+          'Perio': '<i class="fa-solid fa-teeth"></i>',
+          'Prosth': '<i class="fa-solid fa-teeth-open"></i>',
+          'Radio': '<i class="fa-solid fa-skull"></i>',
+          'Surg': '<i class="fa-solid fa-head-side-mask"></i>'
         },
 
         get expPercentage() {
