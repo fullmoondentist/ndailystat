@@ -11,6 +11,7 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@100;400&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
@@ -112,7 +113,8 @@
 
               <div class="text-left flex flex-col justify-center">
                 <div class="flex items-center gap-2">
-                  <span class="text-2xl font-bold leading-tight" x-text="profile.display_name || 'Loading...'"></span>
+                  <span class="text-2xl leading-tight" style="font-family: 'Kanit', sans-serif; font-weight: 100;"
+                    x-text="profile.display_name || 'Loading...'"></span>
                 </div>
                 <p class="text-[11px] opacity-70 mt-0.5 font-medium"
                   x-text="profile.email ? profile.email.split('@')[0] : ''"></p>
