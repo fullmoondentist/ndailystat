@@ -90,40 +90,41 @@
 
         <!-- Top Header -->
         <header
-            :class="'bg-gradient-to-br ' + (rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500') + ' text-white px-6 py-6 rounded-2xl shadow-xl relative overflow-hidden'">
-            
-            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-0 left-0 -ml-10 -mb-10 w-48 h-48 bg-blue-400/20 rounded-full blur-2xl"></div>
+          :class="'bg-gradient-to-br ' + (rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500') + ' text-white px-6 py-6 rounded-2xl shadow-xl relative overflow-hidden'">
 
-            <div class="relative z-10 flex justify-between items-stretch">
-              
-              <div class="text-left flex flex-col justify-center">
-                <h1 class="text-xs font-bold uppercase tracking-[0.2em] opacity-80 mb-1">ยินดีต้อนรับ</h1>
-                <div class="flex items-center gap-2">
-                  <span class="text-2xl font-black" x-text="profile.display_name || 'Loading...'"></span>
-                  <i class="fa-solid fa-circle-check text-blue-300 text-sm"></i>
-                </div>
-                <p class="text-[12px] opacity-70 mt-1 font-medium" x-text="profile.email"></p>
+          <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+          <div class="absolute bottom-0 left-0 -ml-10 -mb-10 w-48 h-48 bg-blue-400/20 rounded-full blur-2xl"></div>
+
+          <div class="relative z-10 flex justify-between items-stretch">
+
+            <div class="text-left flex flex-col justify-center">
+              <h1 class="text-xs font-bold uppercase tracking-[0.2em] opacity-80 mb-1">ยินดีต้อนรับ</h1>
+              <div class="flex items-center gap-2">
+                <span class="text-2xl font-black" x-text="profile.display_name || 'Loading...'"></span>
+                <i class="fa-solid fa-circle-check text-blue-300 text-sm"></i>
+              </div>
+              <p class="text-[12px] opacity-70 mt-1 font-medium" x-text="profile.email"></p>
+            </div>
+
+            <div class="flex flex-col items-end justify-between text-right">
+
+              <div class="flex items-center justify-end gap-1 w-fit ml-auto bg-transparent">
+                <span class="text-base" x-text="rankConfig[profile.current_class]?.emoji || '🐣'"></span>
+                <span x-text="profile.current_class || 'UNRANKED'"
+                  class="text-xs font-bold uppercase tracking-wider"></span>
               </div>
 
-              <div class="flex flex-col items-end justify-between text-right">
-                
-                <div class="flex items-center justify-end gap-1 w-fit ml-auto bg-transparent">
-                  <span class="text-base" x-text="rankConfig[profile.current_class]?.emoji || '🐣'"></span>
-                  <span x-text="profile.current_class || 'UNRANKED'" class="text-xs font-bold uppercase tracking-wider"></span>
-                </div>
+              <div class="text-2xl leading-none scale-110 origin-right drop-shadow-sm filter py-1"
+                x-text="profile.current_title ? profile.current_title.replace(/[a-zA-Z].*/, '') : '🌱'">
+              </div>
 
-                <div class="text-2xl leading-none scale-110 origin-right drop-shadow-sm filter py-1"
-                     x-text="profile.current_title ? profile.current_title.replace(/[a-zA-Z].*/, '') : '🌱'">
-                </div>
-
-                <div class="text-[11px] font-bold opacity-90 uppercase tracking-wide"
-                     x-text="profile.current_title ? profile.current_title.replace(/^[^a-zA-Z]*/, '') : 'Novice'">
-                </div>
-
+              <div class="text-[11px] font-bold opacity-90 uppercase tracking-wide"
+                x-text="profile.current_title ? profile.current_title.replace(/^[^a-zA-Z]*/, '') : 'Novice'">
               </div>
 
             </div>
+
+          </div>
         </header>
 
         <!-- Dashboard Stats Row -->
@@ -164,12 +165,14 @@
             <span class="text-xs font-bold text-gray-700" x-text="profile.current_title"></span>
           </div>
           <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden mb-2">
-            <div class="h-full premium-gradient transition-all duration-1000 rounded-full" :style="'width: ' + (showExp ? expPercentage : 0) + '%'">
+            <div class="h-full premium-gradient transition-all duration-1000 rounded-full"
+              :style="'width: ' + (showExp ? expPercentage : 0) + '%'">
             </div>
           </div>
           <div class="flex justify-between text-[10px] font-bold tracking-wider text-gray-400">
             <span x-text="profile.total_mp?.toLocaleString() + ' MP'"></span>
-            <span x-text="profile.next_rank_mp ? 'Next: ' + (profile.next_rank_name || '') + ' (' + profile.next_rank_mp.toLocaleString() + ' MP)' : 'Next: MAX'"></span>
+            <span
+              x-text="profile.next_rank_mp ? 'Next: ' + (profile.next_rank_name || '') + ' (' + profile.next_rank_mp.toLocaleString() + ' MP)' : 'Next: MAX'"></span>
           </div>
         </div>
 
@@ -181,11 +184,9 @@
           </h3>
           <div class="grid grid-cols-8 gap-2">
             <template x-for="item in groupedRewards" :key="item.name">
-              <div
-                class="aspect-square flex items-center justify-center text-xl relative">
+              <div class="aspect-square flex items-center justify-center text-xl relative">
                 <span x-text="item.emoji"></span>
-                <div x-show="item.count > 1"
-                  class="absolute -top-1 -right-1 text-gray-500 text-[10px] font-bold"
+                <div x-show="item.count > 1" class="absolute -top-1 -right-1 text-gray-500 text-[10px] font-bold"
                   x-text="'x' + item.count">
                 </div>
               </div>
@@ -200,23 +201,22 @@
         <!-- Accuracy Trend Graph -->
         <div class="glass-card p-4 pb-2 overflow-hidden">
           <div class="flex justify-between items-end mb-2">
-            <h3 class="text-sm font-bold text-gray-800"><i class="fa-solid fa-chart-area text-cyan-600 mr-2"></i>Accuracy Trend</h3>
+            <h3 class="text-sm font-bold text-gray-800"><i
+                class="fa-solid fa-chart-area text-cyan-600 mr-2"></i>Accuracy Trend</h3>
             <div class="flex items-center gap-1.5" x-show="profile.daily_history?.length > 1">
               <span class="text-xs font-black text-slate-700" x-text="(profile.alltime_acc || 0) + '%'"></span>
-              <i class="fa-solid"
-                 :class="{
+              <i class="fa-solid" :class="{
                    'fa-chevron-up text-emerald-500': trendDirection === 'up',
                    'fa-chevron-down text-rose-500': trendDirection === 'down',
                    'fa-minus text-gray-300': trendDirection === 'none'
                  }"></i>
             </div>
           </div>
-          
+
           <div class="h-16 w-full relative"
-               x-show="profile.daily_history && profile.daily_history.length > 1 && showTrend"
-               x-transition:enter="transition ease-out duration-[3000ms]"
-               x-transition:enter-start="opacity-0 translate-y-2"
-               x-transition:enter-end="opacity-100 translate-y-0">
+            x-show="profile.daily_history && profile.daily_history.length > 1 && showTrend"
+            x-transition:enter="transition ease-out duration-[3000ms]"
+            x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
             <svg class="w-full h-full overflow-visible" viewBox="0 0 100 40" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="trendGradient" x1="0" x2="0" y1="0" y2="1">
@@ -227,11 +227,13 @@
               <!-- Area Fill -->
               <path :d="trendFill" fill="url(#trendGradient)" stroke="none" />
               <!-- Line -->
-              <path :d="trendPath" fill="none" stroke="#2563eb" stroke-width="2" stroke-opacity="0.2" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" />
+              <path :d="trendPath" fill="none" stroke="#2563eb" stroke-width="2" stroke-opacity="0.2"
+                vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </div>
 
-          <div x-show="!profile.daily_history || profile.daily_history.length < 2" class="h-16 flex items-center justify-center text-xs text-gray-300 italic">
+          <div x-show="!profile.daily_history || profile.daily_history.length < 2"
+            class="h-16 flex items-center justify-center text-xs text-gray-300 italic">
             Not enough data for trend graph
           </div>
         </div>
@@ -249,22 +251,22 @@
           <div class="space-y-2 mt-4">
             <template x-for="(stat, deptName) in system.dept_stats" :key="deptName">
               <div class="flex items-center gap-3">
-                
+
                 <!-- Department Name -->
                 <div class="w-8 text-xs font-bold text-gray-500 text-right shrink-0" x-text="deptName"></div>
 
                 <!-- Progress Bar -->
                 <div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden relative">
                   <div class="h-full rounded-full transition-all duration-[1500ms] cubic-bezier(0.4, 0, 0.2, 1)"
-                    :style="`width: ${showDeptAnim ? stat.accuracy : 0}%;`"
-                    :class="deptName === profile.department
+                    :style="`width: ${showDeptAnim ? stat.accuracy : 0}%;`" :class="deptName === profile.department
                       ? 'bg-gradient-to-r from-blue-600 to-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.6)]'
                       : 'bg-gradient-to-r from-slate-300 to-slate-400 opacity-60'">
                   </div>
                 </div>
 
                 <!-- Percentage -->
-                <div class="w-8 text-[12px] font-bold text-gray-400 text-right shrink-0" x-text="stat.accuracy + '%'"></div>
+                <div class="w-8 text-[12px] font-bold text-gray-400 text-right shrink-0" x-text="stat.accuracy + '%'">
+                </div>
 
               </div>
             </template>
@@ -282,105 +284,105 @@
           </div>
           <div class="mt-4">
             <template x-for="(user, idx) in leaderboard" :key="user.email">
-            <div class="flex items-center gap-3 p-3 border-b border-gray-100 last:border-0"
-              :class="user.email === profile.email ? 'bg-blue-50/50' : ''">
-              <div class="w-8 h-8 flex items-center justify-center font-black text-sm rounded-lg"
-                :class="idx === 0 ? 'bg-yellow-100 text-yellow-700' : (idx === 1 ? 'bg-slate-100 text-slate-500' : (idx === 2 ? 'bg-orange-100 text-orange-700' : 'text-gray-400'))">
-                <span x-show="idx > 2" x-text="idx + 1"></span>
-                <i x-show="idx === 0" class="fa-solid fa-crown"></i>
-                <span x-show="idx === 1 || idx === 2" x-text="idx + 1"></span>
-              </div>
-              <div class="flex-1">
-                <div class="text-sm font-bold text-gray-800" x-text="user.display_name"></div>
-                <div class="text-[10px] text-gray-400 font-bold uppercase" x-text="user.current_title">
+              <div class="flex items-center gap-3 p-3 border-b border-gray-100 last:border-0"
+                :class="user.email === profile.email ? 'bg-blue-50/50' : ''">
+                <div class="w-8 h-8 flex items-center justify-center font-black text-sm rounded-lg"
+                  :class="idx === 0 ? 'bg-yellow-100 text-yellow-700' : (idx === 1 ? 'bg-slate-100 text-slate-500' : (idx === 2 ? 'bg-orange-100 text-orange-700' : 'text-gray-400'))">
+                  <span x-show="idx > 2" x-text="idx + 1"></span>
+                  <i x-show="idx === 0" class="fa-solid fa-crown"></i>
+                  <span x-show="idx === 1 || idx === 2" x-text="idx + 1"></span>
                 </div>
-              </div>
-              <div class="text-right">
-                <div class="text-sm font-black text-blue-600" x-text="user.total_mp.toLocaleString()">
-                </div>
-                <div class="text-[9px] font-bold text-gray-300 uppercase">MP Points</div>
-              </div>
-            </div>
-          </template>
-        </div>
-      </div>
-
-      <!-- History View -->
-      <div x-show="activeTab === 'history'" class="space-y-4">
-        <div class="flex justify-between items-center px-1">
-          <h2 class="text-xl font-black text-slate-800">History</h2>
-          <span class="text-[10px] font-bold text-gray-400 uppercase"
-            x-text="'Total ' + (historyTotal || 0) + ' items'"></span>
-        </div>
-
-        <div class="space-y-6">
-          <template x-for="group in groupedHistory" :key="group.date">
-            <div class="space-y-2">
-              <div class="flex items-center gap-2 px-1">
-                <div class="h-px flex-1 bg-gray-200"></div>
-                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest"
-                  x-text="formatThaiDate(group.date)"></span>
-                <div class="h-px flex-1 bg-gray-200"></div>
-              </div>
-
-              <div class="space-y-2">
-                <template x-for="item in group.items" :key="item.time + item.student">
-                  <div
-                    class="glass-card p-3 flex justify-between items-center transition-transform active:scale-[0.98]">
-                    <div class="flex items-center gap-3">
-                      <div
-                        class="w-10 h-10 rounded-xl bg-slate-50 flex flex-col items-center justify-center border border-white">
-                        <span class="text-[9px] font-black text-gray-400" x-text="item.time"></span>
-                        <i class="fa-solid fa-file-signature text-blue-500/50 text-xs"></i>
-                      </div>
-                      <div>
-                        <div class="text-xs font-bold text-gray-800" x-text="item.student">
-                        </div>
-                        <div class="text-[9px] text-gray-400 font-medium" x-text="item.session || 'Period'"></div>
-                      </div>
-                    </div>
-                    <div class="text-right">
-                      <div
-                        :class="'px-2 py-0.5 rounded-lg text-[9px] font-black uppercase text-white shadow-sm inline-block ' + statusColors[item.status]">
-                        <span x-text="item.status"></span>
-                      </div>
-                      <div class="text-[9px] font-bold text-gray-300 mt-1" x-text="'+' + item.score + ' MP'"></div>
-                    </div>
+                <div class="flex-1">
+                  <div class="text-sm font-bold text-gray-800" x-text="user.display_name"></div>
+                  <div class="text-[10px] text-gray-400 font-bold uppercase" x-text="user.current_title">
                   </div>
-                </template>
+                </div>
+                <div class="text-right">
+                  <div class="text-sm font-black text-blue-600" x-text="user.total_mp.toLocaleString()">
+                  </div>
+                  <div class="text-[9px] font-bold text-gray-300 uppercase">MP Points</div>
+                </div>
               </div>
-            </div>
-          </template>
-        </div>
-
-        <div x-show="historyHasMore" class="pt-4 pb-8">
-          <button @click="loadMoreHistory()" :disabled="isLoadingHistory"
-            class="w-full py-3 glass-card text-xs font-bold text-blue-600 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2">
-            <span x-show="!isLoadingHistory">โหลดเพิ่มเติม</span>
-            <i x-show="!isLoadingHistory" class="fa-solid fa-chevron-down"></i>
-            <i x-show="isLoadingHistory" class="fa-solid fa-circle-notch fa-spin"></i>
-          </button>
-        </div>
-
-        <div x-show="!isLoading && history.length === 0" class="text-center py-20 text-gray-300">
-          <i class="fa-solid fa-folder-open block text-4xl mb-2 opacity-10"></i>
-          <p class="text-xs italic font-medium">ยังไม่มีประวัติการบันทึก</p>
-        </div>
-      </div>
-
-      <!-- Profile / Rewards View -->
-      <div x-show="activeTab === 'profile'" class="space-y-4">
-        <div class="glass-card p-6 flex flex-col items-center">
-          <div
-            class="w-20 h-20 rounded-full premium-gradient flex items-center justify-center text-3xl text-white shadow-xl mb-4 border-4 border-white">
-            <span x-text="profile.display_name?.charAt(0) || '?'"></span>
+            </template>
           </div>
-          <h2 class="text-lg font-bold text-gray-800" x-text="profile.display_name"></h2>
-          <p class="text-xs text-gray-400 font-medium" x-text="profile.department || 'No Department'"></p>
         </div>
 
+        <!-- History View -->
+        <div x-show="activeTab === 'history'" class="space-y-4">
+          <div class="flex justify-between items-center px-1">
+            <h2 class="text-xl font-black text-slate-800">History</h2>
+            <span class="text-[10px] font-bold text-gray-400 uppercase"
+              x-text="'Total ' + (historyTotal || 0) + ' items'"></span>
+          </div>
+
+          <div class="space-y-6">
+            <template x-for="group in groupedHistory" :key="group.date">
+              <div class="space-y-2">
+                <div class="flex items-center gap-2 px-1">
+                  <div class="h-px flex-1 bg-gray-200"></div>
+                  <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest"
+                    x-text="formatThaiDate(group.date)"></span>
+                  <div class="h-px flex-1 bg-gray-200"></div>
+                </div>
+
+                <div class="space-y-2">
+                  <template x-for="item in group.items" :key="item.time + item.student">
+                    <div
+                      class="glass-card p-3 flex justify-between items-center transition-transform active:scale-[0.98]">
+                      <div class="flex items-center gap-3">
+                        <div
+                          class="w-10 h-10 rounded-xl bg-slate-50 flex flex-col items-center justify-center border border-white">
+                          <span class="text-[9px] font-black text-gray-400" x-text="item.time"></span>
+                          <i class="fa-solid fa-file-signature text-blue-500/50 text-xs"></i>
+                        </div>
+                        <div>
+                          <div class="text-xs font-bold text-gray-800" x-text="item.student">
+                          </div>
+                          <div class="text-[9px] text-gray-400 font-medium" x-text="item.session || 'Period'"></div>
+                        </div>
+                      </div>
+                      <div class="text-right">
+                        <div
+                          :class="'px-2 py-0.5 rounded-lg text-[9px] font-black uppercase text-white shadow-sm inline-block ' + statusColors[item.status]">
+                          <span x-text="item.status"></span>
+                        </div>
+                        <div class="text-[9px] font-bold text-gray-300 mt-1" x-text="'+' + item.score + ' MP'"></div>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </template>
+          </div>
+
+          <div x-show="historyHasMore" class="pt-4 pb-8">
+            <button @click="loadMoreHistory()" :disabled="isLoadingHistory"
+              class="w-full py-3 glass-card text-xs font-bold text-blue-600 hover:bg-blue-50 transition-colors flex items-center justify-center gap-2">
+              <span x-show="!isLoadingHistory">โหลดเพิ่มเติม</span>
+              <i x-show="!isLoadingHistory" class="fa-solid fa-chevron-down"></i>
+              <i x-show="isLoadingHistory" class="fa-solid fa-circle-notch fa-spin"></i>
+            </button>
+          </div>
+
+          <div x-show="!isLoading && history.length === 0" class="text-center py-20 text-gray-300">
+            <i class="fa-solid fa-folder-open block text-4xl mb-2 opacity-10"></i>
+            <p class="text-xs italic font-medium">ยังไม่มีประวัติการบันทึก</p>
+          </div>
+        </div>
+
+        <!-- Profile / Rewards View -->
+        <div x-show="activeTab === 'profile'" class="space-y-4">
+          <div class="glass-card p-6 flex flex-col items-center">
+            <div
+              class="w-20 h-20 rounded-full premium-gradient flex items-center justify-center text-3xl text-white shadow-xl mb-4 border-4 border-white">
+              <span x-text="profile.display_name?.charAt(0) || '?'"></span>
+            </div>
+            <h2 class="text-lg font-bold text-gray-800" x-text="profile.display_name"></h2>
+            <p class="text-xs text-gray-400 font-medium" x-text="profile.department || 'No Department'"></p>
+          </div>
+
+        </div>
       </div>
-    </div>
   </main>
 
   <!-- Bottom Navigation -->
@@ -521,48 +523,48 @@
         },
 
         get trendPath() {
-            const history = this.profile.daily_history || [];
-            if (history.length < 2) return '';
-            
-            const width = 100;
-            const height = 40; // SVG height
-            const step = width / (history.length - 1);
-            
-            // คำนวณจุดแรก
-            let prevX = 0;
-            let prevY = height - (history[0].a / 100 * height);
-            
-            let path = `M ${prevX},${prevY}`;
-            
-            // วนลูปจุดที่เหลือ เพื่อสร้างเส้นโค้ง
-            for (let i = 1; i < history.length; i++) {
-                const currentX = i * step;
-                const currentY = height - (history[i].a / 100 * height);
-                
-                // เทคนิค: สร้าง Control Point ที่กึ่งกลางระหว่าง 2 จุด
-                // cp1X = ดึงออกจากจุดเดิมไปทางขวาครึ่งทาง
-                // cp2X = ดึงออกจากจุดใหม่ไปทางซ้ายครึ่งทาง
-                const cp1X = prevX + (currentX - prevX) / 2;
-                const cp1Y = prevY; // ระดับความสูงเท่าจุดเดิม
-                
-                const cp2X = prevX + (currentX - prevX) / 2;
-                const cp2Y = currentY; // ระดับความสูงเท่าจุดใหม่
+          const history = this.profile.daily_history || [];
+          if (history.length < 2) return '';
 
-                // C = Cubic Bezier Curve
-                path += ` C ${cp1X},${cp1Y} ${cp2X},${cp2Y} ${currentX},${currentY}`;
-                
-                // อัปเดตจุดล่าสุดเพื่อใช้ในรอบถัดไป
-                prevX = currentX;
-                prevY = currentY;
-            }
-            
-            return path;
+          const width = 100;
+          const height = 40; // SVG height
+          const step = width / (history.length - 1);
+
+          // คำนวณจุดแรก
+          let prevX = 0;
+          let prevY = height - (history[0].a / 100 * height);
+
+          let path = `M ${prevX},${prevY}`;
+
+          // วนลูปจุดที่เหลือ เพื่อสร้างเส้นโค้ง
+          for (let i = 1; i < history.length; i++) {
+            const currentX = i * step;
+            const currentY = height - (history[i].a / 100 * height);
+
+            // เทคนิค: สร้าง Control Point ที่กึ่งกลางระหว่าง 2 จุด
+            // cp1X = ดึงออกจากจุดเดิมไปทางขวาครึ่งทาง
+            // cp2X = ดึงออกจากจุดใหม่ไปทางซ้ายครึ่งทาง
+            const cp1X = prevX + (currentX - prevX) / 2;
+            const cp1Y = prevY; // ระดับความสูงเท่าจุดเดิม
+
+            const cp2X = prevX + (currentX - prevX) / 2;
+            const cp2Y = currentY; // ระดับความสูงเท่าจุดใหม่
+
+            // C = Cubic Bezier Curve
+            path += ` C ${cp1X},${cp1Y} ${cp2X},${cp2Y} ${currentX},${currentY}`;
+
+            // อัปเดตจุดล่าสุดเพื่อใช้ในรอบถัดไป
+            prevX = currentX;
+            prevY = currentY;
+          }
+
+          return path;
         },
 
         get trendFill() {
-            const path = this.trendPath;
-            if (!path) return '';
-            return `${path} L 100,40 L 0,40 Z`;
+          const path = this.trendPath;
+          if (!path) return '';
+          return `${path} L 100,40 L 0,40 Z`;
         },
 
         get trendDirection() {
