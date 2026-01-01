@@ -10,7 +10,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css" rel="stylesheet">
 
   <script>
@@ -179,8 +178,23 @@
             <i class="fa-solid fa-chart-column text-blue-600"></i>
             Department Same-day Rate
           </h3>
-          <div class="h-48 relative">
-            <canvas id="deptChart"></canvas>
+          <div class="space-y-3 mt-4" x-data="{ showAnim: false }" x-init="setTimeout(() => showAnim = true, 100)">
+            <template x-for="(stat, deptName) in system.dept_stats" :key="deptName">
+              <div class="grid grid-cols-[1fr_auto] gap-y-1">
+                <div class="col-span-2 flex justify-between items-end mb-1 px-1">
+                  <span class="text-xs font-bold text-gray-500" x-text="deptName"></span>
+                  <span class="text-[10px] font-bold text-gray-400" x-text="stat.on_time_rate + '%'"></span>
+                </div>
+                <div class="col-span-2 h-2 w-full bg-gray-100 rounded-full overflow-hidden relative">
+                  <div class="h-full rounded-full transition-all duration-[1500ms] ease-out"
+                    :style="`width: ${showAnim ? stat.on_time_rate : 0}%;`"
+                    :class="deptName === profile.department
+                      ? 'bg-gradient-to-r from-blue-600 to-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.5)]'
+                      : 'bg-gradient-to-r from-slate-300 to-slate-400 opacity-60'">
+                  </div>
+                </div>
+              </div>
+            </template>
           </div>
         </div>
 
@@ -404,7 +418,6 @@
         system: {},
         leaderboard: [],
         recentScores: [],
-        deptChart: null,
 
         // History state
         history: [],
@@ -482,11 +495,6 @@
             if (this.profile.is_rank_up) {
               setTimeout(() => this.showRankup = true, 500);
             }
-
-            // Render chart after DOM is ready
-            this.$nextTick(() => {
-              this.renderDeptChart();
-            });
 
           } catch (err) {
             console.error('Initialization failed', err);
@@ -586,105 +594,6 @@
           await this.callAPI('clearRankUp', { email: this.profile.email });
         },
 
-renderDeptChart() {
-    const ctx = document.getElementById('deptChart');
-    if (!ctx || !this.system.dept_stats) return;
-
-    const stats = this.system.dept_stats;
-    const labels = Object.keys(stats);
-    const data = labels.map(label => stats[label].on_time_rate);
-    
-    // สร้างสี Gradient
-    const backgroundColors = labels.map(label => {
-        const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 200, 0);
-        if (label === this.profile.department) {
-            gradient.addColorStop(0, 'rgba(30, 64, 175, 0.9)');
-            gradient.addColorStop(1, 'rgba(14, 165, 233, 0.9)');
-        } else {
-            gradient.addColorStop(0, 'rgba(148, 163, 184, 0.4)');
-            gradient.addColorStop(1, 'rgba(156, 163, 175, 0.2)');
-        }
-        return gradient;
-    });
-
-    if (this.deptChart) this.deptChart.destroy();
-
-    this.deptChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                data: data,
-                backgroundColor: backgroundColors,
-                borderRadius: 100,
-                borderSkipped: false,
-                barThickness: 8,
-                maxBarThickness: 8
-            }]
-        },
-        options: {
-            indexAxis: 'y',
-            responsive: true,
-            maintainAspectRatio: false,
-            
-            // ยังคงปิด Event เพื่อกันกระพริบ
-            events: [], 
-            hover: { mode: null },
-
-            layout: {
-                padding: { right: 45 } 
-            },
-            plugins: {
-                legend: { display: false },
-                tooltip: { enabled: false }
-            },
-            scales: {
-                x: { display: false, max: 100 },
-                y: {
-                    grid: { display: false },
-                    border: { display: false },
-                    ticks: {
-                        color: '#9CA3AF',
-                        font: { size: 12, weight: 'bold' }
-                    }
-                }
-            },
-            
-            // ⭐ กู้คืน Animation Setting กลับมาตรงนี้ครับ
-            animation: {
-                duration: 1500,           // ระยะเวลา 1.5 วินาที
-                easing: 'easeOutQuart',   // พุ่งออกแบบนุ่มๆ
-                x: {
-                    from: 0               // เริ่มยืดจาก 0
-                },
-                
-                // Logic วาดตัวเลขทำงานหลังจาก Animation จบ
-                onComplete: function() {
-                    const chart = this;
-                    const ctx = chart.ctx;
-                    
-                    ctx.font = "bold 11px sans-serif";
-                    ctx.fillStyle = "#9CA3AF";
-                    ctx.textAlign = "right";
-                    ctx.textBaseline = "middle";
-
-                    chart.data.datasets.forEach(function(dataset, i) {
-                        const meta = chart.getDatasetMeta(i);
-                        // เช็คว่ากราฟวาดเสร็จหรือยัง เพื่อความชัวร์
-                        if (!meta.hidden) {
-                            meta.data.forEach(function(bar, index) {
-                                const dataVal = dataset.data[index];
-                                const xPosition = chart.chartArea.right + 35;
-                                const yPosition = bar.y;
-                                ctx.fillText(dataVal + "%", xPosition, yPosition);
-                            });
-                        }
-                    });
-                }
-            }
-        }
-    });
-}
 
       }
     }
