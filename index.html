@@ -169,7 +169,7 @@
           </div>
           <div class="flex justify-between text-[10px] font-bold tracking-wider text-gray-400">
             <span x-text="profile.total_mp?.toLocaleString() + ' MP'"></span>
-            <span x-text="'Next: ' + (profile.next_rank_mp?.toLocaleString() || 'MAX')"></span>
+            <span x-text="profile.next_rank_mp ? 'Next: ' + (profile.next_rank_name || '') + ' (' + profile.next_rank_mp.toLocaleString() + ' MP)' : 'Next: MAX'"></span>
           </div>
         </div>
 
