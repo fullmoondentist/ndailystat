@@ -73,6 +73,23 @@
                 100% { transform: translate3d(-100%, 0, 0); }
             }
             [x-cloak] { display: none !important; }
+
+            .animate-path {
+                stroke-dasharray: 1000;       /* กำหนดความยาวเส้นสมมติ */
+                stroke-dashoffset: 1000;      /* ดึงเส้นหลบไปให้หมดก่อน */
+                animation: drawLine 2.5s ease-out forwards; /* สั่งวาดใน 2.5 วิ */
+              }
+
+              @keyframes drawLine {
+                to { stroke-dashoffset: 0; }  /* ค่อยๆ คืนค่าเส้นกลับมา */
+              }
+              
+              /* แถม: Keyframes สำหรับ Area ให้ค่อยๆ ชัดขึ้น */
+              @keyframes fadeInArea {
+                from { opacity: 0; }
+                to { opacity: 1; }
+              }
+
         }
     </style>
 </head>
@@ -80,16 +97,16 @@
 <body class="bg-slate-50 min-h-screen text-slate-900 font-sans pb-24" x-data="dailyApp()" x-init="init()">
 
 
-  <!-- Main Content Container -->
+  <!-- MAIN_CONTENT_CONTAINER START -->
   <main class="px-5 mt-4 relative z-20 space-y-4">
 
-    <!-- Dynamic Views -->
+    <!-- DYNAMIC_VIEWS START -->
     <div x-cloak>
 
-      <!-- Dashboard View -->
+      <!-- DASHBOARD_VIEW START -->
       <div x-show="activeTab === 'dashboard'" class="space-y-4">
 
-        <!-- Top Header -->
+        <!-- TOP_HEADER START -->
         <header
           :class="'bg-gradient-to-br ' + (rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500') + ' text-white px-6 py-6 rounded-2xl shadow-xl relative overflow-hidden'">
 
@@ -148,8 +165,9 @@
 
           </div>
         </header>
+        <!-- TOP_HEADER END -->
 
-        <!-- Dashboard Stats Row -->
+        <!-- DASHBOARD_STATS_ROW START -->
         <div class="grid grid-cols-3 gap-3">
           <div class="glass-card p-3 flex flex-col items-center">
             <div class="stat-label">Accuracy</div>
@@ -167,8 +185,9 @@
             </div>
           </div>
         </div>
+        <!-- DASHBOARD_STATS_ROW END -->
 
-        <!-- Ticker Messages -->
+        <!-- TICKER_MESSAGES START -->
         <div class="ticker-wrap rounded-xl" x-show="system.ticker_messages?.length > 0">
           <div class="ticker-move text-[11px] font-bold text-blue-900/60 uppercase tracking-wider">
             <template x-for="msg in system.ticker_messages" :key="msg">
@@ -179,8 +198,9 @@
             </template>
           </div>
         </div>
+        <!-- TICKER_MESSAGES END -->
 
-        <!-- Experience Progress -->
+        <!-- EXPERIENCE_PROGRESS START -->
         <div class="glass-card p-4">
           <div class="flex justify-between items-center mb-2">
             <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Experience Rank</span>
@@ -197,28 +217,32 @@
               x-text="profile.next_rank_mp ? 'Next: ' + (profile.next_rank_name || '') + ' (' + profile.next_rank_mp.toLocaleString() + ' MP)' : 'Next: MAX'"></span>
           </div>
         </div>
+        <!-- EXPERIENCE_PROGRESS END -->
 
 
 
-        <!-- Accuracy Trend Graph -->
+        <!-- ACCURACY_TREND_GRAPH START -->
         <div class="glass-card p-4 pb-2 overflow-hidden">
+
           <div class="flex justify-between items-end mb-2">
-            <h3 class="text-sm font-bold text-gray-800"><i
-                class="fa-solid fa-chart-area text-cyan-600 mr-2"></i>Accuracy Trend</h3>
+            <h3 class="text-sm font-bold text-gray-800">
+              <i class="fa-solid fa-chart-area text-cyan-600 mr-2"></i>Accuracy Trend
+            </h3>
             <div class="flex items-center gap-1.5" x-show="profile.daily_history?.length > 1">
               <span class="text-xs font-black text-slate-700" x-text="(profile.alltime_acc || 0) + '%'"></span>
               <i class="fa-solid" :class="{
-                   'fa-chevron-up text-emerald-500': trendDirection === 'up',
-                   'fa-chevron-down text-rose-500': trendDirection === 'down',
-                   'fa-minus text-gray-300': trendDirection === 'none'
-                 }"></i>
+                  'fa-chevron-up text-emerald-500': trendDirection === 'up',
+                  'fa-chevron-down text-rose-500': trendDirection === 'down',
+                  'fa-minus text-gray-300': trendDirection === 'none'
+                }"></i>
             </div>
           </div>
 
           <div class="h-16 w-full relative"
             x-show="profile.daily_history && profile.daily_history.length > 1 && showTrend"
-            x-transition:enter="transition ease-out duration-[3000ms]"
-            x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
+            x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2"
+            x-transition:enter-end="opacity-100 translate-y-0">
+
             <svg class="w-full h-full overflow-visible" viewBox="0 0 100 40" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="trendGradient" x1="0" x2="0" y1="0" y2="1">
@@ -226,11 +250,13 @@
                   <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" />
                 </linearGradient>
               </defs>
-              <!-- Area Fill -->
-              <path :d="trendFill" fill="url(#trendGradient)" stroke="none" />
-              <!-- Line -->
+
+              <path :d="trendFill" fill="url(#trendGradient)" stroke="none"
+                class="opacity-0 animate-[fadeInArea_1.5s_ease-out_0.5s_forwards]" />
+
               <path :d="trendPath" fill="none" stroke="#2563eb" stroke-width="2" stroke-opacity="0.2"
-                vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" />
+                vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round"
+                class="animate-path" />
             </svg>
           </div>
 
@@ -239,8 +265,9 @@
             Not enough data for trend graph
           </div>
         </div>
+        <!-- ACCURACY_TREND_GRAPH END -->
 
-        <!-- Reward box -->
+        <!-- REWARD_BOX START -->
         <div class="glass-card p-4">
           <h3 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
             <i class="fa-solid fa-gift text-rose-500"></i>
@@ -260,12 +287,14 @@
             </div>
           </div>
         </div>
+        <!-- REWARD_BOX END -->
       </div>
+      <!-- DASHBOARD_VIEW END -->
 
-      <!-- Leaderboard View -->
+      <!-- LEADERBOARD_VIEW START -->
       <div x-show="activeTab === 'ranking'" class="space-y-3">
 
-        <!-- Department Comparison Chart -->
+        <!-- DEPARTMENT_COMPARISON_CHART START -->
         <div class="glass-card p-4">
           <h3 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
             <i class="fa-solid fa-square-poll-horizontal text-blue-600"></i>
@@ -295,8 +324,9 @@
             </template>
           </div>
         </div>
+        <!-- DEPARTMENT_COMPARISON_CHART END -->
 
-        <!-- Leaderboard List -->
+        <!-- LEADERBOARD_LIST START -->
         <div class="glass-card p-4 overflow-hidden">
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2">
@@ -329,9 +359,11 @@
             </template>
           </div>
         </div>
+        <!-- LEADERBOARD_LIST END -->
       </div>
+      <!-- LEADERBOARD_VIEW END -->
 
-      <!-- History View -->
+      <!-- HISTORY_VIEW START -->
       <div x-show="activeTab === 'history'" class="space-y-4">
         <div class="flex justify-between items-center px-1">
           <h2 class="text-xl font-black text-slate-800">History</h2>
@@ -393,8 +425,9 @@
           <p class="text-xs italic font-medium">ยังไม่มีประวัติการบันทึก</p>
         </div>
       </div>
+      <!-- HISTORY_VIEW END -->
 
-      <!-- Profile / Rewards View -->
+      <!-- PROFILE_VIEW START -->
       <div x-show="activeTab === 'profile'" class="space-y-4">
         <div class="glass-card p-6 flex flex-col items-center">
           <div
@@ -411,10 +444,12 @@
           <p class="text-xs text-gray-400 font-medium" x-text="profile.email ? profile.email.split('@')[0] : ''"></p>
         </div>
       </div>
-    </div>
+      <!-- PROFILE_VIEW END -->
+      <!-- DYNAMIC_VIEWS END -->
   </main>
+  <!-- MAIN_CONTENT_CONTAINER END -->
 
-  <!-- Bottom Navigation -->
+  <!-- BOTTOM_NAVIGATION START -->
   <nav
     class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-gray-100 px-6 safe-area-inset-bottom z-50">
     <div class="container mx-auto max-w-md flex justify-between">
@@ -440,8 +475,9 @@
       </button>
     </div>
   </nav>
+  <!-- BOTTOM_NAVIGATION END -->
 
-  <!-- Rankup Celebration Modal -->
+  <!-- RANKUP_CELEBRATION_MODAL START -->
   <div x-show="showRankup" x-cloak
     class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm"
     x-transition.opacity>
@@ -467,8 +503,9 @@
       </button>
     </div>
   </div>
+  <!-- RANKUP_CELEBRATION_MODAL END -->
 
-  <!-- Loading Overlay -->
+  <!-- LOADING_OVERLAY START -->
   <div x-show="isLoading" x-cloak
     class="fixed inset-0 z-[200] bg-white flex flex-col items-center justify-center space-y-4">
     <div class="w-16 h-16 relative">
@@ -476,6 +513,7 @@
       <div class="absolute inset-0 border-4 border-blue-600 rounded-full border-t-transparent animate-spin"></div>
     </div>
   </div>
+  <!-- LOADING_OVERLAY END -->
 
   <script>
     const WEB_APP_URL = 'https://script.google.com/a/macros/rsu.ac.th/s/AKfycbxWTt29Ry2K8upGAFQV1rnxFnDHB9IUb4ahim3tZXFVvOUZv3jqxrrQnZ61NbTz6CdmHA/exec'; // REPLACE WITH ACTUAL URL
