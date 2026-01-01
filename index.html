@@ -178,21 +178,26 @@
             <i class="fa-solid fa-chart-column text-blue-600"></i>
             Department Same-day Rate
           </h3>
-          <div class="space-y-3 mt-4" x-data="{ showAnim: false }" x-init="setTimeout(() => showAnim = true, 100)">
+          <div class="space-y-2 mt-4" x-data="{ showAnim: false }" x-init="setTimeout(() => showAnim = true, 100)">
             <template x-for="(stat, deptName) in system.dept_stats" :key="deptName">
-              <div class="grid grid-cols-[1fr_auto] gap-y-1">
-                <div class="col-span-2 flex justify-between items-end mb-1 px-1">
-                  <span class="text-xs font-bold text-gray-500" x-text="deptName"></span>
-                  <span class="text-[10px] font-bold text-gray-400" x-text="stat.on_time_rate + '%'"></span>
-                </div>
-                <div class="col-span-2 h-2 w-full bg-gray-100 rounded-full overflow-hidden relative">
-                  <div class="h-full rounded-full transition-all duration-[1500ms] ease-out"
+              <div class="flex items-center gap-3">
+                
+                <!-- Department Name -->
+                <div class="w-12 text-xs font-bold text-gray-500 text-right shrink-0" x-text="deptName"></div>
+
+                <!-- Progress Bar -->
+                <div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden relative">
+                  <div class="h-full rounded-full transition-all duration-[1500ms] cubic-bezier(0.4, 0, 0.2, 1)"
                     :style="`width: ${showAnim ? stat.on_time_rate : 0}%;`"
                     :class="deptName === profile.department
-                      ? 'bg-gradient-to-r from-blue-600 to-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.5)]'
+                      ? 'bg-gradient-to-r from-blue-600 to-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.6)]'
                       : 'bg-gradient-to-r from-slate-300 to-slate-400 opacity-60'">
                   </div>
                 </div>
+
+                <!-- Percentage -->
+                <div class="w-8 text-[10px] font-bold text-gray-400 text-right shrink-0" x-text="stat.on_time_rate + '%'"></div>
+
               </div>
             </template>
           </div>
