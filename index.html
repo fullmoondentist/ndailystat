@@ -279,7 +279,8 @@
             </h3>
             <span class="text-[10px] font-bold text-gray-400 uppercase">Top 20 Instructors</span>
           </div>
-          <template x-for="(user, idx) in leaderboard" :key="user.email">
+          <div class="mt-4">
+            <template x-for="(user, idx) in leaderboard" :key="user.email">
             <div class="flex items-center gap-3 p-3 border-b border-gray-100 last:border-0"
               :class="user.email === profile.email ? 'bg-blue-50/50' : ''">
               <div class="w-8 h-8 flex items-center justify-center font-black text-sm rounded-lg"
