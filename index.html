@@ -624,14 +624,7 @@
               indexAxis: 'y',
               animation: {
                 duration: 1500,
-                easing: 'easeOutQuart',
-                delay: (context) => context.dataIndex * 100, // Staggered animation
-                animations: {
-                  x: {
-                    from: 0,
-                    easing: 'easeOutQuart'
-                  }
-                }
+                easing: 'easeOutQuart'
               },
               plugins: {
                 legend: { display: false },
