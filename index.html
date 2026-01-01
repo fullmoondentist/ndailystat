@@ -93,7 +93,7 @@
           <span class="text-2xl font-black" x-text="profile.display_name || 'Loading...'"></span>
           <i class="fa-solid fa-circle-check text-blue-300 text-sm"></i>
         </div>
-        <p class="text-[12px] opacity-70 mt-1 font-medium" x-text="profile.email"></p>
+        <p class="text-[12px] opacity-70 mt-1 font-medium" x-text="profile.email" x-text=" - profile.department || ''"></p>
       </div>
 
       <div class="flex flex-col items-end justify-between text-right">
