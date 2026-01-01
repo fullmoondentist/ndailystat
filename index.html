@@ -80,12 +80,14 @@
 <body class="bg-slate-50 min-h-screen text-slate-900 font-sans pb-24" x-data="dailyApp()" x-init="init()">
 
   <!-- Top Header -->
-  <header
+<header
     :class="'bg-gradient-to-br ' + (rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500') + ' text-white px-6 py-6 mx-5 mt-5 rounded-2xl shadow-xl relative overflow-hidden'">
+    
     <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
     <div class="absolute bottom-0 left-0 -ml-10 -mb-10 w-48 h-48 bg-blue-400/20 rounded-full blur-2xl"></div>
 
     <div class="relative z-10 flex justify-between items-start">
+      
       <div>
         <h1 class="text-xs font-bold uppercase tracking-[0.2em] opacity-80 mb-1">ยินดีต้อนรับ</h1>
         <div class="flex items-center gap-2">
@@ -94,11 +96,12 @@
         </div>
         <p class="text-[12px] opacity-70 mt-1 font-medium" x-text="profile.email"></p>
       </div>
-<div class="flex flex-col items-end text-right">
+
+      <div class="flex flex-col items-end text-right">
         
-        <div class="rank-badge bg-transparent mb-2 flex items-center justify-end">
-          <span x-text="rankConfig[profile.current_class]?.emoji || '⚪'"></span>
-          <span x-text="profile.current_class" class="ml-1 text-xs font-bold uppercase tracking-wider"></span>
+        <div class="rank-badge mb-2 flex items-center justify-end gap-1">
+          <span class="text-base" x-text="rankConfig[profile.current_class]?.emoji || '⚪'"></span>
+          <span x-text="profile.current_class || 'UNRANKED'" class="text-xs font-bold uppercase tracking-wider"></span>
         </div>
 
         <div class="text-2xl leading-none scale-110 origin-right drop-shadow-sm filter" 
@@ -110,9 +113,8 @@
         </div>
 
       </div>
-      </div>
     </div>
-  </header>
+</header>
 
   <!-- Main Content Container -->
   <main class="px-5 mt-4 relative z-20 space-y-4">
