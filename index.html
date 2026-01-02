@@ -161,9 +161,9 @@
             <div class="stat-value text-emerald-600" x-text="(profile.alltime_acc || 0) + '%'"></div>
           </div>
           <div class="glass-card p-3 flex flex-col items-center">
-            <div class="stat-label">Streak</div>
+            <div class="stat-label">Consistency</div>
             <div class="stat-value text-orange-500">
-              <span x-text="profile.current_streak || 0"></span>
+              <span x-text="profile.current_consistency || 0"></span>
               <i class="fa-solid fa-fire text-sm ml-0.5"></i>
             </div>
           </div>
@@ -198,9 +198,9 @@
             </div>
           </div>
           <div class="flex justify-between text-[10px] font-bold tracking-wider text-gray-400">
-            <span x-text="profile.total_mp?.toLocaleString() + ' MP'"></span>
+            <span x-text="profile.total_exp?.toLocaleString() + ' EXP'"></span>
             <span
-              x-text="profile.next_rank_mp ? 'Next: ' + (profile.next_rank_name || '') + ' (' + profile.next_rank_mp.toLocaleString() + ' MP)' : 'Next: MAX'"></span>
+              x-text="profile.next_rank_exp ? 'Next: ' + (profile.next_rank_name || '') + ' (' + profile.next_rank_exp.toLocaleString() + ' EXP)' : 'Next: MAX'"></span>
           </div>
         </div>
         <!-- EXPERIENCE_PROGRESS END -->
@@ -333,9 +333,9 @@
                   </div>
                 </div>
                 <div class="text-right">
-                  <div class="text-sm font-black text-blue-600" x-text="user.total_mp.toLocaleString()">
+                  <div class="text-sm font-black text-blue-600" x-text="user.total_exp.toLocaleString()">
                   </div>
-                  <div class="text-[9px] font-bold text-gray-300 uppercase">MP Points</div>
+                  <div class="text-[9px] font-bold text-gray-300 uppercase">EXP Points</div>
                 </div>
               </div>
             </template>
@@ -458,7 +458,7 @@
           'GOLD': { emoji: '🥇', color: 'from-yellow-400 to-orange-500' },
           'SILVER': { emoji: '🥈', color: 'from-slate-300 to-slate-400' },
           'BRONZE': { emoji: '🥉', color: 'from-orange-700 to-amber-900' },
-          'UNRANKED': { emoji: '⚪', color: 'from-gray-400 to-gray-500' }
+          'BEGINNER': { emoji: '▫️', color: 'from-gray-400 to-gray-500' }
         },
 
         deptIconMap: {
@@ -483,9 +483,9 @@
         },
 
         get expPercentage() {
-          if (!this.profile.total_mp || !this.profile.next_rank_mp) return 0;
-          const current = this.profile.total_mp;
-          const next = this.profile.next_rank_mp;
+          if (!this.profile.total_exp || !this.profile.next_rank_exp) return 0;
+          const current = this.profile.total_exp;
+          const next = this.profile.next_rank_exp;
           if (next <= current) return 100;
           return Math.min(100, Math.round((current / next) * 100));
         },
