@@ -131,17 +131,17 @@
             <div class="flex flex-col items-end justify-between text-right">
 
               <div class="flex items-center justify-end gap-1 w-fit ml-auto bg-transparent">
-                <span class="text-base" x-text="rankConfig[profile.current_class]?.emoji || '🐣'"></span>
-                <span x-text="profile.current_class || 'UNRANKED'"
+                <span class="text-base" x-text="rankConfig[profile.current_class]?.emoji || '▫️'"></span>
+                <span x-text="profile.current_class || 'Beginner'"
                   class="text-xs font-bold uppercase tracking-wider"></span>
               </div>
 
               <div class="text-2xl leading-none scale-110 origin-right drop-shadow-sm filter py-1"
-                x-text="profile.current_title ? profile.current_title.replace(/[a-zA-Z].*/, '') : '🌱'">
+                x-text="profile.current_title ? profile.current_title.replace(/[a-zA-Z].*/, '') : '🔰'">
               </div>
 
               <div class="text-[11px] font-bold opacity-90 uppercase tracking-wide"
-                x-text="profile.current_title ? profile.current_title.replace(/^[^a-zA-Z]*/, '') : 'Novice'">
+                x-text="profile.current_title ? profile.current_title.replace(/^[^a-zA-Z]*/, '') : 'Rookie'">
               </div>
 
             </div>
