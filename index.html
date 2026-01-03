@@ -365,9 +365,12 @@
 
       <!-- PROFILE_VIEW START -->
       <div x-show="activeTab === 'profile'" class="space-y-4">
-        <div class="glass-card p-6 flex flex-col items-center">
+
+        <!-- USER_HEADER_MINI START -->
+        <div class="glass-card p-6 flex flex-col items-center relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50/50 rounded-full -mr-16 -mt-16 blur-2xl"></div>
           <div
-            class="w-20 h-20 rounded-full premium-gradient flex items-center justify-center text-3xl text-white shadow-xl mb-4 border-4 border-white overflow-hidden bg-white/20">
+            class="w-20 h-20 rounded-full premium-gradient flex items-center justify-center text-3xl text-white shadow-xl mb-4 border-4 border-white overflow-hidden bg-white/20 relative z-10">
             <template x-if="profile.pictureUrl">
               <img :src="profile.pictureUrl" class="w-full h-full object-cover">
             </template>
@@ -375,10 +378,129 @@
               <span x-text="profile.display_name?.charAt(0) || '?'"></span>
             </template>
           </div>
-          <h2 class="text-lg text-gray-800 font-light" style="font-family: 'Kanit', sans-serif; font-weight: 300;"
+          <h2 class="text-xl text-gray-800 font-bold relative z-10" style="font-family: 'Kanit', sans-serif;"
             x-text="profile.display_name"></h2>
-          <p class="text-xs text-gray-400 font-medium" x-text="profile.email ? profile.email.split('@')[0] : ''"></p>
+          <p class="text-xs text-gray-400 font-medium relative z-10" x-text="profile.email || '---'"></p>
+
+          <!-- Persona Badge -->
+          <div
+            class="mt-4 px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-100"
+            x-text="profile.count_morning > profile.count_afternoon && profile.count_morning > profile.count_evening ? 'Morning Bird' : (profile.count_evening > profile.count_morning ? 'Night Owl' : 'Active Grader')">
+          </div>
         </div>
+        <!-- USER_HEADER_MINI END -->
+
+        <!-- DISCIPLINE_STATS START -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="glass-card p-4">
+            <div class="text-[10px] font-bold text-gray-400 uppercase mb-1">Grading Vitals</div>
+            <div class="flex items-baseline gap-1">
+              <span class="text-2xl font-black text-gray-800"
+                x-text="profile.total_cases_count?.toLocaleString()"></span>
+              <span class="text-[10px] font-bold text-gray-500 uppercase">Cases</span>
+            </div>
+            <div class="mt-2 h-1.5 w-full bg-gray-100 rounded-full overflow-hidden flex">
+              <div class="h-full bg-emerald-500"
+                :style="`width: ${(profile.total_on_time / (profile.total_cases_count || 1)) * 100}%`" title="On-time">
+              </div>
+              <div class="h-full bg-rose-400"
+                :style="`width: ${(profile.total_overdue / (profile.total_cases_count || 1)) * 100}%`" title="Overdue">
+              </div>
+            </div>
+            <div class="flex justify-between mt-2 text-[9px] font-bold uppercase">
+              <span class="text-emerald-600"
+                x-text="Math.round((profile.total_on_time / (profile.total_cases_count || 1)) * 100) + '% On-time'"></span>
+              <span class="text-rose-400"
+                x-text="Math.round((profile.total_overdue / (profile.total_cases_count || 1)) * 100) + '% Overdue'"></span>
+            </div>
+          </div>
+
+          <div class="glass-card p-4">
+            <div class="text-[10px] font-bold text-gray-400 uppercase mb-1">Avg. Precision</div>
+            <div class="flex items-baseline gap-1">
+              <span class="text-2xl font-black"
+                :class="profile.total_delta_minutes / (profile.total_cases_count || 1) < 0 ? 'text-blue-600' : 'text-amber-600'"
+                x-text="Math.abs(Math.round(profile.total_delta_minutes / (profile.total_cases_count || 1)))"></span>
+              <span class="text-[10px] font-bold text-gray-500 uppercase">Mins</span>
+            </div>
+            <div class="text-[10px] font-medium text-gray-500 mt-1"
+              x-text="profile.total_delta_minutes / (profile.total_cases_count || 1) < 0 ? 'Average Submission Early' : 'Average Submission Delay'">
+            </div>
+            <div class="mt-3 flex items-center gap-1.5">
+              <i class="fa-solid fa-clock-rotate-left text-gray-300 text-sm"></i>
+              <span class="text-[9px] font-black text-gray-400 uppercase tracking-tighter">Consistency Driven</span>
+            </div>
+          </div>
+        </div>
+        <!-- DISCIPLINE_STATS END -->
+
+        <!-- SESSION_DISTRIBUTION START -->
+        <div class="glass-card p-5">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider">Session Distribution</h3>
+            <i class="fa-solid fa-chart-simple text-gray-300"></i>
+          </div>
+          <div class="space-y-4">
+            <!-- Morning -->
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <div class="flex items-center gap-2">
+                  <div class="w-2 h-2 rounded-full bg-sky-400"></div>
+                  <span class="text-[11px] font-bold text-gray-600 uppercase">Morning Session</span>
+                </div>
+                <span class="text-[11px] font-black text-gray-800" x-text="profile.count_morning + ' cases'"></span>
+              </div>
+              <div class="w-full h-1.5 bg-gray-50 rounded-full overflow-hidden">
+                <div class="h-full bg-sky-400 rounded-full"
+                  :style="`width: ${(profile.count_morning / (profile.total_cases_count || 1)) * 100}%`"></div>
+              </div>
+              <div x-show="profile.count_morning > 0"
+                class="mt-1 text-[9px] font-bold text-sky-600 uppercase flex items-center gap-1">
+                <i class="fa-solid fa-bolt-lightning text-[8px]"></i>
+                <span
+                  x-text="'Morning Avg: ' + Math.abs(Math.round(profile.total_morning_delta / profile.count_morning)) + ' mins ' + (profile.total_morning_delta < 0 ? 'early' : 'delay')"></span>
+              </div>
+            </div>
+
+            <!-- Afternoon -->
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <div class="flex items-center gap-2">
+                  <div class="w-2 h-2 rounded-full bg-amber-400"></div>
+                  <span class="text-[11px] font-bold text-gray-600 uppercase">Afternoon Session</span>
+                </div>
+                <span class="text-[11px] font-black text-gray-800" x-text="profile.count_afternoon + ' cases'"></span>
+              </div>
+              <div class="w-full h-1.5 bg-gray-50 rounded-full overflow-hidden">
+                <div class="h-full bg-amber-400 rounded-full"
+                  :style="`width: ${(profile.count_afternoon / (profile.total_cases_count || 1)) * 100}%`"></div>
+              </div>
+            </div>
+
+            <!-- Evening -->
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <div class="flex items-center gap-2">
+                  <div class="w-2 h-2 rounded-full bg-indigo-500"></div>
+                  <span class="text-[11px] font-bold text-gray-600 uppercase">Evening Session</span>
+                </div>
+                <span class="text-[11px] font-black text-gray-800" x-text="profile.count_evening + ' cases'"></span>
+              </div>
+              <div class="w-full h-1.5 bg-gray-50 rounded-full overflow-hidden">
+                <div class="h-full bg-indigo-500 rounded-full"
+                  :style="`width: ${(profile.count_evening / (profile.total_cases_count || 1)) * 100}%`"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- SESSION_DISTRIBUTION END -->
+
+        <!-- FOOTER_INFO START -->
+        <div class="text-center py-4">
+          <p class="text-[10px] font-bold text-gray-300 uppercase tracking-[0.2em]">Efficiency Dashboard v2.0</p>
+        </div>
+        <!-- FOOTER_INFO END -->
+
       </div>
       <!-- PROFILE_VIEW END -->
       <!-- DYNAMIC_VIEWS END -->
