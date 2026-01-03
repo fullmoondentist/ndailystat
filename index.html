@@ -384,18 +384,12 @@
 
           <!-- Persona Badge -->
           <div
-            class="mt-3 px-6 py-1.5 rounded-full bg-blue-50/50 border border-blue-100 flex items-center justify-center gap-2 w-max shadow-sm">
+            class="mt-3 px-6 py-1.5 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center gap-2 w-max shadow-sm">
             <span class="text-lg" x-text="personaConfig.emoji"></span>
             <span class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600"
               x-text="personaConfig.name"></span>
           </div>
 
-          <!-- ACTIVE_GRADER_BADGE -->
-          <div class="mt-4">
-            <span
-              class="px-6 py-1.5 bg-blue-50 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-100 shadow-sm">Active
-              Grader</span>
-          </div>
         </div>
 
         <!-- PRECISION_DASHBOARD_V2_START -->
@@ -413,9 +407,15 @@
                   <div class="h-full bg-emerald-500 transition-all duration-1000"
                     :style="'width: ' + onTimePercent + '%'"></div>
                 </div>
-                <div class="flex justify-between mt-2 text-[9px] font-bold uppercase tracking-wide">
-                  <span class="text-emerald-500" x-text="onTimePercent + '% ON-TIME'"></span>
-                  <span class="text-rose-500" x-text="(100 - onTimePercent) + '% OVERDUE'"></span>
+                <div class="flex justify-between mt-2 text-[9px] font-bold uppercase tracking-wide leading-tight">
+                  <div class="flex flex-col">
+                    <span class="text-emerald-500 text-[11px]" x-text="onTimePercent + '%'"></span>
+                    <span class="text-emerald-600/50">ON-TIME</span>
+                  </div>
+                  <div class="flex flex-col items-end">
+                    <span class="text-rose-500 text-[11px]" x-text="(100 - onTimePercent) + '%'"></span>
+                    <span class="text-rose-600/50">OVERDUE</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -429,11 +429,6 @@
               </div>
               <p class="text-[10px] font-bold text-gray-400 mt-1 uppercase leading-tight">Average<br>Submission Delay
               </p>
-              <div
-                class="mt-4 pt-1 flex items-center gap-1.5 text-[9px] font-black text-gray-400 uppercase tracking-widest border-t border-gray-50">
-                <i class="fa-solid fa-rotate-left text-[10px]"></i>
-                Consistency Driven
-              </div>
             </div>
           </div>
 
