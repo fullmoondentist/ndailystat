@@ -256,16 +256,29 @@
             Reward Box
           </h3>
           <div class="grid grid-cols-8 gap-2">
-            <template x-for="item in groupedRewards" :key="item.name">
-              <div class="aspect-square flex items-center justify-center text-xl relative">
+            <template x-for="item in groupedRewards" :key="item.fullName">
+              <div @click="selectedReward = (selectedReward?.fullName === item.fullName ? null : item)"
+                class="aspect-square flex items-center justify-center text-xl relative cursor-pointer rounded-lg transition-all duration-200"
+                :class="selectedReward?.fullName === item.fullName ? 'bg-rose-50 ring-2 ring-rose-200 scale-110 z-10' : 'hover:bg-gray-50'">
                 <span x-text="item.emoji"></span>
-                <div x-show="item.count > 1" class="absolute -top-1 -right-1 text-gray-500 text-[10px] font-bold"
-                  x-text="'x' + item.count">
+                <div x-show="item.count > 1" class="absolute -top-1 -right-1 text-gray-400 text-[10px] font-black"
+                  x-text="item.count">
                 </div>
               </div>
             </template>
             <div x-show="!profile.rewards?.length" class="col-span-8 py-8 text-center text-gray-300 text-xs italic">
               No rewards yet. Keep it up!
+            </div>
+          </div>
+
+          <!-- Selected Reward Name -->
+          <div x-show="selectedReward" x-cloak x-transition
+            class="mt-4 pt-3 border-t border-gray-100 text-center animate-pulse-slow">
+            <span class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1 block">You tapped on</span>
+            <div class="flex items-center justify-center gap-2">
+              <span class="text-xl" x-text="selectedReward?.emoji"></span>
+              <span class="text-sm font-bold text-gray-700 uppercase tracking-tight"
+                x-text="selectedReward?.displayName"></span>
             </div>
           </div>
         </div>
@@ -432,6 +445,7 @@
     function dailyApp() {
       return {
         activeTab: 'dashboard',
+        selectedReward: null,
         isLoading: true,
         showRankup: false,
         profile: {},
@@ -498,9 +512,10 @@
             counts[r] = (counts[r] || 0) + 1;
           });
           return Object.keys(counts).map(key => ({
-            name: key,
+            fullName: key,
             count: counts[key],
-            emoji: key.split(' ')[0]
+            emoji: key.split(' ')[0],
+            displayName: key.split(' ').slice(1).join(' ')
           }));
         },
 
