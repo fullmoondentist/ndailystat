@@ -379,106 +379,140 @@
             x-text="profile.display_name"></h2>
           <p class="text-xs text-gray-400 font-medium" x-text="profile.email ? profile.email.split('@')[0] : ''"></p>
 
+          <div class="mt-2 text-[10px] font-bold text-gray-300 uppercase tracking-widest"
+            x-text="profile.current_title || '---'"></div>
+
           <!-- Persona Badge -->
-          <div class="mt-4 px-4 py-1.5 rounded-full border-2 border-blue-500/20 bg-blue-50/50 flex items-center gap-2">
+          <div
+            class="mt-3 px-6 py-1.5 rounded-full bg-blue-50/50 border border-blue-100 flex items-center justify-center gap-2 w-max shadow-sm">
             <span class="text-lg" x-text="personaConfig.emoji"></span>
-            <span class="text-xs font-black uppercase tracking-widest text-blue-700" x-text="personaConfig.name"></span>
+            <span class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-600"
+              x-text="personaConfig.name"></span>
+          </div>
+
+          <!-- ACTIVE_GRADER_BADGE -->
+          <div class="mt-4">
+            <span
+              class="px-6 py-1.5 bg-blue-50 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-100 shadow-sm">Active
+              Grader</span>
           </div>
         </div>
 
-        <!-- PRECISION_DASHBOARD_START -->
-        <div class="space-y-3">
-          <!-- GRADING_VITALS_START -->
-          <div class="glass-card p-4">
-            <div class="flex justify-between items-center mb-3">
-              <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest">Grading Vitals</h3>
-              <span class="text-[10px] font-bold text-gray-400"
-                x-text="'TOTAL: ' + (profile.total_cases_count || 0) + ' CASES'"></span>
-            </div>
-            <div class="w-full h-3 bg-rose-100 rounded-full overflow-hidden flex">
-              <div class="h-full bg-emerald-500 transition-all duration-1000" :style="'width: ' + onTimePercent + '%'">
+        <!-- PRECISION_DASHBOARD_V2_START -->
+        <div class="space-y-4 px-1">
+          <div class="grid grid-cols-2 gap-4">
+            <!-- GRADING_VITALS_V2 -->
+            <div class="glass-card p-5 flex flex-col justify-between h-36">
+              <div>
+                <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Grading Vitals</h3>
+                <span class="text-[16px] font-black text-gray-700"
+                  x-text="(profile.total_cases_count || 0) + ' CASES'"></span>
+              </div>
+              <div class="mt-4">
+                <div class="w-full h-1.5 bg-rose-100 rounded-full overflow-hidden flex">
+                  <div class="h-full bg-emerald-500 transition-all duration-1000"
+                    :style="'width: ' + onTimePercent + '%'"></div>
+                </div>
+                <div class="flex justify-between mt-2 text-[9px] font-bold uppercase tracking-wide">
+                  <span class="text-emerald-500" x-text="onTimePercent + '% ON-TIME'"></span>
+                  <span class="text-rose-500" x-text="(100 - onTimePercent) + '% OVERDUE'"></span>
+                </div>
               </div>
             </div>
-            <div class="flex justify-between mt-2 text-[10px] font-bold uppercase tracking-wide">
-              <div class="flex items-center gap-1.5 text-emerald-600">
-                <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
-                <span x-text="'On-time (' + (profile.total_on_time || 0) + ')' "></span>
+
+            <!-- AVG_PRECISION_V2 -->
+            <div class="glass-card p-5 relative overflow-hidden h-36">
+              <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Avg. Precision</h3>
+              <div class="flex items-baseline gap-1">
+                <span class="text-3xl font-black text-orange-500" x-text="Math.abs(Math.round(avgDelta))"></span>
+                <span class="text-[10px] font-black text-orange-500">MINS</span>
               </div>
-              <div class="flex items-center gap-1.5 text-rose-500">
-                <span x-text="'Overdue (' + (profile.total_overdue || 0) + ')' "></span>
-                <div class="w-2 h-2 rounded-full bg-rose-500"></div>
+              <p class="text-[10px] font-bold text-gray-400 mt-1 uppercase leading-tight">Average<br>Submission Delay
+              </p>
+              <div
+                class="mt-4 pt-1 flex items-center gap-1.5 text-[9px] font-black text-gray-400 uppercase tracking-widest border-t border-gray-50">
+                <i class="fa-solid fa-rotate-left text-[10px]"></i>
+                Consistency Driven
               </div>
             </div>
           </div>
-          <!-- GRADING_VITALS_END -->
 
-          <div class="grid grid-cols-2 gap-3">
-            <!-- AVG_PRECISION_START -->
-            <div
-              :class="(avgDelta >= 0 ? 'bg-orange-50' : 'bg-cyan-50') + ' p-4 rounded-2xl border border-white flex flex-col items-center justify-center relative overflow-hidden h-28 shadow-sm'">
-              <div class="absolute -top-4 -right-4 w-12 h-12 rounded-full opacity-10"
-                :class="avgDelta >= 0 ? 'bg-orange-600' : 'bg-cyan-600'"></div>
-              <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 z-10">Avg.
-                Precision</span>
-              <div class="flex items-baseline gap-1 z-10">
-                <span class="text-2xl font-black" :class="avgDelta >= 0 ? 'text-orange-600' : 'text-cyan-600'"
-                  x-text="Math.abs(Math.round(avgDelta))"></span>
-                <span class="text-[10px] font-bold text-gray-400">MINS</span>
-              </div>
-              <span class="text-[10px] font-bold mt-1 z-10" :class="avgDelta >= 0 ? 'text-orange-500' : 'text-cyan-500'"
-                x-text="avgDelta >= 0 ? 'LATER THAN TARGET' : 'EARLIER THAN TARGET'"></span>
+          <!-- SESSION_DISTRIBUTION_V2 -->
+          <div class="glass-card p-5">
+            <div class="flex justify-between items-center mb-5">
+              <h3 class="text-[11px] font-black text-gray-700 uppercase tracking-[0.1em]">Session Distribution</h3>
+              <i class="fa-solid fa-chart-simple text-gray-300"></i>
             </div>
-            <!-- AVG_PRECISION_END -->
 
-            <!-- MORNING_AVG_START -->
-            <div class="glass-card p-4 flex flex-col items-center justify-center h-28">
-              <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Morning Avg</span>
-              <div class="flex items-center gap-2 mb-1">
-                <i class="fa-solid fa-sun text-amber-400 text-lg"></i>
-                <span class="text-xl font-black text-gray-700" x-text="Math.round(morningAvgDelta)"></span>
+            <div class="space-y-6">
+              <!-- MORNING -->
+              <div class="space-y-2">
+                <div class="flex justify-between items-end">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2.5 h-2.5 rounded-full bg-cyan-400"></div>
+                    <span class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Morning Session</span>
+                  </div>
+                  <div class="flex flex-col items-end">
+                    <span class="text-[10px] font-black text-gray-700"
+                      x-text="(profile.count_morning || 0) + ' cases'"></span>
+                    <span :class="avgMorning.isLate ? 'text-rose-500' : 'text-emerald-500'"
+                      class="text-[10px] font-black" x-text="avgMorning.label"></span>
+                  </div>
+                </div>
+                <div class="w-full h-2 bg-gray-50 rounded-full overflow-hidden">
+                  <div class="h-full bg-cyan-400 transition-all duration-1000" :style="'width: ' + sessionDist.m + '%'">
+                  </div>
+                </div>
               </div>
-              <span class="text-[9px] font-bold text-gray-400 uppercase tracking-tighter text-center"
-                x-text="morningAvgDelta <= 0 ? (Math.abs(Math.round(morningAvgDelta)) + 'm PRECISE EARLY') : (Math.abs(Math.round(morningAvgDelta)) + 'm LATE PEAK')"></span>
+
+              <!-- AFTERNOON -->
+              <div class="space-y-2">
+                <div class="flex justify-between items-end">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2.5 h-2.5 rounded-full bg-amber-400"></div>
+                    <span class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Afternoon
+                      Session</span>
+                  </div>
+                  <div class="flex flex-col items-end">
+                    <span class="text-[10px] font-black text-gray-700"
+                      x-text="(profile.count_afternoon || 0) + ' cases'"></span>
+                    <span :class="avgAfternoon.isLate ? 'text-rose-500' : 'text-emerald-500'"
+                      class="text-[10px] font-black" x-text="avgAfternoon.label"></span>
+                  </div>
+                </div>
+                <div class="w-full h-2 bg-gray-50 rounded-full overflow-hidden">
+                  <div class="h-full bg-amber-400 transition-all duration-1000"
+                    :style="'width: ' + sessionDist.a + '%'"></div>
+                </div>
+              </div>
+
+              <!-- EVENING -->
+              <div class="space-y-2">
+                <div class="flex justify-between items-end">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2.5 h-2.5 rounded-full bg-indigo-500"></div>
+                    <span class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Evening Session</span>
+                  </div>
+                  <div class="flex flex-col items-end">
+                    <span class="text-[10px] font-black text-gray-700"
+                      x-text="(profile.count_evening || 0) + ' cases'"></span>
+                    <span :class="avgEvening.isLate ? 'text-rose-500' : 'text-emerald-500'"
+                      class="text-[10px] font-black" x-text="avgEvening.label"></span>
+                  </div>
+                </div>
+                <div class="w-full h-2 bg-gray-50 rounded-full overflow-hidden">
+                  <div class="h-full bg-indigo-500 transition-all duration-1000"
+                    :style="'width: ' + sessionDist.e + '%'"></div>
+                </div>
+              </div>
             </div>
-            <!-- MORNING_AVG_END -->
           </div>
 
-          <!-- SESSION_DISTRIBUTION_START -->
-          <div class="glass-card p-4">
-            <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Session Distribution</h3>
-            <div class="w-full h-4 bg-gray-100 rounded-full overflow-hidden flex">
-              <div class="h-full bg-amber-400 transition-all duration-1000" :style="'width: ' + sessionDist.m + '%'">
-              </div>
-              <div class="h-full bg-sky-400 transition-all duration-1000" :style="'width: ' + sessionDist.a + '%'">
-              </div>
-              <div class="h-full bg-indigo-500 transition-all duration-1000" :style="'width: ' + sessionDist.e + '%'">
-              </div>
-            </div>
-            <div class="grid grid-cols-3 gap-2 mt-3">
-              <div class="flex flex-col">
-                <div class="flex items-center gap-1">
-                  <div class="w-2 h-2 rounded-full bg-amber-400"></div>
-                  <span class="text-[10px] font-bold text-gray-500">MORN</span>
-                </div>
-                <span class="text-xs font-black text-gray-700 ml-3" x-text="sessionDist.m + '%'"></span>
-              </div>
-              <div class="flex flex-col">
-                <div class="flex items-center gap-1">
-                  <div class="w-2 h-2 rounded-full bg-sky-400"></div>
-                  <span class="text-[10px] font-bold text-gray-500">AFTN</span>
-                </div>
-                <span class="text-xs font-black text-gray-700 ml-3" x-text="sessionDist.a + '%'"></span>
-              </div>
-              <div class="flex flex-col">
-                <div class="flex items-center gap-1">
-                  <div class="w-2 h-2 rounded-full bg-indigo-500"></div>
-                  <span class="text-[10px] font-bold text-gray-500">EVEN</span>
-                </div>
-                <span class="text-xs font-black text-gray-700 ml-3" x-text="sessionDist.e + '%'"></span>
-              </div>
-            </div>
+          <!-- FOOTER -->
+          <div class="py-10 flex flex-col items-center">
+            <span class="text-[10px] font-black text-gray-200 uppercase tracking-[0.3em]">Efficiency Dashboard
+              V2.0</span>
           </div>
-          <!-- SESSION_DISTRIBUTION_END -->
         </div>
         <!-- PRECISION_DASHBOARD_END -->
       </div>
@@ -678,6 +712,47 @@
           if (last > prev) return 'up';
           if (last < prev) return 'down';
           return 'none';
+        },
+
+        formatDelta(minutes) {
+          const abs = Math.abs(Math.round(minutes));
+          if (abs < 60) return abs + 'm';
+          const h = Math.floor(abs / 60);
+          const m = abs % 60;
+          return h + 'h ' + m + 'm';
+        },
+
+        get avgMorning() {
+          const count = this.profile.count_morning || 0;
+          const deltaSum = this.profile.total_morning_delta || 0;
+          if (count === 0) return { label: 'No Data', isLate: false };
+          const avg = deltaSum / count;
+          return {
+            label: this.formatDelta(avg) + (avg <= 0 ? ' early' : ' late'),
+            isLate: avg > 15
+          };
+        },
+
+        get avgAfternoon() {
+          const count = this.profile.count_afternoon || 0;
+          const deltaSum = this.profile.total_afternoon_delta || 0;
+          if (count === 0) return { label: 'No Data', isLate: false };
+          const avg = deltaSum / count;
+          return {
+            label: this.formatDelta(avg) + (avg <= 0 ? ' early' : ' late'),
+            isLate: avg > 15
+          };
+        },
+
+        get avgEvening() {
+          const count = this.profile.count_evening || 0;
+          const deltaSum = this.profile.total_evening_delta || 0;
+          if (count === 0) return { label: 'No Data', isLate: false };
+          const avg = deltaSum / count;
+          return {
+            label: this.formatDelta(avg) + (avg <= 0 ? ' early' : ' late'),
+            isLate: avg > 15
+          };
         },
 
         get onTimePercent() {
