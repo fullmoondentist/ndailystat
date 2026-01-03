@@ -258,6 +258,7 @@
           <div class="grid grid-cols-8 gap-2 relative">
             <template x-for="item in groupedRewards" :key="item.fullName">
               <div @click="selectedReward = (selectedReward?.fullName === item.fullName ? null : item)"
+                @click.outside="if(selectedReward?.fullName === item.fullName) selectedReward = null"
                 class="aspect-square flex items-center justify-center text-xl relative cursor-pointer rounded-lg transition-all duration-200"
                 :class="selectedReward?.fullName === item.fullName ? 'bg-rose-50 ring-2 ring-rose-200 scale-110 z-10' : 'hover:bg-gray-50'">
                 <span x-text="item.emoji"></span>
