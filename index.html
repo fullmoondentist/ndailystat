@@ -902,8 +902,8 @@
 
         triggerTabAnimations(tab) {
           if (tab === 'dashboard') {
-            this.showTrend = false;
-            this.showExp = false;
+            if (this.showTrend) this.showTrend = false;
+            if (this.showExp) this.showExp = false;
             this.$nextTick(() => {
               setTimeout(() => {
                 this.showTrend = true;
@@ -911,12 +911,12 @@
               }, 50);
             });
           } else if (tab === 'ranking') {
-            this.showDeptAnim = false;
+            if (this.showDeptAnim) this.showDeptAnim = false;
             this.$nextTick(() => {
               setTimeout(() => this.showDeptAnim = true, 50);
             });
           } else if (tab === 'profile') {
-            this.showProfileAnim = false;
+            if (this.showProfileAnim) this.showProfileAnim = false;
             this.$nextTick(() => {
               setTimeout(() => this.showProfileAnim = true, 50);
             });
@@ -943,15 +943,7 @@
             }
 
             console.log('Auth Identifier:', email || userId);
-            this.userId = userId;
-            this.pictureUrl = pictureUrl; // Store for merging later
-
-            await this.fetchData(email || undefined, userId || undefined);
-
-            // Merge profile picture into profile object
-            if (this.pictureUrl) {
-              this.profile.pictureUrl = this.pictureUrl;
-            }
+            await this.fetchData(email || undefined, userId || undefined, pictureUrl);
 
             this.isLoading = false;
 
@@ -973,7 +965,7 @@
           }
         },
 
-        async fetchData(email, userId) {
+        async fetchData(email, userId, pictureUrl) {
           try {
             const [profileRes, leaderboardRes] = await Promise.all([
               this.callAPI('getProfile', { email, userId }),
@@ -983,26 +975,20 @@
             console.log('Profile Response:', profileRes);
 
             if (profileRes.success) {
-              this.profile = profileRes.profile;
-              // Also ensure userId is stored if it came back from backend
-              if (!this.userId && this.profile.userId) this.userId = this.profile.userId;
+              const profile = profileRes.profile;
+              // Consolidate data into a single reactive update
+              if (pictureUrl) profile.pictureUrl = pictureUrl;
+              if (userId && !profile.userId) profile.userId = userId;
 
+              this.profile = profile;
               this.recentScores = JSON.parse(this.profile.recent_scores_json || '[]');
+              this.system = profileRes.system; // Use system data from profile response
+              if (leaderboardRes.success) {
+                this.leaderboard = leaderboardRes.leaderboard;
+              }
             } else {
               console.warn('Profile fetch failed:', profileRes);
-              let errorDetail = profileRes.message || 'ไม่ทราบสาเหตุ';
-              if (profileRes.error) errorDetail += '\nError: ' + profileRes.error;
-              if (profileRes.stack) errorDetail += '\nStack: ' + profileRes.stack.split('\n')[0]; // Just the first line of stack
-
-              alert('ไม่พบข้อมูลโปรไฟล์: ' + errorDetail);
-            }
-
-            if (leaderboardRes.success) {
-              this.leaderboard = leaderboardRes.leaderboard;
-            }
-
-            if (profileRes.success) {
-              this.system = profileRes.system; // Use system data from profile response
+              alert('ไม่พบข้อมูลโปรไฟล์: ' + (profileRes.message || 'Unknown error'));
             }
           } catch (err) {
             console.error('Fetch data failed', err);
