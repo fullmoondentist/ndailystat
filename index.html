@@ -12,9 +12,6 @@
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@100;300;400&display=swap" rel="stylesheet">
-  <!-- Chartist.js -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.4/chartist.min.js"></script>
 
   <script>
     tailwind.config = {
@@ -76,25 +73,6 @@
                 100% { transform: translate3d(-100%, 0, 0); }
             }
             [x-cloak] { display: none !important; }
-
-            /* Chartist Customization */
-            .ct-chart {
-              height: 64px;
-            }
-            .ct-series-a .ct-line {
-              stroke: #3b82f6;
-              stroke-width: 4px;
-            }
-            .ct-series-a .ct-area {
-              fill: url(#chartGradient);
-              fill-opacity: 1;
-            }
-            .ct-grid {
-              stroke: transparent;
-            }
-            .ct-label {
-              display: none;
-            }
         }
     </style>
 </head>
@@ -246,7 +224,19 @@
           </div>
 
           <div class="h-16 w-full relative" x-show="profile.daily_history && profile.daily_history.length > 1">
-            <div id="trend-chart" class="ct-chart w-full h-full"></div>
+            <svg class="w-full h-full overflow-visible" viewBox="0 0 100 40" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="trendGradient" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.5" />
+                  <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+              <!-- Area Fill -->
+              <path :d="trendFill" fill="url(#trendGradient)" stroke="none" />
+              <!-- Line -->
+              <path :d="trendPath" fill="none" stroke="#2563eb" stroke-width="2" stroke-opacity="0.2"
+                vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
           </div>
 
           <div x-show="!profile.daily_history || profile.daily_history.length < 2"
@@ -907,68 +897,9 @@
           return { name: 'The Deadline Diver', emoji: '🤿' };
         },
 
-        renderTrendChart() {
-          const history = this.profile.daily_history || [];
-          if (history.length < 2) return;
-
-          const data = {
-            series: [history.map(h => h.a)]
-          };
-
-          const options = {
-            showArea: true,
-            fullWidth: true,
-            showPoint: false,
-            axisX: { showGrid: false, showLabel: false, offset: 0 },
-            axisY: { showGrid: false, showLabel: false, offset: 0, low: 0, high: 100 },
-            chartPadding: { top: 0, right: 0, bottom: 0, left: 0 }
-          };
-
-          this.$nextTick(() => {
-            const chart = new Chartist.Line('#trend-chart', data, options);
-
-            chart.on('created', function (ctx) {
-              const defs = ctx.svg.elem('defs');
-
-              // 1. Dynamic Gradient
-              const gradient = defs.elem('linearGradient', {
-                id: 'trendGradient', x1: 0, y1: 0, x2: 0, y2: 1
-              });
-              gradient.elem('stop', { offset: 0, 'stop-color': '#3b82f6', 'stop-opacity': 0.4 });
-              gradient.elem('stop', { offset: 1, 'stop-color': '#3b82f6', 'stop-opacity': 0 });
-
-              // 2. Wipe Mask
-              const clipPath = defs.elem('clipPath', { id: 'chart-mask' });
-              const maskRect = clipPath.elem('rect', {
-                x: 0, y: 0, width: 0, height: '100%'
-              });
-
-              maskRect.animate({
-                width: {
-                  dur: 1500,
-                  from: 0,
-                  to: "100%",
-                  fill: 'freeze',
-                  easing: Chartist.Svg.Easing.easeOutQuint
-                }
-              });
-
-              // 3. Apply Mask and Gradient
-              ctx.svg.querySelector('.ct-series-a').attr({
-                'clip-path': 'url(#chart-mask)'
-              });
-              ctx.svg.querySelector('.ct-area').attr({
-                'fill': 'url(#trendGradient)',
-                'fill-opacity': '1'
-              });
-            });
-          });
-        },
-
         triggerTabAnimations(tab) {
           if (tab === 'dashboard') {
             this.showExp = false;
-            this.renderTrendChart();
             this.$nextTick(() => {
               setTimeout(() => {
                 this.showExp = true;
@@ -1052,10 +983,6 @@
               if (!this.userId && this.profile.userId) this.userId = this.profile.userId;
 
               this.recentScores = JSON.parse(this.profile.recent_scores_json || '[]');
-
-              if (this.activeTab === 'dashboard') {
-                this.renderTrendChart();
-              }
             } else {
               console.warn('Profile fetch failed:', profileRes);
               let errorDetail = profileRes.message || 'ไม่ทราบสาเหตุ';
