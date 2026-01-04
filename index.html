@@ -223,10 +223,7 @@
             </div>
           </div>
 
-          <div class="h-16 w-full relative"
-            x-show="profile.daily_history && profile.daily_history.length > 1 && showTrend"
-            x-transition:enter="transition ease-out duration-[3000ms]"
-            x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
+          <div class="h-16 w-full relative" x-show="profile.daily_history && profile.daily_history.length > 1">
             <svg class="w-full h-full overflow-visible" viewBox="0 0 100 40" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="trendGradient" x1="0" x2="0" y1="0" y2="1">
@@ -661,7 +658,7 @@
         system: {},
         leaderboard: [],
         recentScores: [],
-        showTrend: false,
+        showTrend: true,
         showExp: false,
         showDeptAnim: false,
         showProfileAnim: false,
@@ -902,11 +899,9 @@
 
         triggerTabAnimations(tab) {
           if (tab === 'dashboard') {
-            this.showTrend = false;
             this.showExp = false;
             this.$nextTick(() => {
               setTimeout(() => {
-                this.showTrend = true;
                 this.showExp = true;
               }, 50);
             });
