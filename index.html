@@ -313,8 +313,11 @@
             <template x-for="stat in orderedDeptStats" :key="stat.name">
               <div class="flex items-center gap-3">
 
-                <!-- Department Name -->
-                <div class="w-8 text-xs font-bold text-gray-500 text-right shrink-0" x-text="stat.name"></div>
+                <!-- Department Name & Icon -->
+                <div class="w-12 text-[10px] font-bold text-gray-400 flex items-center justify-end gap-1.5 shrink-0">
+                  <span x-text="stat.name"></span>
+                  <span x-html="deptIconMap[stat.name]" class="text-[10px] opacity-70"></span>
+                </div>
 
                 <!-- Progress Bar -->
                 <div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden relative">
