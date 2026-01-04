@@ -443,14 +443,18 @@
             <div class="glass-card p-4 relative overflow-hidden h-24 flex flex-col items-center justify-center">
               <div class="w-full flex flex-col items-center text-center">
                 <div class="stat-label">AVG. PRECISION</div>
-                <div class="stat-value flex items-baseline justify-center gap-1.5"
-                  :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'">
-                  <span x-text="Math.abs(Math.round(avgDelta))"></span>
-                  <span class="text-xs font-bold opacity-30" x-show="sdDelta > 0"
-                    x-text="'±' + Math.round(sdDelta) + ' MINS'"></span>
+                <div class="stat-value flex items-baseline justify-center gap-1.5"></div>
+                  <span :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'"
+                    x-text="Math.abs(Math.round(avgDelta))"></span>
+                  <div class="flex items-baseline text-gray-700" x-show="sdDelta > 0">
+                    <span class="text-xs font-bold opacity-30" x-text="'±' + Math.round(sdDelta)"></span>
+                    <span class="text-xs uppercase ml-1">MINS</span>
+                  </div>
                 </div>
-                <div class="text-[12px] font-bold text-gray-400 uppercase mt-0.5">
-                  <span x-text="avgDelta <= 0 ? 'BEFORE' : 'AFTER'"></span> Session end
+                <div class="text-[12px] font-bold uppercase mt-0.5">
+                  <span :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'"
+                    x-text="avgDelta <= 0 ? 'BEFORE' : 'AFTER'"></span>
+                  <span class="text-gray-700">Session end</span>
                 </div>
               </div>
             </div>
