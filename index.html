@@ -547,7 +547,7 @@
               <div class="flex items-center gap-1">
                 <span class="text-[9px] font-black text-gray-400 uppercase">Peak:</span>
                 <span class="text-[9px] font-black text-indigo-600"
-                  x-text="hourlyStats.peakHour.toString().padStart(2, '0') + ':00'"></span>
+                  x-text="hourlyStats.peakHour >= 0 ? (hourlyStats.peakHour.toString().padStart(2, '0') + ':00') : 'None'"></span>
               </div>
             </div>
 
@@ -864,10 +864,18 @@
         },
 
         get hourlyStats() {
-          const raw = JSON.parse(this.profile.hourly_dist_json || '[]');
-          const data = raw.length === 24 ? raw : new Array(24).fill(0);
+          let raw = [];
+          try {
+            const field = this.profile.hourly_dist_json;
+            raw = typeof field === 'string' ? JSON.parse(field || '[]') : (field || []);
+          } catch (e) {
+            console.error('Error parsing hourly_dist_json', e);
+            raw = [];
+          }
+          const data = (Array.isArray(raw) && raw.length === 24) ? raw : new Array(24).fill(0);
           const max = Math.max(...data, 1);
-          const peakHour = data.indexOf(Math.max(...data));
+          const maxVal = Math.max(...data);
+          const peakHour = maxVal > 0 ? data.indexOf(maxVal) : -1;
           return { data, max, peakHour };
         },
 
