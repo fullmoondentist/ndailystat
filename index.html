@@ -415,12 +415,13 @@
               </div>
               <div class="mt-1">
                 <div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden flex">
-                  <div class="h-full bg-emerald-500 transition-all duration-1000"
-                    :style="'width: ' + onTimePercent + '%'"></div>
-                  <div class="h-full bg-amber-400 transition-all duration-1000" x-show="profile.total_too_early > 0"
-                    :style="'width: ' + tooEarlyPercent + '%'"></div>
-                  <div class="h-full bg-rose-500 transition-all duration-1000"
-                    :style="'width: ' + overduePercent + '%'"></div>
+                  <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-1000"
+                    :style="'width: ' + (showProfileAnim ? onTimePercent : 0) + '%'"></div>
+                  <div class="h-full bg-gradient-to-r from-amber-400 to-orange-300 transition-all duration-1000"
+                    x-show="profile.total_too_early > 0"
+                    :style="'width: ' + (showProfileAnim ? tooEarlyPercent : 0) + '%'"></div>
+                  <div class="h-full bg-gradient-to-r from-rose-500 to-pink-400 transition-all duration-1000"
+                    :style="'width: ' + (showProfileAnim ? overduePercent : 0) + '%'"></div>
                 </div>
                 <div class="flex justify-between mt-1 text-[8px] font-bold uppercase tracking-wide leading-tight">
                   <div class="flex flex-col">
@@ -486,8 +487,9 @@
                   <i class="fa-solid fa-sun text-cyan-400 text-sm"></i>
                 </div>
                 <div class="flex-1 h-2 bg-gray-50 rounded-full overflow-hidden">
-                  <div class="h-full bg-cyan-400 rounded-full transition-all duration-1000"
-                    :style="'width: ' + sessionDist.m + '%'"></div>
+                  <div
+                    class="h-full bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full transition-all duration-1000"
+                    :style="'width: ' + (showProfileAnim ? sessionDist.m : 0) + '%'"></div>
                 </div>
                 <div class="w-20 text-right leading-tight">
                   <div class="text-[9px] font-black text-gray-400" x-text="(profile.count_morning || 0) + ' cases'">
@@ -503,8 +505,9 @@
                   <i class="fa-solid fa-cloud-sun text-amber-400 text-sm"></i>
                 </div>
                 <div class="flex-1 h-2 bg-gray-50 rounded-full overflow-hidden">
-                  <div class="h-full bg-amber-400 rounded-full transition-all duration-1000"
-                    :style="'width: ' + sessionDist.a + '%'"></div>
+                  <div
+                    class="h-full bg-gradient-to-r from-amber-400 to-orange-300 rounded-full transition-all duration-1000"
+                    :style="'width: ' + (showProfileAnim ? sessionDist.a : 0) + '%'"></div>
                 </div>
                 <div class="w-20 text-right leading-tight">
                   <div class="text-[9px] font-black text-gray-400" x-text="(profile.count_afternoon || 0) + ' cases'">
@@ -520,8 +523,9 @@
                   <i class="fa-solid fa-moon text-indigo-500 text-sm"></i>
                 </div>
                 <div class="flex-1 h-2 bg-gray-50 rounded-full overflow-hidden">
-                  <div class="h-full bg-indigo-500 rounded-full transition-all duration-1000"
-                    :style="'width: ' + sessionDist.e + '%'"></div>
+                  <div
+                    class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-1000"
+                    :style="'width: ' + (showProfileAnim ? sessionDist.e : 0) + '%'"></div>
                 </div>
                 <div class="w-20 text-right leading-tight">
                   <div class="text-[9px] font-black text-gray-400" x-text="(profile.count_evening || 0) + ' cases'">
@@ -621,6 +625,7 @@
         showTrend: true,
         showExp: true,
         showDeptAnim: true,
+        showProfileAnim: true,
 
 
         statusColors: {
@@ -888,6 +893,11 @@
                 this.showDeptAnim = false;
                 this.$nextTick(() => {
                   setTimeout(() => this.showDeptAnim = true, 50);
+                });
+              } else if (value === 'profile') {
+                this.showProfileAnim = false;
+                this.$nextTick(() => {
+                  setTimeout(() => this.showProfileAnim = true, 50);
                 });
               }
             });
