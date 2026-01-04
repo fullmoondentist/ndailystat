@@ -500,7 +500,8 @@
               x-show="profile.total_overdue > 0">
               <div class="w-full flex flex-col items-center text-center">
                 <div class="stat-label">AVG. DELAY</div>
-                <div class="stat-value text-orange-500" x-html="formatOverdueDelay(profile.avg_overdue_delay)"></div>
+                <div class="text-orange-500 text-xs font-bold" x-html="formatOverdueDelay(profile.avg_overdue_delay)">
+                </div>
                 <div class="text-[12px] font-bold text-orange-500 uppercase mt-0.5"
                   x-text="(profile.total_overdue || 0) + ' Entries'"></div>
               </div>
