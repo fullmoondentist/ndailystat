@@ -925,7 +925,24 @@
           };
 
           this.$nextTick(() => {
-            new Chartist.Line('#trend-chart', data, options);
+            const chart = new Chartist.Line('#trend-chart', data, options);
+
+            chart.on('created', () => {
+              const series = document.querySelector('#trend-chart .ct-series-a');
+              if (series) {
+                // Apply the mask to the series group
+                series.setAttribute('mask', 'url(#trendMask)');
+
+                // Reset and start SVG animation
+                const anim = document.getElementById('wipeAnim');
+                if (anim) {
+                  // Important: Reset width to 0 before starting
+                  const rect = document.getElementById('maskRect');
+                  if (rect) rect.setAttribute('width', '0');
+                  anim.beginElement();
+                }
+              }
+            });
           });
         },
 
@@ -1079,13 +1096,21 @@
     }
   </script>
 
-  <!-- SVG Gradients for Chartist -->
+  <!-- SVG Gradients and Masks for Chartist -->
   <svg style="height: 0; width: 0; position: absolute;">
     <defs>
       <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
         <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.2" />
         <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" />
       </linearGradient>
+
+      <!-- Wipe Animation Mask -->
+      <mask id="trendMask" maskUnits="userSpaceOnUse">
+        <rect id="maskRect" x="0" y="0" width="0" height="100" fill="white">
+          <animate id="wipeAnim" attributeName="width" from="0" to="100" dur="1.2s" begin="indefinite" fill="freeze"
+            calcMode="spline" keySplines="0.4 0 0.2 1" />
+        </rect>
+      </mask>
     </defs>
   </svg>
 </body>
