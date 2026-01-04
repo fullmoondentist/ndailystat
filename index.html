@@ -377,20 +377,21 @@
             </template>
           </div>
 
-          <!-- Right side: Info -->
-          <div class="flex flex-col">
-            <h2 class="text-xl text-gray-800 font-light leading-tight"
+          <!-- Right side: Info (Right aligned, Left aligned text) -->
+          <div class="ml-auto flex flex-col items-start gap-1 text-right">
+            <h2 class="text-lg text-gray-800 font-light leading-tight"
               style="font-family: 'Kanit', sans-serif; font-weight: 300;" x-text="profile.display_name"></h2>
-            <p class="text-xs text-gray-400 font-medium" x-text="profile.email ? profile.email.split('@')[0] : ''"></p>
+            <p class="text-[10px] text-gray-400 font-medium" x-text="profile.email ? profile.email.split('@')[0] : ''">
+            </p>
 
             <div class="mt-1 text-[10px] font-bold text-gray-400 uppercase tracking-widest"
               x-text="profile.current_title || '---'"></div>
 
             <!-- Persona Badge -->
             <div
-              class="mt-2 px-3 py-0.5 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center gap-1.5 w-max shadow-sm">
-              <span class="text-sm" x-text="personaConfig.emoji"></span>
-              <span class="text-[9px] font-black uppercase tracking-[0.15em] text-blue-600"
+              class="mt-1 px-3 py-0.5 rounded-full bg-blue-50/50 border border-blue-100 flex items-center justify-center gap-1.5 w-max">
+              <span class="text-xs" x-text="personaConfig.emoji"></span>
+              <span class="text-[8px] font-black uppercase tracking-[0.1em] text-blue-600"
                 x-text="personaConfig.name"></span>
             </div>
           </div>
