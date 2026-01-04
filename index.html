@@ -72,15 +72,7 @@
                 0% { transform: translate3d(0, 0, 0); }
                 100% { transform: translate3d(-100%, 0, 0); }
             }
-            @keyframes drawLine {
-                0% {
-                    stroke-dashoffset: 1000;
-                }
-                100% {
-                    stroke-dashoffset: 0;
-                }
-            }
-            @keyframes revealArea {
+            @keyframes revealGraph {
                 0% {
                     clip-path: inset(0 100% 0 0);
                 }
@@ -88,14 +80,9 @@
                     clip-path: inset(0 0 0 0);
                 }
             }
-            .animate-draw-line {
-                stroke-dasharray: 1000;
-                stroke-dashoffset: 1000;
-                animation: drawLine 2s ease-out forwards;
-            }
-            .animate-reveal-area {
+            .animate-reveal-graph {
                 clip-path: inset(0 100% 0 0);
-                animation: revealArea 2s ease-out forwards;
+                animation: revealGraph 2s ease-out forwards;
             }
             [x-cloak] { display: none !important; }
         }
@@ -249,7 +236,8 @@
           </div>
 
           <div class="h-16 w-full relative" x-show="profile.daily_history && profile.daily_history.length > 1">
-            <svg class="w-full h-full overflow-visible" viewBox="0 0 100 40" preserveAspectRatio="none">
+            <svg class="w-full h-full overflow-visible animate-reveal-graph" viewBox="0 0 100 40"
+              preserveAspectRatio="none">
               <defs>
                 <linearGradient id="trendGradient" x1="0" x2="0" y1="0" y2="1">
                   <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.5" />
@@ -257,11 +245,10 @@
                 </linearGradient>
               </defs>
               <!-- Area Fill -->
-              <path :d="trendFill" fill="url(#trendGradient)" stroke="none" class="animate-reveal-area" />
+              <path :d="trendFill" fill="url(#trendGradient)" stroke="none" />
               <!-- Line -->
               <path :d="trendPath" fill="none" stroke="#2563eb" stroke-width="2" stroke-opacity="0.5"
-                vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round"
-                class="animate-draw-line" />
+                vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round" />
             </svg>
           </div>
 
