@@ -402,7 +402,7 @@
           <div class="grid grid-cols-2 gap-4">
             <!-- GRADING_VITALS_V2 -->
             <div class="glass-card p-5 flex flex-col justify-between h-36">
-              <div>
+              <div class="flex flex-col items-center">
                 <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Grading Vitals</h3>
                 <div class="flex items-baseline gap-1">
                   <span class="text-3xl font-black text-gray-700" x-text="profile.total_cases_count || 0"></span>
@@ -436,7 +436,7 @@
             </div>
 
             <!-- AVG_PRECISION_V2 -->
-            <div class="glass-card p-5 relative overflow-hidden h-36">
+            <div class="glass-card p-5 relative overflow-hidden h-36 flex flex-col items-center">
               <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Avg. Precision</h3>
               <div class="flex items-baseline gap-1">
                 <span class="text-3xl font-black transition-colors duration-500"
@@ -449,7 +449,8 @@
                     x-text="'±' + Math.round(sdDelta) + ' SD'"></span>
                 </div>
               </div>
-              <p class="text-[10px] font-bold text-gray-400 mt-1 uppercase leading-tight">Average<br>Sub. Precision</p>
+              <p class="text-[10px] font-bold text-gray-400 mt-1 uppercase leading-tight text-center">Average<br>Sub.
+                Precision</p>
               <div class="mt-1">
                 <span class="text-[10px] font-black uppercase tracking-wider"
                   :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'"
