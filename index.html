@@ -925,6 +925,7 @@
 
         async init() {
           try {
+            this.showTrend = false; // Force hide at start
             await liff.init({ liffId: '2008789653-GNraHzM6' });
             if (!liff.isLoggedIn()) {
               liff.login();
@@ -952,11 +953,13 @@
               setTimeout(() => this.showRankup = true, 500);
             }
 
-            // Trigger initial animations for default tab
-            this.triggerTabAnimations(this.activeTab);
+            this.$nextTick(() => {
+              // Watch for tab changes to reset animations AFTER initial load
+              this.$watch('activeTab', (value) => this.triggerTabAnimations(value));
 
-            // Watch for tab changes to reset animations
-            this.$watch('activeTab', (value) => this.triggerTabAnimations(value));
+              // Trigger initial animations for default tab
+              this.triggerTabAnimations(this.activeTab);
+            });
 
           } catch (err) {
             console.error('Initialization failed', err);
