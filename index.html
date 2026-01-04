@@ -244,7 +244,7 @@
               </svg>
             </div>
 
-            <div x-show="!profile.daily_history || profile.daily_history.length < 2"
+            <div x-show="!isLoading && (!profile.daily_history || profile.daily_history.length < 2)"
               class="absolute inset-0 flex items-center justify-center text-xs text-gray-300 italic">
               Not enough data for trend graph
             </div>
