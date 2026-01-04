@@ -554,7 +554,7 @@
             </div>
 
             <!-- Fixed Height Placeholder for Hourly Distribution -->
-            <div class="h-18 w-full relative px-1">
+            <div class="h-[72px] w-full relative px-1">
               <div class="flex items-stretch justify-between h-full gap-1">
                 <template x-for="(count, hour) in hourlyStats.data" :key="hour">
                   <div class="flex-1 flex flex-col items-center group relative h-full">
@@ -907,8 +907,7 @@
 
         triggerTabAnimations(tab) {
           if (tab === 'dashboard') {
-            this.showTrend = false;
-            this.showExp = false;
+            if (this.showTrend) return; // Already triggered
             this.$nextTick(() => {
               setTimeout(() => {
                 this.showTrend = true;
@@ -916,12 +915,12 @@
               }, 50);
             });
           } else if (tab === 'ranking') {
-            this.showDeptAnim = false;
+            if (this.showDeptAnim) return; // Already triggered
             this.$nextTick(() => {
               setTimeout(() => this.showDeptAnim = true, 50);
             });
           } else if (tab === 'profile') {
-            this.showProfileAnim = false;
+            if (this.showProfileAnim) return; // Already triggered
             this.$nextTick(() => {
               setTimeout(() => this.showProfileAnim = true, 50);
             });
