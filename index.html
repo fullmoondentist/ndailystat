@@ -425,7 +425,7 @@
 
         <!-- PRECISION_DASHBOARD_V2_START -->
         <div class="space-y-4 px-0">
-          <div class="grid grid-cols-3 gap-4">
+          <div class="grid grid-cols-2 gap-4">
             <!-- GRADING_VITALS_V2 -->
             <div class="glass-card p-5 flex flex-col justify-between h-36">
               <div class="flex flex-col items-center">
@@ -497,44 +497,46 @@
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Same-day Submissions Only</p>
               </div>
             </div>
-
-            <!-- OVERDUE_REPORT_CARD -->
-            <div class="glass-card p-5 relative overflow-hidden h-36 flex flex-col items-center justify-between"
-              x-show="profile.total_overdue > 0">
-              <div class="w-full flex flex-col items-center">
-                <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1.5">
-                  <i class="fa-solid fa-triangle-exclamation text-rose-500/50"></i>
-                  Overdue
-                </h3>
-
-                <div class="flex items-baseline gap-1 mt-2">
-                  <span class="text-3xl font-black text-rose-500" x-text="profile.total_overdue || 0"></span>
-                  <span class="text-[10px] font-black text-gray-400 uppercase">Entries</span>
-                </div>
-
-                <!-- English formatted delay -->
-                <div class="flex flex-col items-center mt-1 leading-tight">
-                  <span class="text-[11px] font-black text-rose-400"
-                    x-html="formatOverdueDelay(profile.avg_overdue_delay)"></span>
-                  <span class="text-[8px] font-black text-gray-400 uppercase">Avg Delay</span>
-                </div>
-              </div>
-
-              <div class="w-full text-center">
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Cross-day</p>
-              </div>
-            </div>
           </div>
 
-          <!-- SESSION_DISTRIBUTION_V2 -->
-          <div class="glass-card p-5">
-            <div class="flex items-center gap-2 mb-5">
-              <i class="fa-solid fa-chart-simple text-blue-600/50"></i>
-              <h3 class="text-sm font-bold text-gray-800">Session Distribution</h3>
+          <!-- OVERDUE_REPORT_CARD -->
+          <div class="glass-card p-5 relative overflow-hidden h-36 flex flex-col items-center justify-between"
+            x-show="profile.total_overdue > 0">
+            <div class="w-full flex flex-col items-center">
+              <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1.5">
+                <i class="fa-solid fa-triangle-exclamation text-rose-500/50"></i>
+                Overdue
+              </h3>
+
+              <div class="flex items-baseline gap-1 mt-2">
+                <span class="text-3xl font-black text-rose-500" x-text="profile.total_overdue || 0"></span>
+                <span class="text-[10px] font-black text-gray-400 uppercase">Entries</span>
+              </div>
+
+              <!-- English formatted delay -->
+              <div class="flex flex-col items-center mt-1 leading-tight">
+                <span class="text-[11px] font-black text-rose-400"
+                  x-html="formatOverdueDelay(profile.avg_overdue_delay)"></span>
+                <span class="text-[8px] font-black text-gray-400 uppercase">Avg Delay</span>
+              </div>
             </div>
 
-            <div class="space-y-2">
-              <!-- MORNING -->
+            <div class="w-full text-center">
+              <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Cross-day</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SESSION_DISTRIBUTION_V2 -->
+        <div class="glass-card p-5">
+          <div class="flex items-center gap-2 mb-5">
+            <i class="fa-solid fa-chart-simple text-blue-600/50"></i>
+            <h3 class="text-sm font-bold text-gray-800">Session Distribution</h3>
+          </div>
+
+          <div class="space-y-2">
+            <!-- MORNING -->
+            <div class="space-y-0.5">
               <div class="flex items-center gap-3">
                 <div class="w-6 flex flex-col items-center shrink-0">
                   <i class="fa-solid fa-sun text-cyan-400 text-sm"></i>
@@ -544,18 +546,24 @@
                     class="h-full bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full transition-all duration-1000"
                     :style="'width: ' + (showProfileAnim ? sessionDist.m : 0) + '%'"></div>
                 </div>
-                <div class="w-24 text-right leading-tight">
-                  <div class="text-[9px] font-black text-gray-400">
-                    <span x-text="(profile.count_morning || 0) + ' entries'"></span>
-                    <span x-show="morningOverdueCount > 0" class="text-rose-400 ml-1"
-                      x-text="'(' + morningOverdueCount + ' OD)'"></span>
-                  </div>
-                  <div :class="avgMorningSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
-                    class="text-[9px] font-black" x-text="avgMorningSameday.label"></div>
+                <div class="text-right leading-tight">
+                  <span class="text-[9px] font-black text-gray-400"
+                    x-text="(profile.count_morning || 0) + ' entries'"></span>
                 </div>
               </div>
+              <div class="flex items-center gap-3">
+                <div class="w-6"></div>
+                <div class="flex-1 text-right">
+                  <span :class="avgMorningSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
+                    class="text-[9px] font-black" x-text="'Avg. ' + avgMorningSameday.label"></span>
+                  <span x-show="morningOverdueCount > 0" class="text-rose-400 text-[8px] font-black ml-2"
+                    x-text="morningOverdueCount + ' overdue'"></span>
+                </div>
+              </div>
+            </div>
 
-              <!-- AFTERNOON -->
+            <!-- AFTERNOON -->
+            <div class="space-y-0.5">
               <div class="flex items-center gap-3">
                 <div class="w-6 flex flex-col items-center shrink-0">
                   <i class="fa-solid fa-cloud-sun text-amber-400 text-sm"></i>
@@ -565,93 +573,104 @@
                     class="h-full bg-gradient-to-r from-amber-400 to-orange-300 rounded-full transition-all duration-1000"
                     :style="'width: ' + (showProfileAnim ? sessionDist.a : 0) + '%'"></div>
                 </div>
-                <div class="w-24 text-right leading-tight">
-                  <div class="text-[9px] font-black text-gray-400">
-                    <span x-text="(profile.count_afternoon || 0) + ' entries'"></span>
-                    <span x-show="afternoonOverdueCount > 0" class="text-rose-400 ml-1"
-                      x-text="'(' + afternoonOverdueCount + ' OD)'"></span>
-                  </div>
-                  <div :class="avgAfternoonSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
-                    class="text-[9px] font-black" x-text="avgAfternoonSameday.label"></div>
+                <div class="text-right leading-tight">
+                  <span class="text-[9px] font-black text-gray-400"
+                    x-text="(profile.count_afternoon || 0) + ' entries'"></span>
                 </div>
               </div>
+              <div class="flex items-center gap-3">
+                <div class="w-6"></div>
+                <div class="flex-1 text-right">
+                  <span :class="avgAfternoonSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
+                    class="text-[9px] font-black" x-text="'Avg. ' + avgAfternoonSameday.label"></span>
+                  <span x-show="afternoonOverdueCount > 0" class="text-rose-400 text-[8px] font-black ml-2"
+                    x-text="afternoonOverdueCount + ' overdue'"></span>
+                </div>
+              </div>
+            </div>
 
-              <!-- EVENING -->
+            <!-- EVENING -->
+            <div class="space-y-0.5">
               <div class="flex items-center gap-3">
                 <div class="w-6 flex flex-col items-center shrink-0">
-                  <i class="fa-solid fa-moon text-indigo-500 text-sm"></i>
+                  <i class="fa-solid fa-moon text-indigo-400 text-sm"></i>
                 </div>
                 <div class="flex-1 h-1.5 bg-gray-50 rounded-full overflow-hidden">
                   <div
                     class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-1000"
                     :style="'width: ' + (showProfileAnim ? sessionDist.e : 0) + '%'"></div>
                 </div>
-                <div class="w-24 text-right leading-tight">
-                  <div class="text-[9px] font-black text-gray-400">
-                    <span x-text="(profile.count_evening || 0) + ' entries'"></span>
-                    <span x-show="eveningOverdueCount > 0" class="text-rose-400 ml-1"
-                      x-text="'(' + eveningOverdueCount + ' OD)'"></span>
-                  </div>
-                  <div :class="avgEveningSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
-                    class="text-[9px] font-black" x-text="avgEveningSameday.label"></div>
+                <div class="text-right leading-tight">
+                  <span class="text-[9px] font-black text-gray-400"
+                    x-text="(profile.count_evening || 0) + ' entries'"></span>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-6"></div>
+                <div class="flex-1 text-right">
+                  <span :class="avgEveningSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
+                    class="text-[9px] font-black" x-text="'Avg. ' + avgEveningSameday.label"></span>
+                  <span x-show="eveningOverdueCount > 0" class="text-rose-400 text-[8px] font-black ml-2"
+                    x-text="eveningOverdueCount + ' overdue'"></span>
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- HOURLY_DISTRIBUTION_V2 -->
-          <div class="glass-card p-5">
-            <div class="flex justify-between items-center mb-4">
-              <div class="flex items-center gap-2">
-                <i class="fa-solid fa-clock text-indigo-500/50"></i>
-                <h3 class="text-sm font-bold text-gray-800">24-Hr Submission</h3>
-              </div>
-              <div class="flex items-center gap-1">
-                <span class="text-[9px] font-black text-gray-400 uppercase">Peak:</span>
-                <span class="text-[9px] font-black text-indigo-600"
-                  x-text="hourlyStats.peakHour >= 0 ? (hourlyStats.peakHour.toString().padStart(2, '0') + ':00') : 'None'"></span>
-              </div>
+        <!-- HOURLY_DISTRIBUTION_V2 -->
+        <div class="glass-card p-5">
+          <div class="flex justify-between items-center mb-4">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-clock text-indigo-500/50"></i>
+              <h3 class="text-sm font-bold text-gray-800">24-Hr Submission</h3>
             </div>
+            <div class="flex items-center gap-1">
+              <span class="text-[9px] font-black text-gray-400 uppercase">Peak:</span>
+              <span class="text-[9px] font-black text-indigo-600"
+                x-text="hourlyStats.peakHour >= 0 ? (hourlyStats.peakHour.toString().padStart(2, '0') + ':00') : 'None'"></span>
+            </div>
+          </div>
 
-            <div class="flex items-stretch justify-between h-24 gap-1 px-1">
-              <template x-for="(count, hour) in hourlyStats.data" :key="hour">
-                <div class="flex-1 flex flex-col items-center group relative h-full">
-                  <!-- Bar Wrapper -->
-                  <div class="w-full bg-gray-50 rounded-full overflow-hidden flex items-end h-full">
-                    <div
-                      class="w-full bg-gradient-to-t from-rose-500 to-pink-400 rounded-full transition-all duration-1000"
-                      :style="'height: ' + (showProfileAnim ? (count / hourlyStats.max * 100) : 0) + '%'"
-                      :title="hour + ':00 - ' + count + ' cases'">
-                    </div>
+          <div class="flex items-stretch justify-between h-24 gap-1 px-1">
+            <template x-for="(count, hour) in hourlyStats.data" :key="hour">
+              <div class="flex-1 flex flex-col items-center group relative h-full">
+                <!-- Bar Wrapper -->
+                <div class="w-full bg-gray-50 rounded-full overflow-hidden flex items-end h-full">
+                  <div
+                    class="w-full bg-gradient-to-t from-rose-500 to-pink-400 rounded-full transition-all duration-1000"
+                    :style="'height: ' + (showProfileAnim ? (count / hourlyStats.max * 100) : 0) + '%'"
+                    :title="hour + ':00 - ' + count + ' cases'">
                   </div>
+                </div>
+              </div>
+            </template>
+          </div>
+
+          <!-- X-Axis Labels -->
+          <div class="relative mt-2 px-1">
+            <div class="flex items-stretch justify-between">
+              <template x-for="(count, hour) in hourlyStats.data" :key="'label-' + hour">
+                <div class="flex-1 flex justify-center">
+                  <span x-show="[0, 9, 12, 16, 20, 23].includes(parseInt(hour))"
+                    class="text-[8px] font-black text-gray-400 uppercase tracking-tighter"
+                    x-text="hour.toString().padStart(2, '0')"></span>
                 </div>
               </template>
             </div>
-
-            <!-- X-Axis Labels -->
-            <div class="relative mt-2 px-1">
-              <div class="flex items-stretch justify-between">
-                <template x-for="(count, hour) in hourlyStats.data" :key="'label-' + hour">
-                  <div class="flex-1 flex justify-center">
-                    <span x-show="[0, 9, 12, 16, 20, 23].includes(parseInt(hour))"
-                      class="text-[8px] font-black text-gray-400 uppercase tracking-tighter"
-                      x-text="hour.toString().padStart(2, '0')"></span>
-                  </div>
-                </template>
-              </div>
-            </div>
-          </div>
-
-          <!-- FOOTER -->
-          <div class="py-10 flex flex-col items-center">
-            <span class="text-[10px] font-black text-gray-200 uppercase tracking-[0.3em]">Efficiency Dashboard
-              V2.0</span>
           </div>
         </div>
-        <!-- PRECISION_DASHBOARD_END -->
+
+        <!-- FOOTER -->
+        <div class="py-10 flex flex-col items-center">
+          <span class="text-[10px] font-black text-gray-200 uppercase tracking-[0.3em]">Efficiency Dashboard
+            V2.0</span>
+        </div>
       </div>
-      <!-- PROFILE_VIEW END -->
-      <!-- DYNAMIC_VIEWS END -->
+      <!-- PRECISION_DASHBOARD_END -->
+    </div>
+    <!-- PROFILE_VIEW END -->
+    <!-- DYNAMIC_VIEWS END -->
   </main>
   <!-- MAIN_CONTENT_CONTAINER END -->
 
