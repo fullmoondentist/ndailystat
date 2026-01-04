@@ -438,23 +438,27 @@
             <!-- AVG_PRECISION_V2 -->
             <div class="glass-card p-5 relative overflow-hidden h-36 flex flex-col items-center">
               <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Avg. Precision</h3>
+
               <div class="flex items-baseline gap-1">
                 <span class="text-3xl font-black transition-colors duration-500"
                   :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'"
                   x-text="Math.abs(Math.round(avgDelta))"></span>
-                <div class="flex flex-col -mt-1">
-                  <span class="text-[10px] font-black uppercase transition-colors duration-500"
-                    :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'">MINS</span>
-                  <span class="text-[8px] font-black text-gray-300 -mt-0.5" x-show="sdDelta > 0"
+                <div class="flex flex-col -mt-1 items-start">
+                  <span class="text-[8px] font-black text-gray-300" x-show="sdDelta > 0"
                     x-text="'±' + Math.round(sdDelta) + ' SD'"></span>
+                  <span class="text-[10px] font-black uppercase transition-colors duration-500 -mt-0.5"
+                    :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'">MINS</span>
                 </div>
               </div>
-              <p class="text-[10px] font-bold text-gray-400 mt-1 uppercase leading-tight text-center">Average<br>Sub.
-                Precision</p>
+
               <div class="mt-1">
-                <span class="text-[10px] font-black uppercase tracking-wider"
+                <span class="text-[11px] font-black uppercase tracking-widest"
                   :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'"
-                  x-text="avgDelta <= 0 ? '● Before Target' : '● After Target'"></span>
+                  x-text="avgDelta <= 0 ? 'BEFORE' : 'AFTER'"></span>
+              </div>
+
+              <div class="mt-auto">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Session End Time</p>
               </div>
             </div>
           </div>
