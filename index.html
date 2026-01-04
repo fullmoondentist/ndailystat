@@ -551,11 +551,11 @@
               </div>
             </div>
 
-            <div class="flex items-end justify-between h-24 gap-1 px-1">
+            <div class="flex items-stretch justify-between h-24 gap-1 px-1">
               <template x-for="(count, hour) in hourlyStats.data" :key="hour">
-                <div class="flex-1 flex flex-col items-center group relative">
+                <div class="flex-1 flex flex-col items-center group relative h-full">
                   <!-- Bar Wrapper -->
-                  <div class="w-full bg-gray-50 rounded-t-sm overflow-hidden flex items-end" style="height: 100%;">
+                  <div class="w-full bg-gray-50 rounded-t-sm overflow-hidden flex items-end h-full">
                     <div
                       class="w-full bg-gradient-to-t from-indigo-500 to-purple-400 rounded-t-sm transition-all duration-1000"
                       :style="'height: ' + (showProfileAnim ? (count / hourlyStats.max * 100) : 0) + '%'"
@@ -661,10 +661,10 @@
         system: {},
         leaderboard: [],
         recentScores: [],
-        showTrend: true,
-        showExp: true,
-        showDeptAnim: true,
-        showProfileAnim: true,
+        showTrend: false,
+        showExp: false,
+        showDeptAnim: false,
+        showProfileAnim: false,
 
 
         statusColors: {
@@ -872,9 +872,13 @@
             console.error('Error parsing hourly_dist_json', e);
             raw = [];
           }
-          const data = (Array.isArray(raw) && raw.length === 24) ? raw : new Array(24).fill(0);
-          const max = Math.max(...data, 1);
+          // Ensure it's an array of length 24 and all values are numbers
+          const data = (Array.isArray(raw) && raw.length === 24)
+            ? raw.map(v => Number(v) || 0)
+            : new Array(24).fill(0);
+
           const maxVal = Math.max(...data);
+          const max = maxVal > 0 ? maxVal : 1;
           const peakHour = maxVal > 0 ? data.indexOf(maxVal) : -1;
           return { data, max, peakHour };
         },
