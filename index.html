@@ -73,6 +73,21 @@
                 100% { transform: translate3d(-100%, 0, 0); }
             }
             [x-cloak] { display: none !important; }
+
+            /* Soft Wipe Animation */
+            @keyframes soft-wipe {
+                from { mask-position: 150% 0; -webkit-mask-position: 150% 0; }
+                to { mask-position: 0% 0; -webkit-mask-position: 0% 0; }
+            }
+            .animate-soft-wipe {
+                -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 100%);
+                mask-image: linear-gradient(to right, transparent 0%, black 15%, black 100%);
+                -webkit-mask-size: 200% 100%;
+                mask-size: 200% 100%;
+                -webkit-mask-repeat: no-repeat;
+                mask-repeat: no-repeat;
+                animation: soft-wipe 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            }
         }
     </style>
 </head>
@@ -223,7 +238,9 @@
             </div>
           </div>
 
-          <div class="h-16 w-full relative" x-show="profile.daily_history && profile.daily_history.length > 1">
+          <div class="h-16 w-full relative"
+            x-show="profile.daily_history && profile.daily_history.length > 1 && showTrend"
+            :class="showTrend ? 'animate-soft-wipe' : ''">
             <svg class="w-full h-full overflow-visible" viewBox="0 0 100 40" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="trendGradient" x1="0" x2="0" y1="0" y2="1">
@@ -658,7 +675,7 @@
         system: {},
         leaderboard: [],
         recentScores: [],
-        showTrend: true,
+        showTrend: false,
         showExp: false,
         showDeptAnim: false,
         showProfileAnim: false,
@@ -899,9 +916,11 @@
 
         triggerTabAnimations(tab) {
           if (tab === 'dashboard') {
+            this.showTrend = false;
             this.showExp = false;
             this.$nextTick(() => {
               setTimeout(() => {
+                this.showTrend = true;
                 this.showExp = true;
               }, 50);
             });
