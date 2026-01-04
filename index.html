@@ -665,6 +665,7 @@
         showExp: false,
         showDeptAnim: false,
         showProfileAnim: false,
+        isInitialLoad: true,
 
 
         statusColors: {
@@ -955,7 +956,13 @@
 
             this.$nextTick(() => {
               // Watch for tab changes to reset animations AFTER initial load
-              this.$watch('activeTab', (value) => this.triggerTabAnimations(value));
+              this.$watch('activeTab', (value) => {
+                if (this.isInitialLoad) {
+                  this.isInitialLoad = false;
+                  return;
+                }
+                this.triggerTabAnimations(value);
+              });
 
               // Trigger initial animations for default tab
               this.triggerTabAnimations(this.activeTab);
