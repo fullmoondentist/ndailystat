@@ -495,7 +495,7 @@
               class="glass-card px-3 py-2 flex flex-col items-center justify-center h-24 !bg-rose-50/90 w-1/3 border-rose-100"
               x-show="profile.total_overdue > 0">
               <div class="stat-label text-rose-600/70">Avg. Delay</div>
-              <div class="stat-value text-rose-500 font-bold text-lg leading-tight"
+              <div class="stat-value text-rose-500 font-bold text-md leading-tight"
                 x-html="formatOverdueDelay(profile.avg_overdue_delay)"></div>
               <div class="stat-label text-rose-400 mt-1 whitespace-nowrap"
                 x-text="(profile.total_overdue || 0) + ' Entries'"></div>
