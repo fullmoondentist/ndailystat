@@ -921,9 +921,9 @@
 
         get personaConfig() {
           const avg = this.avgDelta;
-          if (avg <= -20) return { name: 'The Flash', emoji: '⚡', desc: 'Lightning fast! You’re done before the ink dries.' };
-          if (avg <= 0) return { name: 'The Slow-burner', emoji: '🧘', desc: 'Slow but steady. You take your time, but you always arrive perfectly on schedule.' };
-          return { name: 'The Deadline Diver', emoji: '🤿', desc: 'Better late than never! You passed the deadline, but hey, you got it done!' };
+          if (avg <= 0) return { name: 'The Flash', emoji: '⚡', desc: 'Lightning fast! You always finish your work on or before the target time.' };
+          if (avg <= 60) return { name: 'The Slow-burner', emoji: '🧘', desc: 'Slow but steady. You might be a bit after the target, but you always arrive within the hour!' };
+          return { name: 'The Deadline Diver', emoji: '🤿', desc: 'Better late than never! You usually pass the 60-minute mark, but hey, you got it done!' };
         },
 
         triggerTabAnimations(tab) {
