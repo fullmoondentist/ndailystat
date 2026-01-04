@@ -542,7 +542,7 @@
             <div class="flex justify-between items-center mb-4">
               <div class="flex items-center gap-2">
                 <i class="fa-solid fa-clock text-indigo-500/50"></i>
-                <h3 class="text-sm font-bold text-gray-800">24-Hr Submission</h3>
+                <h3 class="text-sm font-bold text-gray-800">24-Hr Case Distribution</h3>
               </div>
               <div class="flex items-center gap-1">
                 <span class="text-[9px] font-black text-gray-400 uppercase">Peak:</span>
@@ -555,9 +555,9 @@
               <template x-for="(count, hour) in hourlyStats.data" :key="hour">
                 <div class="flex-1 flex flex-col items-center group relative h-full">
                   <!-- Bar Wrapper -->
-                  <div class="w-full bg-gray-50 rounded-full overflow-hidden flex items-end h-full">
+                  <div class="w-full bg-gray-50 rounded-t-sm overflow-hidden flex items-end h-full">
                     <div
-                      class="w-full bg-gradient-to-t from-indigo-500 to-purple-400 rounded-full transition-all duration-1000"
+                      class="w-full bg-gradient-to-t from-indigo-500 to-purple-400 rounded-t-sm transition-all duration-1000"
                       :style="'height: ' + (showProfileAnim ? (count / hourlyStats.max * 100) : 0) + '%'"
                       :title="hour + ':00 - ' + count + ' cases'">
                     </div>
