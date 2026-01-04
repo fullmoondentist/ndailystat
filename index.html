@@ -927,21 +927,40 @@
           this.$nextTick(() => {
             const chart = new Chartist.Line('#trend-chart', data, options);
 
-            chart.on('created', () => {
-              const series = document.querySelector('#trend-chart .ct-series-a');
-              if (series) {
-                // Apply the mask to the series group
-                series.setAttribute('mask', 'url(#trendMask)');
+            chart.on('created', function (ctx) {
+              const defs = ctx.svg.elem('defs');
 
-                // Reset and start SVG animation
-                const anim = document.getElementById('wipeAnim');
-                if (anim) {
-                  // Important: Reset width to 0 before starting
-                  const rect = document.getElementById('maskRect');
-                  if (rect) rect.setAttribute('width', '0');
-                  anim.beginElement();
+              // 1. Dynamic Gradient
+              const gradient = defs.elem('linearGradient', {
+                id: 'trendGradient', x1: 0, y1: 0, x2: 0, y2: 1
+              });
+              gradient.elem('stop', { offset: 0, 'stop-color': '#3b82f6', 'stop-opacity': 0.4 });
+              gradient.elem('stop', { offset: 1, 'stop-color': '#3b82f6', 'stop-opacity': 0 });
+
+              // 2. Wipe Mask
+              const clipPath = defs.elem('clipPath', { id: 'chart-mask' });
+              const maskRect = clipPath.elem('rect', {
+                x: 0, y: 0, width: 0, height: '100%'
+              });
+
+              maskRect.animate({
+                width: {
+                  dur: 1500,
+                  from: 0,
+                  to: "100%",
+                  fill: 'freeze',
+                  easing: Chartist.Svg.Easing.easeOutQuint
                 }
-              }
+              });
+
+              // 3. Apply Mask and Gradient
+              ctx.svg.querySelector('.ct-series-a').attr({
+                'clip-path': 'url(#chart-mask)'
+              });
+              ctx.svg.querySelector('.ct-area').attr({
+                'fill': 'url(#trendGradient)',
+                'fill-opacity': '1'
+              });
             });
           });
         },
@@ -1095,24 +1114,6 @@
       }
     }
   </script>
-
-  <!-- SVG Gradients and Masks for Chartist -->
-  <svg style="height: 0; width: 0; position: absolute;">
-    <defs>
-      <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
-        <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.2" />
-        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" />
-      </linearGradient>
-
-      <!-- Wipe Animation Mask -->
-      <mask id="trendMask" maskUnits="userSpaceOnUse">
-        <rect id="maskRect" x="0" y="0" width="0" height="100" fill="white">
-          <animate id="wipeAnim" attributeName="width" from="0" to="100" dur="1.2s" begin="indefinite" fill="freeze"
-            calcMode="spline" keySplines="0.4 0 0.2 1" />
-        </rect>
-      </mask>
-    </defs>
-  </svg>
 </body>
 
 </html>
