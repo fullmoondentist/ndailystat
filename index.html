@@ -479,65 +479,55 @@
               <h3 class="text-sm font-bold text-gray-800">Session Distribution</h3>
             </div>
 
-            <div class="space-y-6">
+            <div class="space-y-4">
               <!-- MORNING -->
-              <div class="space-y-2">
-                <div class="flex justify-between items-end">
-                  <div class="flex items-center gap-2">
-                    <div class="w-2.5 h-2.5 rounded-full bg-cyan-400"></div>
-                    <span class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Morning Session</span>
-                  </div>
-                  <div class="flex flex-col items-end">
-                    <span class="text-[10px] font-black text-gray-700"
-                      x-text="(profile.count_morning || 0) + ' cases'"></span>
-                    <span :class="avgMorning.isLate ? 'text-rose-500' : 'text-emerald-500'"
-                      class="text-[10px] font-black" x-text="avgMorning.label"></span>
-                  </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 flex flex-col items-center shrink-0">
+                  <i class="fa-solid fa-sun text-cyan-400 text-lg"></i>
                 </div>
-                <div class="w-full h-2 bg-gray-50 rounded-full overflow-hidden">
-                  <div class="h-full bg-cyan-400 transition-all duration-1000" :style="'width: ' + sessionDist.m + '%'">
+                <div class="flex-1 h-2 bg-gray-50 rounded-full overflow-hidden">
+                  <div class="h-full bg-cyan-400 rounded-full transition-all duration-1000"
+                    :style="'width: ' + sessionDist.m + '%'"></div>
+                </div>
+                <div class="w-20 text-right leading-tight">
+                  <div class="text-[9px] font-black text-gray-400" x-text="(profile.count_morning || 0) + ' cases'">
                   </div>
+                  <div :class="avgMorning.isLate ? 'text-rose-500' : 'text-emerald-500'" class="text-[9px] font-black"
+                    x-text="avgMorning.label"></div>
                 </div>
               </div>
 
               <!-- AFTERNOON -->
-              <div class="space-y-2">
-                <div class="flex justify-between items-end">
-                  <div class="flex items-center gap-2">
-                    <div class="w-2.5 h-2.5 rounded-full bg-amber-400"></div>
-                    <span class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Afternoon
-                      Session</span>
-                  </div>
-                  <div class="flex flex-col items-end">
-                    <span class="text-[10px] font-black text-gray-700"
-                      x-text="(profile.count_afternoon || 0) + ' cases'"></span>
-                    <span :class="avgAfternoon.isLate ? 'text-rose-500' : 'text-emerald-500'"
-                      class="text-[10px] font-black" x-text="avgAfternoon.label"></span>
-                  </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 flex flex-col items-center shrink-0">
+                  <i class="fa-solid fa-cloud-sun text-amber-400 text-lg"></i>
                 </div>
-                <div class="w-full h-2 bg-gray-50 rounded-full overflow-hidden">
-                  <div class="h-full bg-amber-400 transition-all duration-1000"
+                <div class="flex-1 h-2 bg-gray-50 rounded-full overflow-hidden">
+                  <div class="h-full bg-amber-400 rounded-full transition-all duration-1000"
                     :style="'width: ' + sessionDist.a + '%'"></div>
+                </div>
+                <div class="w-20 text-right leading-tight">
+                  <div class="text-[9px] font-black text-gray-400" x-text="(profile.count_afternoon || 0) + ' cases'">
+                  </div>
+                  <div :class="avgAfternoon.isLate ? 'text-rose-500' : 'text-emerald-500'" class="text-[9px] font-black"
+                    x-text="avgAfternoon.label"></div>
                 </div>
               </div>
 
               <!-- EVENING -->
-              <div class="space-y-2">
-                <div class="flex justify-between items-end">
-                  <div class="flex items-center gap-2">
-                    <div class="w-2.5 h-2.5 rounded-full bg-indigo-500"></div>
-                    <span class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Evening Session</span>
-                  </div>
-                  <div class="flex flex-col items-end">
-                    <span class="text-[10px] font-black text-gray-700"
-                      x-text="(profile.count_evening || 0) + ' cases'"></span>
-                    <span :class="avgEvening.isLate ? 'text-rose-500' : 'text-emerald-500'"
-                      class="text-[10px] font-black" x-text="avgEvening.label"></span>
-                  </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 flex flex-col items-center shrink-0">
+                  <i class="fa-solid fa-moon text-indigo-500 text-lg"></i>
                 </div>
-                <div class="w-full h-2 bg-gray-50 rounded-full overflow-hidden">
-                  <div class="h-full bg-indigo-500 transition-all duration-1000"
+                <div class="flex-1 h-2 bg-gray-50 rounded-full overflow-hidden">
+                  <div class="h-full bg-indigo-500 rounded-full transition-all duration-1000"
                     :style="'width: ' + sessionDist.e + '%'"></div>
+                </div>
+                <div class="w-20 text-right leading-tight">
+                  <div class="text-[9px] font-black text-gray-400" x-text="(profile.count_evening || 0) + ' cases'">
+                  </div>
+                  <div :class="avgEvening.isLate ? 'text-rose-500' : 'text-emerald-500'" class="text-[9px] font-black"
+                    x-text="avgEvening.label"></div>
                 </div>
               </div>
             </div>
