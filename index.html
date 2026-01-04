@@ -413,7 +413,7 @@
                   <span class="text-[10px] font-black text-gray-700 uppercase">Cases</span>
                 </div>
               </div>
-              <div class="mt-4">
+              <div class="mt-2">
                 <div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden flex">
                   <div class="h-full bg-emerald-500 transition-all duration-1000"
                     :style="'width: ' + onTimePercent + '%'"></div>
@@ -440,31 +440,34 @@
             </div>
 
             <!-- AVG_PRECISION_V2 -->
-            <div class="glass-card p-5 relative overflow-hidden h-36 flex flex-col items-center">
-              <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
-                <i class="fa-solid fa-bullseye text-orange-500/50"></i>
-                Avg. Precision
-              </h3>
+            <div class="glass-card p-5 relative overflow-hidden h-36 flex flex-col items-center justify-between">
+              <div class="w-full flex flex-col items-center">
+                <h3
+                  class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                  <i class="fa-solid fa-bullseye text-orange-500/50"></i>
+                  Avg. Precision
+                </h3>
 
-              <div class="flex items-center gap-1.5">
-                <span class="text-3xl font-black transition-colors duration-500"
-                  :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'"
-                  x-text="Math.abs(Math.round(avgDelta))"></span>
-                <div class="flex flex-col items-start leading-tight">
-                  <span class="text-[8px] font-black text-gray-300" x-show="sdDelta > 0"
-                    x-text="'±' + Math.round(sdDelta) + ' SD'"></span>
-                  <span class="text-[10px] font-black uppercase transition-colors duration-500"
-                    :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'">MINS</span>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-3xl font-black transition-colors duration-500"
+                    :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'"
+                    x-text="Math.abs(Math.round(avgDelta))"></span>
+                  <div class="flex flex-col items-start leading-tight">
+                    <span class="text-[8px] font-black text-gray-300" x-show="sdDelta > 0"
+                      x-text="'±' + Math.round(sdDelta) + ' SD'"></span>
+                    <span class="text-[10px] font-black uppercase transition-colors duration-500"
+                      :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'">MINS</span>
+                  </div>
+                </div>
+
+                <div class="mt-0.5">
+                  <span class="text-[11px] font-black uppercase tracking-widest"
+                    :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'"
+                    x-text="avgDelta <= 0 ? 'BEFORE' : 'AFTER'"></span>
                 </div>
               </div>
 
-              <div class="mt-1">
-                <span class="text-[11px] font-black uppercase tracking-widest"
-                  :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'"
-                  x-text="avgDelta <= 0 ? 'BEFORE' : 'AFTER'"></span>
-              </div>
-
-              <div class="mt-auto">
+              <div class="w-full text-center">
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Session End Time</p>
               </div>
             </div>
