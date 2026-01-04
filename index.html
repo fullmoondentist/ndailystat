@@ -86,8 +86,8 @@
               stroke-width: 4px;
             }
             .ct-series-a .ct-area {
-              fill: #3b82f6;
-              fill-opacity: 0.05;
+              fill: url(#chartGradient);
+              fill-opacity: 1;
             }
             .ct-grid {
               stroke: transparent;
@@ -1078,6 +1078,16 @@
       }
     }
   </script>
+
+  <!-- SVG Gradients for Chartist -->
+  <svg style="height: 0; width: 0; position: absolute;">
+    <defs>
+      <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.2" />
+        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" />
+      </linearGradient>
+    </defs>
+  </svg>
 </body>
 
 </html>
