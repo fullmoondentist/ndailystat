@@ -431,46 +431,19 @@
         <div class="space-y-4 px-0">
           <div class="grid grid-cols-2 gap-4">
             <!-- GRADING_VITALS_V2 -->
-            <div class="glass-card p-4 flex flex-col justify-between h-36">
-              <div class="flex flex-col items-center">
-                <div class="stat-label">All Submissions</div>
-                <div class="stat-value text-gray-700 font-bold">
-                  <span x-text="profile.total_cases_count || 0"></span>
-                  <span class="text-xs uppercase ml-1">Entries</span>
-                </div>
-              </div>
-              <div class="mt-1">
-                <div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden flex">
-                  <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-1000"
-                    :style="'width: ' + (showProfileAnim ? onTimePercent : 0) + '%'"></div>
-                  <div class="h-full bg-gradient-to-r from-amber-400 to-orange-300 transition-all duration-1000"
-                    x-show="profile.total_too_early > 0"
-                    :style="'width: ' + (showProfileAnim ? tooEarlyPercent : 0) + '%'"></div>
-                  <div class="h-full bg-gradient-to-r from-rose-500 to-pink-400 transition-all duration-1000"
-                    :style="'width: ' + (showProfileAnim ? overduePercent : 0) + '%'"></div>
-                </div>
-                <div class="flex justify-between mt-1 text-xs font-bold uppercase leading-tight">
-                  <div class="flex flex-col">
-                    <span class="text-emerald-500 text-xs" x-text="onTimePercent + '%'"></span>
-                    <span class="text-emerald-600/50">ON-TIME</span>
-                  </div>
-                  <div class="flex flex-col items-center" x-show="profile.total_too_early > 0">
-                    <span class="text-amber-500 text-xs" x-text="tooEarlyPercent + '%'"></span>
-                    <span class="text-amber-600/50">T. EARLY</span>
-                  </div>
-                  <div class="flex flex-col items-end">
-                    <span class="text-rose-500 text-xs" x-text="overduePercent + '%'"></span>
-                    <span class="text-rose-600/50">OVERDUE</span>
-                  </div>
-                </div>
+            <div class="glass-card p-4 flex flex-col items-center justify-center h-28">
+              <div class="stat-label">All Submissions</div>
+              <div class="stat-value text-gray-700 font-bold">
+                <span x-text="profile.total_cases_count || 0"></span>
+                <span class="text-xs uppercase ml-1">Entries</span>
               </div>
             </div>
 
             <!-- AVG_PRECISION_V2 -->
-            <div class="glass-card p-4 relative overflow-hidden h-36 flex flex-col items-center justify-between">
-              <div class="w-full flex flex-col items-center">
+            <div class="glass-card p-4 relative overflow-hidden h-28 flex flex-col items-center justify-center">
+              <div class="w-full flex flex-col items-center text-center">
                 <div class="stat-label">Avg. Precision</div>
-                <div class="stat-value font-bold flex items-center gap-1.5"
+                <div class="stat-value font-bold flex items-center justify-center gap-1.5"
                   :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'">
                   <span x-text="Math.abs(Math.round(avgDelta))"></span>
                   <div class="flex flex-col items-start leading-tight">
@@ -480,9 +453,33 @@
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
 
-              <div class="w-full text-center">
-                <p class="text-xs font-bold text-gray-400 uppercase">Same-day Submissions Only</p>
+          <!-- SUBMISSION_STATUS_BAR_CARD -->
+          <div class="glass-card px-5 py-4">
+            <div class="stat-label mb-3">Submission Accuracy Distribution</div>
+            <div class="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden flex shadow-inner">
+              <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-1000"
+                :style="'width: ' + (showProfileAnim ? onTimePercent : 0) + '%'"></div>
+              <div class="h-full bg-gradient-to-r from-amber-400 to-orange-300 transition-all duration-1000"
+                x-show="profile.total_too_early > 0" :style="'width: ' + (showProfileAnim ? tooEarlyPercent : 0) + '%'">
+              </div>
+              <div class="h-full bg-gradient-to-r from-rose-500 to-pink-400 transition-all duration-1000"
+                :style="'width: ' + (showProfileAnim ? overduePercent : 0) + '%'"></div>
+            </div>
+            <div class="flex justify-between mt-3 text-xs font-bold uppercase leading-tight">
+              <div class="flex flex-col">
+                <span class="text-emerald-500 text-sm" x-text="onTimePercent + '%'"></span>
+                <span class="text-emerald-600/40">ON-TIME</span>
+              </div>
+              <div class="flex flex-col items-center" x-show="profile.total_too_early > 0">
+                <span class="text-amber-500 text-sm" x-text="tooEarlyPercent + '%'"></span>
+                <span class="text-amber-600/40">TOO EARLY</span>
+              </div>
+              <div class="flex flex-col items-end">
+                <span class="text-rose-500 text-sm" x-text="overduePercent + '%'"></span>
+                <span class="text-rose-600/40">OVERDUE</span>
               </div>
             </div>
           </div>
