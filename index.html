@@ -479,17 +479,17 @@
                 <div class="flex flex-col">
                   <span class="text-emerald-500 text-sm"
                     x-text="onTimePercent + '% (' + (profile.total_on_time || 0) + ')'"></span>
-                  <span class="text-emerald-600/40">ON-TIME</span>
+                  <span class="text-emerald-500">ON-TIME</span>
                 </div>
                 <div class="flex flex-col items-center" x-show="profile.total_too_early > 0">
                   <span class="text-amber-500 text-sm"
                     x-text="tooEarlyPercent + '% (' + (profile.total_too_early || 0) + ')'"></span>
-                  <span class="text-amber-600/40">TOO EARLY</span>
+                  <span class="text-amber-500">TOO EARLY</span>
                 </div>
                 <div class="flex flex-col items-end">
                   <span class="text-rose-500 text-sm"
                     x-text="overduePercent + '% (' + (profile.total_overdue || 0) + ')'"></span>
-                  <span class="text-rose-600/40">OVERDUE</span>
+                  <span class="text-rose-500">OVERDUE</span>
                 </div>
               </div>
             </div>
