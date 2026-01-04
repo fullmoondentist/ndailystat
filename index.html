@@ -365,7 +365,7 @@
                 <div class="text-right">
                   <div class="text-sm font-black text-blue-600" x-text="user.total_exp.toLocaleString()">
                   </div>
-                  <div class="text-[9px] font-bold text-gray-300 uppercase">EXP Points</div>
+                  <div class="text-[10px] font-bold text-gray-300 uppercase">EXP Points</div>
                 </div>
               </div>
             </template>
@@ -404,7 +404,7 @@
             <div @click="showPersonaTooltip = !showPersonaTooltip" @click.outside="showPersonaTooltip = false"
               class="mt-1 px-3 py-0.5 rounded-full bg-blue-50/50 border border-blue-100 flex items-center justify-center gap-1.5 w-max cursor-pointer relative transition-transform active:scale-95">
               <span class="text-xs" x-text="personaConfig.emoji"></span>
-              <span class="text-[8px] font-black uppercase tracking-[0.1em] text-blue-600"
+              <span class="text-[10px] font-black uppercase tracking-[0.1em] text-blue-600"
                 x-text="personaConfig.name"></span>
 
               <!-- Persona Tooltip -->
@@ -449,7 +449,7 @@
                   <div class="h-full bg-gradient-to-r from-rose-500 to-pink-400 transition-all duration-1000"
                     :style="'width: ' + (showProfileAnim ? overduePercent : 0) + '%'"></div>
                 </div>
-                <div class="flex justify-between mt-1 text-[8px] font-bold uppercase tracking-wide leading-tight">
+                <div class="flex justify-between mt-1 text-[10px] font-bold uppercase tracking-wide leading-tight">
                   <div class="flex flex-col">
                     <span class="text-emerald-500 text-[10px]" x-text="onTimePercent + '%'"></span>
                     <span class="text-emerald-600/50">ON-TIME</span>
@@ -479,7 +479,7 @@
                     :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'"
                     x-text="Math.abs(Math.round(avgDelta))"></span>
                   <div class="flex flex-col items-start leading-tight">
-                    <span class="text-[8px] font-black text-gray-300" x-show="sdDelta > 0"
+                    <span class="text-[10px] font-black text-gray-300" x-show="sdDelta > 0"
                       x-text="'±' + Math.round(sdDelta) + ' SD'"></span>
                     <span class="text-[10px] font-black uppercase transition-colors duration-500"
                       :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'">MINS</span>
@@ -517,7 +517,7 @@
               <div class="flex flex-col items-center mt-1 leading-tight">
                 <span class="text-[11px] font-black text-rose-400"
                   x-html="formatOverdueDelay(profile.avg_overdue_delay)"></span>
-                <span class="text-[8px] font-black text-gray-400 uppercase">Avg Delay</span>
+                <span class="text-[10px] font-black text-gray-400 uppercase">Avg Delay</span>
               </div>
             </div>
 
@@ -546,8 +546,8 @@
                     class="h-full bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full transition-all duration-1000"
                     :style="'width: ' + (showProfileAnim ? sessionDist.m : 0) + '%'"></div>
                 </div>
-                <div class="text-right leading-tight">
-                  <span class="text-[9px] font-black text-gray-400"
+                <div class="w-16 text-right leading-tight">
+                  <span class="text-[10px] font-black text-gray-400"
                     x-text="(profile.count_morning || 0) + ' entries'"></span>
                 </div>
               </div>
@@ -555,8 +555,8 @@
                 <div class="w-6"></div>
                 <div class="flex-1 text-right">
                   <span :class="avgMorningSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
-                    class="text-[9px] font-black" x-text="'Avg. ' + avgMorningSameday.label"></span>
-                  <span x-show="morningOverdueCount > 0" class="text-rose-400 text-[8px] font-black ml-2"
+                    class="text-[10px] font-black" x-text="'Avg. ' + avgMorningSameday.label"></span>
+                  <span x-show="morningOverdueCount > 0" class="text-rose-400 text-[10px] font-black ml-2"
                     x-text="morningOverdueCount + ' overdue'"></span>
                 </div>
               </div>
@@ -573,8 +573,8 @@
                     class="h-full bg-gradient-to-r from-amber-400 to-orange-300 rounded-full transition-all duration-1000"
                     :style="'width: ' + (showProfileAnim ? sessionDist.a : 0) + '%'"></div>
                 </div>
-                <div class="text-right leading-tight">
-                  <span class="text-[9px] font-black text-gray-400"
+                <div class="w-16 text-right leading-tight">
+                  <span class="text-[10px] font-black text-gray-400"
                     x-text="(profile.count_afternoon || 0) + ' entries'"></span>
                 </div>
               </div>
@@ -582,8 +582,8 @@
                 <div class="w-6"></div>
                 <div class="flex-1 text-right">
                   <span :class="avgAfternoonSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
-                    class="text-[9px] font-black" x-text="'Avg. ' + avgAfternoonSameday.label"></span>
-                  <span x-show="afternoonOverdueCount > 0" class="text-rose-400 text-[8px] font-black ml-2"
+                    class="text-[10px] font-black" x-text="'Avg. ' + avgAfternoonSameday.label"></span>
+                  <span x-show="afternoonOverdueCount > 0" class="text-rose-400 text-[10px] font-black ml-2"
                     x-text="afternoonOverdueCount + ' overdue'"></span>
                 </div>
               </div>
@@ -600,8 +600,8 @@
                     class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-1000"
                     :style="'width: ' + (showProfileAnim ? sessionDist.e : 0) + '%'"></div>
                 </div>
-                <div class="text-right leading-tight">
-                  <span class="text-[9px] font-black text-gray-400"
+                <div class="w-16 text-right leading-tight">
+                  <span class="text-[10px] font-black text-gray-400"
                     x-text="(profile.count_evening || 0) + ' entries'"></span>
                 </div>
               </div>
@@ -609,8 +609,8 @@
                 <div class="w-6"></div>
                 <div class="flex-1 text-right">
                   <span :class="avgEveningSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
-                    class="text-[9px] font-black" x-text="'Avg. ' + avgEveningSameday.label"></span>
-                  <span x-show="eveningOverdueCount > 0" class="text-rose-400 text-[8px] font-black ml-2"
+                    class="text-[10px] font-black" x-text="'Avg. ' + avgEveningSameday.label"></span>
+                  <span x-show="eveningOverdueCount > 0" class="text-rose-400 text-[10px] font-black ml-2"
                     x-text="eveningOverdueCount + ' overdue'"></span>
                 </div>
               </div>
@@ -626,8 +626,8 @@
               <h3 class="text-sm font-bold text-gray-800">24-Hr Submission</h3>
             </div>
             <div class="flex items-center gap-1">
-              <span class="text-[9px] font-black text-gray-400 uppercase">Peak:</span>
-              <span class="text-[9px] font-black text-indigo-600"
+              <span class="text-[10px] font-black text-gray-400 uppercase">Peak:</span>
+              <span class="text-[10px] font-black text-indigo-600"
                 x-text="hourlyStats.peakHour >= 0 ? (hourlyStats.peakHour.toString().padStart(2, '0') + ':00') : 'None'"></span>
             </div>
           </div>
@@ -653,7 +653,7 @@
               <template x-for="(count, hour) in hourlyStats.data" :key="'label-' + hour">
                 <div class="flex-1 flex justify-center">
                   <span x-show="[0, 9, 12, 16, 20, 23].includes(parseInt(hour))"
-                    class="text-[8px] font-black text-gray-400 uppercase tracking-tighter"
+                    class="text-[10px] font-black text-gray-400 uppercase tracking-tighter"
                     x-text="hour.toString().padStart(2, '0')"></span>
                 </div>
               </template>
