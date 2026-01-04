@@ -403,7 +403,11 @@
             <!-- GRADING_VITALS_V2 -->
             <div class="glass-card p-5 flex flex-col justify-between h-36">
               <div class="flex flex-col items-center">
-                <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Grading Vitals</h3>
+                <h3
+                  class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                  <i class="fa-solid fa-clipboard-check text-blue-500/50"></i>
+                  Grading Vitals
+                </h3>
                 <div class="flex items-baseline gap-1">
                   <span class="text-3xl font-black text-gray-700" x-text="profile.total_cases_count || 0"></span>
                   <span class="text-[10px] font-black text-gray-700 uppercase">Cases</span>
@@ -437,7 +441,10 @@
 
             <!-- AVG_PRECISION_V2 -->
             <div class="glass-card p-5 relative overflow-hidden h-36 flex flex-col items-center">
-              <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Avg. Precision</h3>
+              <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                <i class="fa-solid fa-bullseye text-orange-500/50"></i>
+                Avg. Precision
+              </h3>
 
               <div class="flex items-center gap-1.5">
                 <span class="text-3xl font-black transition-colors duration-500"
@@ -465,9 +472,9 @@
 
           <!-- SESSION_DISTRIBUTION_V2 -->
           <div class="glass-card p-5">
-            <div class="flex justify-between items-center mb-5">
+            <div class="flex items-center gap-2 mb-5">
+              <i class="fa-solid fa-chart-simple text-blue-600/50"></i>
               <h3 class="text-[11px] font-black text-gray-700 uppercase tracking-[0.1em]">Session Distribution</h3>
-              <i class="fa-solid fa-chart-simple text-gray-300"></i>
             </div>
 
             <div class="space-y-6">
