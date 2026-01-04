@@ -425,7 +425,7 @@
 
         <!-- PRECISION_DASHBOARD_V2_START -->
         <div class="space-y-4 px-0">
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-3 gap-4">
             <!-- GRADING_VITALS_V2 -->
             <div class="glass-card p-5 flex flex-col justify-between h-36">
               <div class="flex flex-col items-center">
@@ -494,7 +494,34 @@
               </div>
 
               <div class="w-full text-center">
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Session End Time</p>
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Same-day Submissions Only</p>
+              </div>
+            </div>
+
+            <!-- OVERDUE_REPORT_CARD -->
+            <div class="glass-card p-5 relative overflow-hidden h-36 flex flex-col items-center justify-between"
+              x-show="profile.total_overdue > 0">
+              <div class="w-full flex flex-col items-center">
+                <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1.5">
+                  <i class="fa-solid fa-triangle-exclamation text-rose-500/50"></i>
+                  Overdue
+                </h3>
+
+                <div class="flex items-baseline gap-1 mt-2">
+                  <span class="text-3xl font-black text-rose-500" x-text="profile.total_overdue || 0"></span>
+                  <span class="text-[10px] font-black text-gray-400 uppercase">Entries</span>
+                </div>
+
+                <!-- English formatted delay -->
+                <div class="flex flex-col items-center mt-1 leading-tight">
+                  <span class="text-[11px] font-black text-rose-400"
+                    x-html="formatOverdueDelay(profile.avg_overdue_delay)"></span>
+                  <span class="text-[8px] font-black text-gray-400 uppercase">Avg Delay</span>
+                </div>
+              </div>
+
+              <div class="w-full text-center">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Cross-day</p>
               </div>
             </div>
           </div>
@@ -517,11 +544,14 @@
                     class="h-full bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full transition-all duration-1000"
                     :style="'width: ' + (showProfileAnim ? sessionDist.m : 0) + '%'"></div>
                 </div>
-                <div class="w-20 text-right leading-tight">
-                  <div class="text-[9px] font-black text-gray-400" x-text="(profile.count_morning || 0) + ' cases'">
+                <div class="w-24 text-right leading-tight">
+                  <div class="text-[9px] font-black text-gray-400">
+                    <span x-text="(profile.count_morning || 0) + ' entries'"></span>
+                    <span x-show="morningOverdueCount > 0" class="text-rose-400 ml-1"
+                      x-text="'(' + morningOverdueCount + ' OD)'"></span>
                   </div>
-                  <div :class="avgMorning.isLate ? 'text-rose-500' : 'text-emerald-500'" class="text-[9px] font-black"
-                    x-text="avgMorning.label"></div>
+                  <div :class="avgMorningSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
+                    class="text-[9px] font-black" x-text="avgMorningSameday.label"></div>
                 </div>
               </div>
 
@@ -535,11 +565,14 @@
                     class="h-full bg-gradient-to-r from-amber-400 to-orange-300 rounded-full transition-all duration-1000"
                     :style="'width: ' + (showProfileAnim ? sessionDist.a : 0) + '%'"></div>
                 </div>
-                <div class="w-20 text-right leading-tight">
-                  <div class="text-[9px] font-black text-gray-400" x-text="(profile.count_afternoon || 0) + ' cases'">
+                <div class="w-24 text-right leading-tight">
+                  <div class="text-[9px] font-black text-gray-400">
+                    <span x-text="(profile.count_afternoon || 0) + ' entries'"></span>
+                    <span x-show="afternoonOverdueCount > 0" class="text-rose-400 ml-1"
+                      x-text="'(' + afternoonOverdueCount + ' OD)'"></span>
                   </div>
-                  <div :class="avgAfternoon.isLate ? 'text-rose-500' : 'text-emerald-500'" class="text-[9px] font-black"
-                    x-text="avgAfternoon.label"></div>
+                  <div :class="avgAfternoonSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
+                    class="text-[9px] font-black" x-text="avgAfternoonSameday.label"></div>
                 </div>
               </div>
 
@@ -553,11 +586,14 @@
                     class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-1000"
                     :style="'width: ' + (showProfileAnim ? sessionDist.e : 0) + '%'"></div>
                 </div>
-                <div class="w-20 text-right leading-tight">
-                  <div class="text-[9px] font-black text-gray-400" x-text="(profile.count_evening || 0) + ' cases'">
+                <div class="w-24 text-right leading-tight">
+                  <div class="text-[9px] font-black text-gray-400">
+                    <span x-text="(profile.count_evening || 0) + ' entries'"></span>
+                    <span x-show="eveningOverdueCount > 0" class="text-rose-400 ml-1"
+                      x-text="'(' + eveningOverdueCount + ' OD)'"></span>
                   </div>
-                  <div :class="avgEvening.isLate ? 'text-rose-500' : 'text-emerald-500'" class="text-[9px] font-black"
-                    x-text="avgEvening.label"></div>
+                  <div :class="avgEveningSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
+                    class="text-[9px] font-black" x-text="avgEveningSameday.label"></div>
                 </div>
               </div>
             </div>
@@ -873,16 +909,17 @@
         },
 
         get avgDelta() {
-          const count = (this.profile.total_cases_count || 0) - (this.profile.total_too_early || 0);
+          // Use same-day count only (excluding overdue)
+          const count = this.profile.count_sameday || 0;
           if (count <= 0) return 0;
-          return this.profile.total_delta_minutes / count;
+          return this.profile.total_sameday_delta / count;
         },
 
         get sdDelta() {
-          const count = (this.profile.total_cases_count || 0) - (this.profile.total_too_early || 0);
+          const count = this.profile.count_sameday || 0;
           if (count <= 1) return 0;
           const avg = this.avgDelta;
-          const meanSq = this.profile.total_delta_sq / count;
+          const meanSq = this.profile.total_sameday_delta_sq / count;
           const variance = meanSq - (avg * avg);
           return Math.sqrt(Math.max(0, variance));
         },
@@ -911,6 +948,83 @@
           const max = maxVal > 0 ? maxVal : 1;
           const peakHour = maxVal > 0 ? data.indexOf(maxVal) : -1;
           return { data, max, peakHour };
+        },
+
+        // Overdue count computed properties
+        get morningOverdueCount() {
+          return (this.profile.count_morning || 0) - (this.profile.count_morning_sameday || 0);
+        },
+
+        get afternoonOverdueCount() {
+          return (this.profile.count_afternoon || 0) - (this.profile.count_afternoon_sameday || 0);
+        },
+
+        get eveningOverdueCount() {
+          return (this.profile.count_evening || 0) - (this.profile.count_evening_sameday || 0);
+        },
+
+        // Same-day session averages
+        get avgMorningSameday() {
+          const count = this.profile.count_morning_sameday || 0;
+          const deltaSum = this.profile.total_morning_sameday_delta || 0;
+          if (count === 0) return { label: 'No Data', isLate: false };
+          const avg = deltaSum / count;
+          return {
+            label: this.formatDelta(avg) + (avg <= 0 ? ' before' : ' after'),
+            isLate: avg > 0
+          };
+        },
+
+        get avgAfternoonSameday() {
+          const count = this.profile.count_afternoon_sameday || 0;
+          const deltaSum = this.profile.total_afternoon_sameday_delta || 0;
+          if (count === 0) return { label: 'No Data', isLate: false };
+          const avg = deltaSum / count;
+          return {
+            label: this.formatDelta(avg) + (avg <= 0 ? ' before' : ' after'),
+            isLate: avg > 0
+          };
+        },
+
+        get avgEveningSameday() {
+          const count = this.profile.count_evening_sameday || 0;
+          const deltaSum = this.profile.total_evening_sameday_delta || 0;
+          if (count === 0) return { label: 'No Data', isLate: false };
+          const avg = deltaSum / count;
+          return {
+            label: this.formatDelta(avg) + (avg <= 0 ? ' before' : ' after'),
+            isLate: avg > 0
+          };
+        },
+
+        formatOverdueDelay(minutes) {
+          if (!minutes || minutes <= 0) return '0 mins';
+
+          const totalMinutes = Math.round(minutes);
+
+          // If less than 1 hour, show minutes only
+          if (totalMinutes < 60) {
+            return `${totalMinutes} mins`;
+          }
+
+          // If less than 1 day, show hours and minutes
+          if (totalMinutes < 1440) { // 1440 = 24 hours
+            const hours = Math.floor(totalMinutes / 60);
+            const mins = totalMinutes % 60;
+            return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+          }
+
+          // If 1 day or more, show days, hours, and minutes
+          const days = Math.floor(totalMinutes / 1440);
+          const remainingMins = totalMinutes % 1440;
+          const hours = Math.floor(remainingMins / 60);
+          const mins = remainingMins % 60;
+
+          let result = `${days}d`;
+          if (hours > 0) result += ` ${hours}h`;
+          if (mins > 0) result += ` ${mins}m`;
+
+          return result;
         },
 
         get classDisplay() {
