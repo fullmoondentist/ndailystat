@@ -50,7 +50,7 @@
                 @apply text-2xl font-bold tracking-tight text-gray-900;
             }
             .stat-label {
-                @apply text-xs uppercase tracking-wider font-bold text-gray-400;
+                @apply text-xs uppercase font-bold text-gray-400;
             }
             .rank-badge {
                 @apply px-3 py-1 rounded-full text-xs font-bold text-white;
@@ -134,7 +134,7 @@
                 <div class="flex items-center gap-1 mt-1 opacity-90">
                   <span x-html="deptIconMap[profile.department] || '<i class=\'fa-solid fa-building-user\'></i>'"
                     class="text-xs text-blue-200"></span>
-                  <span class="text-[11px] font-black uppercase tracking-wider"
+                  <span class="text-[11px] font-black uppercase"
                     x-text="profile.department || 'RSU Dental'"></span>
                 </div>
               </div>
@@ -145,7 +145,7 @@
               <div class="flex items-center justify-end gap-1 w-fit ml-auto bg-transparent">
                 <span class="text-base" x-text="rankConfig[profile.current_class]?.emoji || '▫️'"></span>
                 <span x-text="profile.current_class || 'Beginner'"
-                  class="text-xs font-bold uppercase tracking-wider"></span>
+                  class="text-xs font-bold uppercase"></span>
               </div>
 
               <div class="text-2xl leading-none scale-110 origin-right drop-shadow-sm filter py-1"
@@ -184,7 +184,7 @@
 
         <!-- TICKER_MESSAGES START -->
         <div class="ticker-wrap rounded-xl" x-show="system.ticker_messages?.length > 0">
-          <div class="ticker-move text-[11px] font-bold text-blue-900/60 uppercase tracking-wider">
+          <div class="ticker-move text-[11px] font-bold text-blue-900/60 uppercase">
             <template x-for="msg in system.ticker_messages" :key="msg">
               <span class="mx-8 flex-inline items-center">
                 <i class="fa-solid fa-bullhorn mr-2"></i>
@@ -209,7 +209,7 @@
               :style="'width: ' + (showExp ? expPercentage : 0) + '%'">
             </div>
           </div>
-          <div class="flex justify-between text-xs font-bold tracking-wider text-gray-400">
+          <div class="flex justify-between text-xs font-bold text-gray-400">
             <span x-text="profile.total_exp?.toLocaleString() + ' EXP'"></span>
             <span
               x-text="profile.next_rank_exp ? 'Next: ' + (profile.next_rank_name || '') + ' (' + profile.next_rank_exp.toLocaleString() + ' EXP)' : 'Next: MAX'"></span>
