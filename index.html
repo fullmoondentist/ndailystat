@@ -537,6 +537,45 @@
             </div>
           </div>
 
+          <!-- HOURLY_DISTRIBUTION_V2 -->
+          <div class="glass-card p-5">
+            <div class="flex justify-between items-center mb-4">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-clock text-indigo-500/50"></i>
+                <h3 class="text-sm font-bold text-gray-800">24-Hr Case Distribution</h3>
+              </div>
+              <div class="flex items-center gap-1">
+                <span class="text-[9px] font-black text-gray-400 uppercase">Peak:</span>
+                <span class="text-[9px] font-black text-indigo-600"
+                  x-text="hourlyStats.peakHour.toString().padStart(2, '0') + ':00'"></span>
+              </div>
+            </div>
+
+            <div class="flex items-end justify-between h-24 gap-1 px-1">
+              <template x-for="(count, hour) in hourlyStats.data" :key="hour">
+                <div class="flex-1 flex flex-col items-center group relative">
+                  <!-- Bar Wrapper -->
+                  <div class="w-full bg-gray-50 rounded-t-sm overflow-hidden flex items-end" style="height: 100%;">
+                    <div
+                      class="w-full bg-gradient-to-t from-indigo-500 to-purple-400 rounded-t-sm transition-all duration-1000"
+                      :style="'height: ' + (showProfileAnim ? (count / hourlyStats.max * 100) : 0) + '%'"
+                      :title="hour + ':00 - ' + count + ' cases'">
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </div>
+
+            <!-- X-Axis Labels -->
+            <div class="flex justify-between mt-2 px-1 text-[8px] font-black text-gray-400 uppercase tracking-tighter">
+              <span>00h</span>
+              <span>06h</span>
+              <span>12h</span>
+              <span>18h</span>
+              <span>23h</span>
+            </div>
+          </div>
+
           <!-- FOOTER -->
           <div class="py-10 flex flex-col items-center">
             <span class="text-[10px] font-black text-gray-200 uppercase tracking-[0.3em]">Efficiency Dashboard
@@ -822,6 +861,14 @@
           const count = this.profile.count_morning || 0;
           if (count === 0) return 0;
           return this.profile.total_morning_delta / count;
+        },
+
+        get hourlyStats() {
+          const raw = JSON.parse(this.profile.hourly_dist_json || '[]');
+          const data = raw.length === 24 ? raw : new Array(24).fill(0);
+          const max = Math.max(...data, 1);
+          const peakHour = data.indexOf(Math.max(...data));
+          return { data, max, peakHour };
         },
 
         get sessionDist() {
