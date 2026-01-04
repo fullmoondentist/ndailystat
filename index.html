@@ -33,6 +33,14 @@
   </script>
 
   <style type="text/tailwindcss">
+    @layer base {
+      * {
+        @apply leading-tight;
+      }
+      body {
+        @apply leading-tight;
+      }
+    }
     @layer components {
             .glass-card {
                 @apply bg-white/90 backdrop-blur-md border border-white/20 shadow-md rounded-2xl;
@@ -395,8 +403,7 @@
             <p class="text-xs font-bold text-gray-400 uppercase" x-text="classDisplay">
             </p>
 
-            <div class="mt-1 text-xs font-bold text-gray-400 uppercase"
-              x-text="profile.current_title || '---'"></div>
+            <div class="mt-1 text-xs font-bold text-gray-400 uppercase" x-text="profile.current_title || '---'"></div>
 
             <!-- Persona Badge -->
             <div @click="showPersonaTooltip = !showPersonaTooltip" @click.outside="showPersonaTooltip = false"
@@ -650,8 +657,7 @@
               <template x-for="(count, hour) in hourlyStats.data" :key="'label-' + hour">
                 <div class="flex-1 flex justify-center">
                   <span x-show="[0, 9, 12, 16, 20, 23].includes(parseInt(hour))"
-                    class="text-xs font-black text-gray-400 uppercase"
-                    x-text="hour.toString().padStart(2, '0')"></span>
+                    class="text-xs font-black text-gray-400 uppercase" x-text="hour.toString().padStart(2, '0')"></span>
                 </div>
               </template>
             </div>
