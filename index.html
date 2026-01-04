@@ -384,24 +384,25 @@
 
       <!-- PROFILE_VIEW START -->
       <div x-show="activeTab === 'profile'" class="space-y-4">
-        <div class="glass-card p-6 relative overflow-hidden z-30 min-h-[140px] flex items-center">
+        <div class="glass-card p-4 relative overflow-hidden z-30 min-h-[140px] flex items-center">
           <!-- Background Icon Layer -->
-          <div class="absolute -bottom-6 -right-6 opacity-[0.08] text-gray-400 pointer-events-none z-0"
+          <div class="absolute -bottom-6 -right-2 opacity-[0.2] text-gray-400 pointer-events-none z-0"
             style="font-size: 140px; transform: rotate(-12deg);" x-html="deptIconMap[profile.department]">
           </div>
 
           <div class="grid grid-cols-2 gap-4 w-full relative z-10 items-center">
             <!-- Left side: Identity -->
             <div class="flex flex-col items-start gap-1">
-              <h2 class="text-xl text-gray-800 font-light leading-tight"
-                style="font-family: 'Kanit', sans-serif; font-weight: 300;" x-text="profile.display_name"></h2>
-
-              <div class="flex items-center gap-1.5 opacity-60">
-                <span x-html="deptIconMap[profile.department] || '<i class=\'fa-solid fa-building-user\'></i>'"
-                  class="text-xs text-blue-600"></span>
-                <span class="text-[11px] font-black uppercase text-gray-500"
-                  x-text="(profile.department || 'RSU Dental') + ' Department'"></span>
-              </div>
+              <h2 class="text-xl text-gray-800 font-light leading-tight flex items-baseline gap-2"
+                style="font-family: 'Kanit', sans-serif; font-weight: 300;">
+                <span x-text="profile.display_name"></span>
+                <span class="flex items-center gap-1 opacity-40">
+                  <span x-html="deptIconMap[profile.department] || '<i class=\'fa-solid fa-building-user\'></i>'"
+                    class="text-[10px] text-blue-600"></span>
+                  <span class="text-[11px] font-bold text-gray-500 uppercase"
+                    x-text="profile.department || 'DentRSU'"></span>
+                </span>
+              </h2>
 
               <!-- Persona Badge -->
               <div @click="showPersonaTooltip = !showPersonaTooltip" @click.outside="showPersonaTooltip = false"
@@ -424,8 +425,8 @@
 
             <!-- Right side: Rank Stats -->
             <div class="flex flex-col items-end gap-1 text-right">
-              <p class="text-xs font-black text-gray-400 uppercase tracking-wider" x-text="classDisplay"></p>
-              <div class="text-sm font-black text-blue-600/80 uppercase" x-text="profile.current_title || '---'"></div>
+              <p class="text-xs font-bold text-gray-40" x-text="classDisplay"></p>
+              <div class="text-xs font-bold text-blue-600/80" x-text="profile.current_title || '---'"></div>
             </div>
           </div>
         </div>
