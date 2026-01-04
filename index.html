@@ -80,10 +80,22 @@
                     stroke-dashoffset: 0;
                 }
             }
+            @keyframes revealArea {
+                0% {
+                    clip-path: inset(0 100% 0 0);
+                }
+                100% {
+                    clip-path: inset(0 0 0 0);
+                }
+            }
             .animate-draw-line {
                 stroke-dasharray: 1000;
                 stroke-dashoffset: 1000;
                 animation: drawLine 2s ease-out forwards;
+            }
+            .animate-reveal-area {
+                clip-path: inset(0 100% 0 0);
+                animation: revealArea 2s ease-out forwards;
             }
             [x-cloak] { display: none !important; }
         }
@@ -245,7 +257,7 @@
                 </linearGradient>
               </defs>
               <!-- Area Fill -->
-              <path :d="trendFill" fill="url(#trendGradient)" stroke="none" />
+              <path :d="trendFill" fill="url(#trendGradient)" stroke="none" class="animate-reveal-area" />
               <!-- Line -->
               <path :d="trendPath" fill="none" stroke="#2563eb" stroke-width="2" stroke-opacity="0.5"
                 vector-effect="non-scaling-stroke" stroke-linecap="butt" stroke-linejoin="round"
