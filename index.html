@@ -736,6 +736,9 @@
             const labels = history.map((_, i) => i);
             const dataValues = history.map(h => h.a);
 
+            const totalDuration = 1500;
+            const delayBetweenPoints = totalDuration / dataValues.length;
+
             this.trendChartInstance = new Chart(ctx, {
               type: 'line',
               data: {
@@ -744,7 +747,7 @@
                   label: 'Accuracy',
                   data: dataValues,
                   borderColor: '#2563eb', // blue-600
-                  borderWidth: 2,
+                  borderWidth: 2.5,
                   backgroundColor: gradient,
                   fill: true,
                   tension: 0.4, // Smooth curve
@@ -760,11 +763,29 @@
                 },
                 scales: {
                   x: { display: false },
-                  y: { display: false, min: 0, max: 100 }
+                  y: { display: false, min: 0, max: 105 } // Extra 5% for comfort
                 },
-                animation: {
-                  duration: 2000,
-                  easing: 'easeInOutQuart'
+                animations: {
+                  x: {
+                    type: 'number',
+                    easing: 'linear',
+                    duration: delayBetweenPoints,
+                    from: NaN,
+                    delay(ctx) {
+                      if (ctx.type !== 'data' || ctx.active) return 0;
+                      return ctx.index * delayBetweenPoints;
+                    }
+                  },
+                  y: {
+                    type: 'number',
+                    easing: 'linear',
+                    duration: delayBetweenPoints,
+                    from: (ctx) => ctx.chart.scales.y.getPixelForValue(100), // Start from bottom (normalized 100 in canvas usually top, but Chart.js scales it)
+                    delay(ctx) {
+                      if (ctx.type !== 'data' || ctx.active) return 0;
+                      return ctx.index * delayBetweenPoints;
+                    }
+                  }
                 }
               }
             });
