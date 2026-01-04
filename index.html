@@ -9,7 +9,6 @@
   <!-- Libraries -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@100;300;400&display=swap" rel="stylesheet">
@@ -225,7 +224,19 @@
           </div>
 
           <div class="h-16 w-full relative" x-show="profile.daily_history && profile.daily_history.length > 1">
-            <canvas id="trendChart"></canvas>
+            <svg class="w-full h-full overflow-visible" viewBox="0 0 100 40" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="trendGradient" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.5" />
+                  <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+              <!-- Area Fill -->
+              <path :d="trendFill" fill="url(#trendGradient)" stroke="none" />
+              <!-- Line -->
+              <path :d="trendPath" fill="none" stroke="#2563eb" stroke-width="2" stroke-opacity="0.2"
+                vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
           </div>
 
           <div x-show="!profile.daily_history || profile.daily_history.length < 2"
@@ -647,7 +658,7 @@
         system: {},
         leaderboard: [],
         recentScores: [],
-        trendChartInstance: null,
+        showTrend: true,
         showExp: false,
         showDeptAnim: false,
         showProfileAnim: false,
@@ -714,82 +725,49 @@
           }));
         },
 
-        initTrendChart() {
+        get trendPath() {
           const history = this.profile.daily_history || [];
-          if (history.length < 2) return;
+          if (history.length < 2) return '';
 
-          this.$nextTick(() => {
-            const canvas = document.getElementById('trendChart');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
+          const width = 100;
+          const height = 40; // SVG height
+          const step = width / (history.length - 1);
 
-            // Cleanup existing chart
-            if (this.trendChartInstance) {
-              this.trendChartInstance.destroy();
-            }
+          // คำนวณจุดแรก
+          let prevX = 0;
+          let prevY = height - (history[0].a / 100 * height);
 
-            // Create Gradient
-            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height || 64);
-            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)'); // blue-500
-            gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+          let path = `M ${prevX},${prevY}`;
 
-            const labels = history.map((_, i) => i);
-            const dataValues = history.map(h => h.a);
+          // วนลูปจุดที่เหลือ เพื่อสร้างเส้นโค้ง
+          for (let i = 1; i < history.length; i++) {
+            const currentX = i * step;
+            const currentY = height - (history[i].a / 100 * height);
 
-            const totalDuration = 1500;
-            const delayBetweenPoints = totalDuration / dataValues.length;
+            // เทคนิค: สร้าง Control Point ที่กึ่งกลางระหว่าง 2 จุด
+            // cp1X = ดึงออกจากจุดเดิมไปทางขวาครึ่งทาง
+            // cp2X = ดึงออกจากจุดใหม่ไปทางซ้ายครึ่งทาง
+            const cp1X = prevX + (currentX - prevX) / 2;
+            const cp1Y = prevY; // ระดับความสูงเท่าจุดเดิม
 
-            this.trendChartInstance = new Chart(ctx, {
-              type: 'line',
-              data: {
-                labels: labels,
-                datasets: [{
-                  label: 'Accuracy',
-                  data: dataValues,
-                  borderColor: '#2563eb', // blue-600
-                  borderWidth: 2.5,
-                  backgroundColor: gradient,
-                  fill: true,
-                  tension: 0.4, // Smooth curve
-                  pointRadius: 0, // Hide points
-                }]
-              },
-              options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                  legend: { display: false },
-                  tooltip: { enabled: false }
-                },
-                scales: {
-                  x: { display: false },
-                  y: { display: false, min: 0, max: 105 } // Extra 5% for comfort
-                },
-                animations: {
-                  x: {
-                    type: 'number',
-                    easing: 'linear',
-                    duration: delayBetweenPoints,
-                    from: NaN,
-                    delay(ctx) {
-                      if (ctx.type !== 'data' || ctx.active) return 0;
-                      return ctx.index * delayBetweenPoints;
-                    }
-                  },
-                  y: {
-                    type: 'number',
-                    easing: 'linear',
-                    duration: delayBetweenPoints,
-                    from: (ctx) => ctx.chart.scales.y.getPixelForValue(100), // Start from bottom (normalized 100 in canvas usually top, but Chart.js scales it)
-                    delay(ctx) {
-                      if (ctx.type !== 'data' || ctx.active) return 0;
-                      return ctx.index * delayBetweenPoints;
-                    }
-                  }
-                }
-              }
-            });
-          });
+            const cp2X = prevX + (currentX - prevX) / 2;
+            const cp2Y = currentY; // ระดับความสูงเท่าจุดใหม่
+
+            // C = Cubic Bezier Curve
+            path += ` C ${cp1X},${cp1Y} ${cp2X},${cp2Y} ${currentX},${currentY}`;
+
+            // อัปเดตจุดล่าสุดเพื่อใช้ในรอบถัดไป
+            prevX = currentX;
+            prevY = currentY;
+          }
+
+          return path;
+        },
+
+        get trendFill() {
+          const path = this.trendPath;
+          if (!path) return '';
+          return `${path} L 100,40 L 0,40 Z`;
         },
 
         get trendDirection() {
@@ -981,15 +959,7 @@
             this.triggerTabAnimations(this.activeTab);
 
             // Watch for tab changes to reset animations
-            this.$watch('activeTab', (value) => {
-              this.triggerTabAnimations(value);
-              if (value === 'dashboard') this.initTrendChart();
-            });
-
-            // Watch for profile data to init chart
-            this.$watch('profile', (value) => {
-              if (value.daily_history) this.initTrendChart();
-            });
+            this.$watch('activeTab', (value) => this.triggerTabAnimations(value));
 
           } catch (err) {
             console.error('Initialization failed', err);
