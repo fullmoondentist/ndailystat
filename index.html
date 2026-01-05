@@ -587,7 +587,7 @@
                     <span :class="avgMorningSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
                       class="text-xs font-bold" x-text="'Avg. ' + avgMorningSameday.label"></span>
                     <span x-show="morningOverdueCount > 0" class="text-orange-500 text-xs font-bold ml-2"
-                      x-text="morningOverdueCount + ' overdue'"></span>
+                      x-text="morningOverdueCount + ' after-date'"></span>
                   </div>
                 </div>
               </div>
@@ -614,7 +614,7 @@
                     <span :class="avgAfternoonSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
                       class="text-xs font-bold" x-text="'Avg. ' + avgAfternoonSameday.label"></span>
                     <span x-show="afternoonOverdueCount > 0" class="text-orange-500 text-xs font-bold ml-2"
-                      x-text="afternoonOverdueCount + ' overdue'"></span>
+                      x-text="afternoonOverdueCount + ' after-date'"></span>
                   </div>
                 </div>
               </div>
@@ -641,7 +641,7 @@
                     <span :class="avgEveningSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
                       class="text-xs font-bold" x-text="'Avg. ' + avgEveningSameday.label"></span>
                     <span x-show="eveningOverdueCount > 0" class="text-orange-500 text-xs font-bold ml-2"
-                      x-text="eveningOverdueCount + ' overdue'"></span>
+                      x-text="eveningOverdueCount + ' after-date'"></span>
                   </div>
                 </div>
               </div>
