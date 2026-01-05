@@ -355,7 +355,7 @@
               <i class="fa-solid fa-ranking-star text-orange-600"></i>
               Leaderboard
             </h3>
-            <span class="text-xs font-bold text-gray-400 uppercase">Top 20 Instructors</span>
+            <span class="text-xs font-bold text-gray-400 uppercase">Top 50 Instructors</span>
           </div>
           <div class="mt-4">
             <template x-for="(user, idx) in leaderboard" :key="user.email">
@@ -1152,7 +1152,7 @@
           try {
             const [profileRes, leaderboardRes] = await Promise.all([
               this.callAPI('getProfile', { email, userId }),
-              this.callAPI('getLeaderboard', { limit: 20 })
+              this.callAPI('getLeaderboard', { limit: 50 })
             ]);
 
             console.log('Profile Response:', profileRes);
