@@ -532,7 +532,7 @@
                       :style="'width: ' + (showProfileAnim ? sessionDist.m : 0) + '%'"></div>
                   </div>
                   <div class="w-16 text-right leading-tight">
-                    <span class="text-xs font-black text-gray-400"
+                    <span class="text-xs font-bold text-gray-400"
                       x-text="(profile.count_morning || 0) + ' entries'"></span>
                   </div>
                 </div>
@@ -540,8 +540,8 @@
                   <div class="w-6"></div>
                   <div class="flex-1 text-right">
                     <span :class="avgMorningSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
-                      class="text-xs font-black" x-text="'Avg. ' + avgMorningSameday.label"></span>
-                    <span x-show="morningOverdueCount > 0" class="text-rose-400 text-xs font-black ml-2"
+                      class="text-xs font-bold" x-text="'Avg. ' + avgMorningSameday.label"></span>
+                    <span x-show="morningOverdueCount > 0" class="text-orange-500 text-xs font-bold ml-2"
                       x-text="morningOverdueCount + ' overdue'"></span>
                   </div>
                 </div>
@@ -559,7 +559,7 @@
                       :style="'width: ' + (showProfileAnim ? sessionDist.a : 0) + '%'"></div>
                   </div>
                   <div class="w-16 text-right leading-tight">
-                    <span class="text-xs font-black text-gray-400"
+                    <span class="text-xs font-bold text-gray-400"
                       x-text="(profile.count_afternoon || 0) + ' entries'"></span>
                   </div>
                 </div>
@@ -567,8 +567,8 @@
                   <div class="w-6"></div>
                   <div class="flex-1 text-right">
                     <span :class="avgAfternoonSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
-                      class="text-xs font-black" x-text="'Avg. ' + avgAfternoonSameday.label"></span>
-                    <span x-show="afternoonOverdueCount > 0" class="text-rose-400 text-xs font-black ml-2"
+                      class="text-xs font-bold" x-text="'Avg. ' + avgAfternoonSameday.label"></span>
+                    <span x-show="afternoonOverdueCount > 0" class="text-orange-500 text-xs font-bold ml-2"
                       x-text="afternoonOverdueCount + ' overdue'"></span>
                   </div>
                 </div>
@@ -586,7 +586,7 @@
                       :style="'width: ' + (showProfileAnim ? sessionDist.e : 0) + '%'"></div>
                   </div>
                   <div class="w-16 text-right leading-tight">
-                    <span class="text-xs font-black text-gray-400"
+                    <span class="text-xs font-bold text-gray-400"
                       x-text="(profile.count_evening || 0) + ' entries'"></span>
                   </div>
                 </div>
@@ -594,8 +594,8 @@
                   <div class="w-6"></div>
                   <div class="flex-1 text-right">
                     <span :class="avgEveningSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
-                      class="text-xs font-black" x-text="'Avg. ' + avgEveningSameday.label"></span>
-                    <span x-show="eveningOverdueCount > 0" class="text-rose-400 text-xs font-black ml-2"
+                      class="text-xs font-bold" x-text="'Avg. ' + avgEveningSameday.label"></span>
+                    <span x-show="eveningOverdueCount > 0" class="text-orange-500 text-xs font-bold ml-2"
                       x-text="eveningOverdueCount + ' overdue'"></span>
                   </div>
                 </div>
