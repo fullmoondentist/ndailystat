@@ -583,9 +583,9 @@
                 <div class="flex items-center gap-3 -mt-1">
                   <div class="w-6"></div>
                   <div class="flex-1 text-right">
-                    <span :class="avgMorningSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
-                      class="text-xs font-bold" x-text="'x̄ ' + avgMorningSameday.label"></span>
-                    <span x-show="morningOverdueCount > 0" class="text-orange-500 text-xs font-bold ml-2"
+                    <span :class="avgMorningSameday.isLate ? 'text-rose-500' : 'text-emerald-500'" class="text-xs"
+                      x-text="'x̄ ' + avgMorningSameday.label"></span>
+                    <span x-show="morningOverdueCount > 0" class="text-orange-500 text-xs ml-2"
                       x-text="morningOverdueCount + ' after-date'"></span>
                   </div>
                 </div>
@@ -610,9 +610,9 @@
                 <div class="flex items-center gap-3 -mt-1">
                   <div class="w-6"></div>
                   <div class="flex-1 text-right">
-                    <span :class="avgAfternoonSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
-                      class="text-xs font-bold" x-text="'x̄ ' + avgAfternoonSameday.label"></span>
-                    <span x-show="afternoonOverdueCount > 0" class="text-orange-500 text-xs font-bold ml-2"
+                    <span :class="avgAfternoonSameday.isLate ? 'text-rose-500' : 'text-emerald-500'" class="text-xs"
+                      x-text="'x̄ ' + avgAfternoonSameday.label"></span>
+                    <span x-show="afternoonOverdueCount > 0" class="text-orange-500 text-xs ml-2"
                       x-text="afternoonOverdueCount + ' after-date'"></span>
                   </div>
                 </div>
@@ -637,9 +637,9 @@
                 <div class="flex items-center gap-3 -mt-1">
                   <div class="w-6"></div>
                   <div class="flex-1 text-right">
-                    <span :class="avgEveningSameday.isLate ? 'text-rose-500' : 'text-emerald-500'"
-                      class="text-xs font-bold" x-text="'x̄ ' + avgEveningSameday.label"></span>
-                    <span x-show="eveningOverdueCount > 0" class="text-orange-500 text-xs font-bold ml-2"
+                    <span :class="avgEveningSameday.isLate ? 'text-rose-500' : 'text-emerald-500'" class="text-xs"
+                      x-text="'x̄ ' + avgEveningSameday.label"></span>
+                    <span x-show="eveningOverdueCount > 0" class="text-orange-500 text-xs ml-2"
                       x-text="eveningOverdueCount + ' after-date'"></span>
                   </div>
                 </div>
