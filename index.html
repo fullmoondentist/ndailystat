@@ -491,7 +491,7 @@
             <!-- AVG_PRECISION_V2 -->
             <div class="glass-card p-3 relative overflow-hidden flex flex-col items-center justify-center">
               <div class="w-full flex flex-col items-center text-center">
-                <div class="stat-label">Same-date PRECISION x̄</div>
+                <div class="stat-label">Same-date PRECISION <span class="!normal-case !font-normal">x̄</span></div>
                 <div class="stat-value">
                   <span :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'"
                     x-text="Math.abs(Math.round(avgDelta))"></span>
@@ -548,7 +548,8 @@
               class="glass-card p-3 flex flex-col items-center justify-center !bg-rose-600 shadow-rose-200 w-1/3 border-rose-500"
               x-show="profile.total_overdue > 0">
               <div class="w-full flex flex-col items-center text-center">
-                <div class="stat-label !text-white/70">DELAY x̄</div>
+                <div class="stat-label !text-white/70">DELAY <span class="!normal-case !font-normal"></span>x̄</span>
+                </div>
                 <div class="text-white text-sm font-bold" x-html="formatOverdueDelay(profile.avg_overdue_delay)">
                 </div>
                 <div class="text-[12px] font-bold text-white/70 uppercase mt-0.5"
