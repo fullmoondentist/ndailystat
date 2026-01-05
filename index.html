@@ -381,7 +381,7 @@
                   <span x-show="idx === 1 || idx === 2" x-text="idx + 1"></span>
                 </div>
                 <div class="flex-1">
-                  <div class="text-sm font-bold text-gray-800" x-text="user.display_name"></div>
+                  <div class="text-sm font-bold text-gray-800" x-text="formatName(user.email)"></div>
                   <div class="text-xs text-gray-400" x-text="user.current_title">
                   </div>
                 </div>
@@ -404,7 +404,7 @@
                 <span x-text="myRank"></span>
               </div>
               <div class="flex-1">
-                <div class="text-sm font-bold text-gray-800" x-text="profile.display_name"></div>
+                <div class="text-sm font-bold text-gray-800" x-text="formatName(profile.email)"></div>
                 <div class="text-xs text-gray-400" x-text="profile.current_title"></div>
               </div>
             </div>
@@ -796,6 +796,12 @@
             card: '!bg-rose-50/50 !border-rose-100/50',
             text: 'text-rose-600'
           };
+        },
+
+        formatName(email) {
+          if (!email) return '';
+          const prefix = email.split('@')[0];
+          return prefix.charAt(0).toUpperCase() + prefix.slice(1);
         },
 
         statusColors: {
