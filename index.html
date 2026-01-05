@@ -170,13 +170,17 @@
 
         <!-- DASHBOARD_STATS_ROW START -->
         <div class="grid grid-cols-3 gap-3">
-          <div class="glass-card p-3 flex flex-col items-center">
+          <div class="glass-card p-3 flex flex-col items-center transition-colors duration-500"
+            :class="getAccStyles(profile.recent_acc).card">
             <div class="stat-label">Accuracy</div>
-            <div class="stat-value text-purple-600 font-bold" x-text="(profile.recent_acc || 0) + '%'"></div>
+            <div class="stat-value font-bold" :class="getAccStyles(profile.recent_acc).text"
+              x-text="(profile.recent_acc || 0) + '%'"></div>
           </div>
-          <div class="glass-card p-3 flex flex-col items-center">
+          <div class="glass-card p-3 flex flex-col items-center transition-colors duration-500"
+            :class="getAccStyles(profile.alltime_acc).card">
             <div class="stat-label">All-time Acc</div>
-            <div class="stat-value text-emerald-600 font-bold" x-text="(profile.alltime_acc || 0) + '%'"></div>
+            <div class="stat-value font-bold" :class="getAccStyles(profile.alltime_acc).text"
+              x-text="(profile.alltime_acc || 0) + '%'"></div>
           </div>
           <div class="glass-card p-3 flex flex-col items-center">
             <div class="stat-label">Consistency</div>
@@ -738,6 +742,26 @@
         showProfileAnim: false,
         showPersonaTooltip: false,
 
+
+        getAccStyles(acc) {
+          const v = parseFloat(acc) || 0;
+          if (v >= 90) return {
+            card: '!bg-emerald-50/50 !border-emerald-100/50',
+            text: 'text-emerald-600'
+          };
+          if (v >= 75) return {
+            card: '!bg-blue-50/50 !border-blue-100/50',
+            text: 'text-blue-600'
+          };
+          if (v >= 60) return {
+            card: '!bg-amber-50/50 !border-amber-100/50',
+            text: 'text-amber-500'
+          };
+          return {
+            card: '!bg-rose-50/50 !border-rose-100/50',
+            text: 'text-rose-600'
+          };
+        },
 
         statusColors: {
           'perfect': 'bg-gradient-to-r from-cyan-500 to-blue-500',
