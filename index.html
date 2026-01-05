@@ -234,8 +234,8 @@
             <div class="flex items-center gap-1.5" x-show="profile.daily_history?.length > 1">
               <span class="text-xs font-black text-slate-700" x-text="(profile.alltime_acc || 0) + '%'"></span>
               <i class="fa-solid" :class="{
-                   'fa-chevron-up text-emerald-500': trendDirection === 'up',
-                   'fa-chevron-down text-rose-500': trendDirection === 'down',
+                   'fa-caret-up text-emerald-500': trendDirection === 'up',
+                   'fa-caret-down text-rose-500': trendDirection === 'down',
                    'fa-minus text-gray-300': trendDirection === 'none'
                  }"></i>
             </div>
