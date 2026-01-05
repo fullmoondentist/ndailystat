@@ -491,13 +491,13 @@
             <!-- AVG_PRECISION_V2 -->
             <div class="glass-card p-3 relative overflow-hidden flex flex-col items-center justify-center">
               <div class="w-full flex flex-col items-center text-center">
-                <div class="stat-label">Same-date PRECISION <span class="!normal-case !font-normal">x̄</span></div>
+                <div class="stat-label">Same-date PRECISION</div>
                 <div class="stat-value">
                   <span :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'"
                     x-text="Math.abs(Math.round(avgDelta))"></span>
                   <span class="text-gray-700 inline-flex items-baseline" x-show="sdDelta > 0">
                     <span class="text-xs font-bold opacity-30" x-text="'±' + Math.round(sdDelta)"></span>
-                    <span class="text-xs uppercase ml-1">mins</span>
+                    <span class="text-xs ml-1">mins <span class="!normal-case !font-normal">x̄</span></span>
                   </span>
                 </div>
                 <div class="text-[12px] font-bold mt-0.5">
