@@ -400,17 +400,17 @@
             class="mt-4 bg-blue-50/50 rounded-xl p-3 flex items-center justify-between border border-blue-100/50">
             <div class="flex items-center gap-3">
               <div
-                class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-black text-lg">
-                <span x-text="'#' + myRank"></span>
+                class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-md">
+                <span x-text="myRank"></span>
               </div>
-              <div>
-                <div class="text-xs font-bold text-blue-600">Your Current Rank</div>
+              <div class="flex-1">
                 <div class="text-sm font-bold text-gray-800" x-text="profile.display_name"></div>
+                <div class="text-xs text-gray-400" x-text="profile.current_title"></div>
               </div>
             </div>
             <div class="text-right">
               <div class="text-sm font-black text-blue-600" x-text="(profile.recent_acc || 0) + '%'"></div>
-              <div class="text-[10px] font-bold text-gray-400">Recent Accuracy</div>
+              <div class="text-xs font-bold text-gray-300">Recent Accuracy</div>
             </div>
           </div>
         </div>
