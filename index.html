@@ -381,7 +381,10 @@
                   <span x-show="idx === 1 || idx === 2" x-text="idx + 1"></span>
                 </div>
                 <div class="flex-1">
-                  <div class="text-sm font-bold text-gray-800" x-text="formatName(user.email)"></div>
+                  <div class="text-sm font-bold text-gray-800 flex items-center gap-1.5">
+                    <span x-text="formatName(user.email)"></span>
+                    <span x-html="deptIconMap[user.department]" class="text-[10px] opacity-40"></span>
+                  </div>
                   <div class="text-xs text-gray-400" x-text="user.current_title">
                   </div>
                 </div>
@@ -404,7 +407,10 @@
                 <span x-text="myRank"></span>
               </div>
               <div class="flex-1">
-                <div class="text-sm font-bold text-gray-800" x-text="formatName(profile.email)"></div>
+                <div class="text-sm font-bold text-gray-800 flex items-center gap-1.5">
+                  <span x-text="formatName(profile.email)"></span>
+                  <span x-html="deptIconMap[profile.department]" class="text-[10px] opacity-40"></span>
+                </div>
                 <div class="text-xs text-gray-400" x-text="profile.current_title"></div>
               </div>
             </div>
