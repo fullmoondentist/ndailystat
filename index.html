@@ -356,9 +356,9 @@
                 <i class="fa-solid fa-ranking-star text-orange-600"></i>
                 Leaderboard
               </h3>
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2" x-show="allowToggleAllLeaderboard">
                 <span class="text-[10px] font-bold text-gray-400 uppercase"
-                  x-text="showAllLeaderboard ? 'All Instructors' : 'Top 50'"></span>
+                  x-text="showAllLeaderboard ? 'All Instructors' : 'Top 20'"></span>
                 <button @click="showAllLeaderboard = !showAllLeaderboard"
                   class="w-10 h-5 rounded-full bg-gray-100 relative transition-colors duration-300"
                   :class="showAllLeaderboard ? 'bg-blue-100' : 'bg-gray-100'">
@@ -368,23 +368,6 @@
               </div>
             </div>
 
-            <!-- Your Rank Summary -->
-            <div class="bg-blue-50/50 rounded-xl p-3 flex items-center justify-between border border-blue-100/50">
-              <div class="flex items-center gap-3">
-                <div
-                  class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-black text-lg">
-                  <span x-text="'#' + myRank"></span>
-                </div>
-                <div>
-                  <div class="text-xs font-bold text-blue-600 uppercase">Your Current Rank</div>
-                  <div class="text-sm font-bold text-gray-800" x-text="profile.display_name"></div>
-                </div>
-              </div>
-              <div class="text-right">
-                <div class="text-sm font-black text-blue-600" x-text="(profile.recent_acc || 0) + '%'"></div>
-                <div class="text-[10px] font-bold text-gray-400 uppercase">Recent Accuracy</div>
-              </div>
-            </div>
           </div>
 
           <div class="mt-4">
@@ -410,6 +393,25 @@
                 </div>
               </div>
             </template>
+          </div>
+
+          <!-- Your Rank Summary (Bottom) -->
+          <div x-show="!showAllLeaderboard && myRank > leaderboardLimit"
+            class="mt-4 bg-blue-50/50 rounded-xl p-3 flex items-center justify-between border border-blue-100/50">
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-black text-lg">
+                <span x-text="'#' + myRank"></span>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-blue-600">Your Current Rank</div>
+                <div class="text-sm font-bold text-gray-800" x-text="profile.display_name"></div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-sm font-black text-blue-600" x-text="(profile.recent_acc || 0) + '%'"></div>
+              <div class="text-[10px] font-bold text-gray-400">Recent Accuracy</div>
+            </div>
           </div>
         </div>
         <!-- LEADERBOARD_LIST END -->
@@ -766,7 +768,8 @@
         userId: null,
         system: {},
         leaderboard: [],
-        leaderboardLimit: 50,
+        leaderboardLimit: 20,
+        allowToggleAllLeaderboard: false,
         showAllLeaderboard: false,
         recentScores: [],
         showExp: false,
