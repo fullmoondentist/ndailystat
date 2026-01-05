@@ -528,17 +528,17 @@
                 <div class="flex flex-col">
                   <span class="text-emerald-500 text-sm"
                     x-text="onTimePercent + '% (' + (profile.total_on_time || 0) + ')'"></span>
-                  <span class="text-emerald-500">ON-TIME</span>
+                  <span class="text-emerald-500 text-xs">ON-TIME</span>
                 </div>
                 <div class="flex flex-col items-center" x-show="profile.total_too_early > 0">
                   <span class="text-amber-500 text-sm"
                     x-text="tooEarlyPercent + '% (' + (profile.total_too_early || 0) + ')'"></span>
-                  <span class="text-amber-500">TOO EARLY</span>
+                  <span class="text-amber-500 text-xs">TOO EARLY</span>
                 </div>
                 <div class="flex flex-col items-end">
                   <span class="text-orange-500 text-sm"
                     x-text="overduePercent + '% (' + (profile.total_overdue || 0) + ')'"></span>
-                  <span class="text-orange-500">OVERDUE</span>
+                  <span class="text-orange-500 text-xs">OVERDUE</span>
                 </div>
               </div>
             </div>
@@ -548,10 +548,10 @@
               class="glass-card p3 flex flex-col items-center justify-center !bg-orange-50/90 w-1/3 border-orange-100"
               x-show="profile.total_overdue > 0">
               <div class="w-full flex flex-col items-center text-center">
-                <div class="stat-label">Cross-date DELAY</div>
+                <div class="stat-label text-xs">Cross-date DELAY</div>
                 <div class="text-orange-500 text-sm font-bold" x-html="formatOverdueDelay(profile.avg_overdue_delay)">
                 </div>
-                <div class="text-[12px] font-bold text-orange-500 uppercase mt-0.5"
+                <div class="text-xs font-bold text-orange-500 uppercase mt-0.5"
                   x-text="(profile.total_overdue || 0) + ' Entries'"></div>
               </div>
             </div>
