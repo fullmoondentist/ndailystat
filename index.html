@@ -373,9 +373,10 @@
                   </div>
                 </div>
                 <div class="text-right">
-                  <div class="text-sm font-black text-blue-600" x-text="user.total_exp.toLocaleString()">
+                  <div class="text-sm font-black" :class="getAccStyles(user.recent_acc).text"
+                    x-text="(user.recent_acc || 0) + '%'">
                   </div>
-                  <div class="text-xs font-bold text-gray-300 uppercase">EXP Points</div>
+                  <div class="text-xs font-bold text-gray-300 uppercase">Recent Accuracy</div>
                 </div>
               </div>
             </template>
