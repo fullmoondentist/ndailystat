@@ -947,7 +947,7 @@
         },
 
         get orderedDeptStats() {
-          const order = ['Perio', 'Oper', 'Endo', 'Prosth', 'Radio', 'Pedo', 'Ortho', 'Surg'];
+          const order = ['Perio', 'Oper', 'Endo', 'Prosth', 'Diag', 'Pedo', 'Radio', 'Ortho', 'Surg'];
           const stats = this.system.dept_stats || {};
           return order.map(name => ({
             name,
