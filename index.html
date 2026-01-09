@@ -149,17 +149,112 @@
 
             <div class="flex flex-col items-end justify-between text-right">
 
-              <div class="flex items-center justify-end gap-1 w-fit ml-auto bg-transparent">
+              <div @click="showClassTooltip = !showClassTooltip" @click.outside="showClassTooltip = false"
+                class="flex items-center justify-end gap-1 w-fit ml-auto bg-transparent cursor-pointer relative transition-transform active:scale-95">
                 <span class="text-base" x-text="rankConfig[profile.current_class]?.emoji || '▫️'"></span>
                 <span x-text="profile.current_class || 'Beginner'" class="text-xs font-bold uppercase"></span>
+
+                <!-- Class Tooltip -->
+                <div x-show="showClassTooltip" x-cloak x-transition:enter="transition ease-out duration-200"
+                  x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+                  class="absolute top-full right-0 mt-2 z-[60] w-60 origin-top-right">
+                  <div class="bg-gray-800 text-white text-[11px] p-3 rounded-xl shadow-xl relative">
+                    <div class="absolute bottom-full right-4 border-4 border-transparent border-b-gray-800"></div>
+
+                    <!-- Close Button -->
+                    <button @click="showClassTooltip = false"
+                      class="absolute top-2 right-2 text-gray-400 hover:text-white transition-colors">
+                      <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+
+                    <div class="font-bold text-blue-200 mb-1">Class Progression</div>
+                    <div class="text-[10px] text-gray-400 mb-2">Based on: Precision</div>
+
+                    <div class="space-y-1">
+                      <template x-for="cls in classProgression" :key="cls.name">
+                        <div class="flex items-center gap-2"
+                          :class="cls.isCurrent ? 'text-yellow-300 font-bold' : 'text-gray-300'">
+                          <span x-text="cls.order + '.'"></span>
+                          <span x-text="cls.emoji"></span>
+                          <span x-text="cls.name"></span>
+                          <span class="text-[10px] opacity-60"
+                            x-text="cls.minPrecision !== null ? '(' + cls.minPrecision + '-' + cls.maxPrecision + '%)' : '(Not Ranked)'">
+                          </span>
+                          <span x-show="cls.isCurrent" class="ml-auto text-xs">← You</span>
+                        </div>
+                      </template>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div class="text-2xl leading-tight scale-110 origin-right drop-shadow-sm filter py-1"
-                x-text="profile.current_title ? profile.current_title.replace(/[a-zA-Z].*/, '') : '🔰'">
-              </div>
+              <div @click="showTitleTooltip = !showTitleTooltip" @click.outside="showTitleTooltip = false"
+                class="cursor-pointer relative transition-transform active:scale-95">
 
-              <div class="text-[11px] font-bold opacity-90 uppercase"
-                x-text="profile.current_title ? profile.current_title.replace(/^[^a-zA-Z]*/, '') : 'Rookie'">
+                <div class="text-2xl leading-tight scale-110 origin-right drop-shadow-sm filter py-1"
+                  x-text="profile.current_title ? profile.current_title.replace(/[a-zA-Z].*/, '') : '🔰'">
+                </div>
+
+                <div class="text-[11px] font-bold opacity-90 uppercase"
+                  x-text="profile.current_title ? profile.current_title.replace(/^[^a-zA-Z]*/, '') : 'Rookie'">
+                </div>
+
+                <!-- Title Tooltip -->
+                <div x-show="showTitleTooltip" x-cloak x-transition:enter="transition ease-out duration-200"
+                  x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+                  class="absolute top-full right-0 mt-2 z-[60] w-64 origin-top-right">
+                  <div
+                    class="bg-gray-800 text-white text-[11px] p-3 rounded-xl shadow-xl relative max-h-96 overflow-y-auto">
+                    <div class="absolute bottom-full right-4 border-4 border-transparent border-b-gray-800"></div>
+
+                    <!-- Close Button -->
+                    <button @click="showTitleTooltip = false"
+                      class="absolute top-2 right-2 text-gray-400 hover:text-white transition-colors z-10">
+                      <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+
+                    <div class="font-bold text-blue-200 mb-2">Title Progression</div>
+
+                    <div class="space-y-1.5">
+                      <template x-for="phase in titleProgression" :key="phase.name">
+                        <div>
+                          <!-- Main Phase -->
+                          <div class="flex items-center gap-2"
+                            :class="phase.isCurrentPhase ? 'text-yellow-300 font-bold' : 'text-gray-300'">
+                            <span x-text="phase.order + '.'"></span>
+                            <span x-text="phase.emoji"></span>
+                            <span x-text="phase.name"></span>
+                            <span class="text-[10px] opacity-60"
+                              x-text="'(' + (phase.min || 0).toLocaleString() + (phase.max ? '-' + phase.max.toLocaleString() : '+') + ')'">
+                            </span>
+                          </div>
+
+                          <!-- Tiers (if exists) -->
+                          <div x-show="phase.tiers.length > 0" class="ml-6 mt-0.5 space-y-0.5">
+                            <template x-for="tier in phase.tiers" :key="tier.tier">
+                              <div class="flex items-center gap-1.5 text-[10px]"
+                                :class="phase.currentTier?.tier === tier.tier ? 'text-yellow-200 font-bold' : 'text-gray-400'">
+                                <span>•</span>
+                                <span x-show="tier.icon" x-text="tier.icon"></span>
+                                <span x-text="tier.tier"></span>
+                                <span class="opacity-60"
+                                  x-text="'(' + tier.min.toLocaleString() + '-' + tier.max.toLocaleString() + ')'">
+                                </span>
+                                <span x-show="phase.currentTier?.tier === tier.tier" class="ml-auto">← You</span>
+                              </div>
+                            </template>
+                          </div>
+
+                          <!-- Current Phase Indicator -->
+                          <div x-show="phase.isCurrentPhase && !phase.currentTier"
+                            class="ml-6 text-[10px] text-yellow-200">
+                            ← Current
+                          </div>
+                        </div>
+                      </template>
+                    </div>
+                  </div>
+                </div>
               </div>
 
             </div>
@@ -779,6 +874,8 @@
         showDeptAnim: false,
         showProfileAnim: false,
         showPersonaTooltip: false,
+        showClassTooltip: false,
+        showTitleTooltip: false,
 
 
         getAccStyles(acc) {
@@ -1143,6 +1240,99 @@
           if (avg <= 0) return { name: 'The Flash', emoji: '⚡', desc: 'Lightning fast! You always finish your work on or before the target time.' };
           if (avg <= 60) return { name: 'The Slow-burner', emoji: '🧘', desc: 'Slow but steady. You might be a bit after the target, but you always arrive within the hour!' };
           return { name: 'The Deadline Diver', emoji: '🤿', desc: 'Better late than never! You usually pass the 60-minute mark, but hey, you got it done!' };
+        },
+
+        get classProgression() {
+          // Based on CONFIG.CLASS_RANK.TIERS from Config.gs
+          const classes = [
+            { name: 'Diamond', emoji: '💎', minPrecision: 95, maxPrecision: 100, order: 1 },
+            { name: 'Platinum', emoji: '◻️', minPrecision: 85, maxPrecision: 94, order: 2 },
+            { name: 'Gold', emoji: '🥇', minPrecision: 70, maxPrecision: 84, order: 3 },
+            { name: 'Silver', emoji: '🥈', minPrecision: 50, maxPrecision: 69, order: 4 },
+            { name: 'Bronze', emoji: '🥉', minPrecision: 0, maxPrecision: 49, order: 5 },
+            { name: 'Beginner', emoji: '▫️', minPrecision: null, maxPrecision: null, order: 6 }
+          ];
+
+          return classes.map(cls => ({
+            ...cls,
+            isCurrent: cls.name === this.profile.current_class
+          }));
+        },
+
+        get titleProgression() {
+          // Title configuration based on Config.gs EXP_RANK.PHASES
+          const phases = [
+            {
+              name: 'Legendary',
+              emoji: '👑',
+              min: 50001,
+              max: Infinity,
+              tiers: []
+            },
+            {
+              name: 'Grand Master',
+              emoji: '⚜️',
+              min: 15001,
+              max: 50000,
+              tiers: []
+            },
+            {
+              name: 'Master',
+              emoji: '💠',
+              min: 5001,
+              max: 15000,
+              tiers: [
+                { tier: 'Tier Ⅰ', min: 11001, max: 15000, icon: '🌟' },
+                { tier: 'Tier Ⅱ', min: 8001, max: 11000, icon: '⭐️' },
+                { tier: 'Tier Ⅲ', min: 5001, max: 8000, icon: '' }
+              ]
+            },
+            {
+              name: 'Senior',
+              emoji: '🎖️',
+              min: 1001,
+              max: 5000,
+              tiers: [
+                { tier: 'Tier Ⅰ', min: 3501, max: 5000, icon: '🌟' },
+                { tier: 'Tier Ⅱ', min: 2201, max: 3500, icon: '⭐️' },
+                { tier: 'Tier Ⅲ', min: 1001, max: 2200, icon: '' }
+              ]
+            },
+            {
+              name: 'Rookie',
+              emoji: '🔰',
+              min: 0,
+              max: 1000,
+              tiers: [
+                { tier: 'Tier Ⅰ', min: 601, max: 1000, icon: '🌟' },
+                { tier: 'Tier Ⅱ', min: 301, max: 600, icon: '⭐️' },
+                { tier: 'Tier Ⅲ', min: 0, max: 300, icon: '' }
+              ]
+            }
+          ];
+
+          const currentExp = this.profile.total_exp || 0;
+          const currentTitle = this.profile.current_title || '';
+
+          return phases.map((phase, idx) => {
+            const isCurrentPhase = currentTitle.includes(phase.name);
+            let currentTier = null;
+
+            if (phase.tiers && phase.tiers.length > 0) {
+              currentTier = phase.tiers.find(t => currentExp >= t.min && currentExp <= t.max);
+            }
+
+            return {
+              order: idx + 1,
+              name: phase.name,
+              emoji: phase.emoji,
+              min: phase.min,
+              max: phase.max === Infinity ? null : phase.max,
+              tiers: phase.tiers || [],
+              isCurrentPhase,
+              currentTier: isCurrentPhase ? currentTier : null
+            };
+          });
         },
 
         triggerTabAnimations(tab) {
