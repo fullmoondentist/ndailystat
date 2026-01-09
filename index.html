@@ -163,24 +163,22 @@
 
                     <!-- Close Button -->
                     <button @click="showClassTooltip = false"
-                      class="absolute top-2 right-2 text-gray-400 hover:text-white transition-colors">
+                      class="absolute top-2 left-2 text-gray-400 hover:text-white transition-colors">
                       <i class="fa-solid fa-xmark text-sm"></i>
                     </button>
 
-                    <div class="font-bold text-blue-200 mb-1">Class Progression</div>
-                    <div class="text-[10px] text-gray-400 mb-2">Based on: Precision</div>
+                    <div class="font-bold text-blue-200 mb-2 text-xs">Class: Based on Accuracy</div>
 
-                    <div class="space-y-1">
+                    <div class="space-y-1.5">
                       <template x-for="cls in classProgression" :key="cls.name">
-                        <div class="flex items-center gap-2"
-                          :class="cls.isCurrent ? 'text-yellow-300 font-bold' : 'text-gray-300'">
+                        <div class="flex items-center gap-2 px-2 py-1 rounded-lg transition-colors text-xs"
+                          :class="cls.isCurrent ? 'bg-yellow-500/20 text-yellow-300 font-bold' : 'text-gray-300'">
                           <span x-text="cls.order + '.'"></span>
                           <span x-text="cls.emoji"></span>
                           <span x-text="cls.name"></span>
-                          <span class="text-[10px] opacity-60"
+                          <span class="text-[11px] opacity-60"
                             x-text="cls.minPrecision !== null ? '(' + cls.minPrecision + '-' + cls.maxPrecision + '%)' : '(Not Ranked)'">
                           </span>
-                          <span x-show="cls.isCurrent" class="ml-auto text-xs">← You</span>
                         </div>
                       </template>
                     </div>
@@ -209,46 +207,40 @@
 
                     <!-- Close Button -->
                     <button @click="showTitleTooltip = false"
-                      class="absolute top-2 right-2 text-gray-400 hover:text-white transition-colors z-10">
+                      class="absolute top-2 left-2 text-gray-400 hover:text-white transition-colors z-10">
                       <i class="fa-solid fa-xmark text-sm"></i>
                     </button>
 
-                    <div class="font-bold text-blue-200 mb-2">Title Progression</div>
+                    <div class="font-bold text-blue-200 mb-2 text-xs">Title: Based on Experience</div>
 
                     <div class="space-y-1.5">
                       <template x-for="phase in titleProgression" :key="phase.name">
                         <div>
                           <!-- Main Phase -->
-                          <div class="flex items-center gap-2"
-                            :class="phase.isCurrentPhase ? 'text-yellow-300 font-bold' : 'text-gray-300'">
+                          <div class="flex items-center gap-2 px-2 py-1 rounded-lg transition-colors text-xs"
+                            :class="phase.isCurrentPhase ? 'bg-yellow-500/20 text-yellow-300 font-bold' : 'text-gray-300'">
                             <span x-text="phase.order + '.'"></span>
                             <span x-text="phase.emoji"></span>
                             <span x-text="phase.name"></span>
-                            <span class="text-[10px] opacity-60"
+                            <span class="text-[11px] opacity-60"
                               x-text="'(' + (phase.min || 0).toLocaleString() + (phase.max ? '-' + phase.max.toLocaleString() : '+') + ')'">
                             </span>
                           </div>
 
                           <!-- Tiers (if exists) -->
-                          <div x-show="phase.tiers.length > 0" class="ml-6 mt-0.5 space-y-0.5">
+                          <div x-show="phase.tiers.length > 0" class="ml-6 mt-0.5 space-y-1">
                             <template x-for="tier in phase.tiers" :key="tier.tier">
-                              <div class="flex items-center gap-1.5 text-[10px]"
-                                :class="phase.currentTier?.tier === tier.tier ? 'text-yellow-200 font-bold' : 'text-gray-400'">
+                              <div
+                                class="flex items-center gap-1.5 px-2 py-0.5 rounded-lg transition-colors text-[11px]"
+                                :class="phase.currentTier?.tier === tier.tier ? 'bg-yellow-500/15 text-yellow-200 font-bold' : 'text-gray-400'">
                                 <span>•</span>
                                 <span x-show="tier.icon" x-text="tier.icon"></span>
                                 <span x-text="tier.tier"></span>
                                 <span class="opacity-60"
                                   x-text="'(' + tier.min.toLocaleString() + '-' + tier.max.toLocaleString() + ')'">
                                 </span>
-                                <span x-show="phase.currentTier?.tier === tier.tier" class="ml-auto">← You</span>
                               </div>
                             </template>
-                          </div>
-
-                          <!-- Current Phase Indicator -->
-                          <div x-show="phase.isCurrentPhase && !phase.currentTier"
-                            class="ml-6 text-[10px] text-yellow-200">
-                            ← Current
                           </div>
                         </div>
                       </template>
