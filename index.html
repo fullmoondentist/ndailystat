@@ -263,23 +263,65 @@
 
         <!-- DASHBOARD_STATS_ROW START -->
         <div class="grid grid-cols-3 gap-3">
-          <div class="glass-card p-3 flex flex-col items-center transition-colors duration-500"
-            :class="getAccStyles(profile.recent_acc).card">
+          <!-- Accuracy Card -->
+          <div @click="activeInfo = (activeInfo === 'accuracy' ? null : 'accuracy')"
+            @click.outside="activeInfo === 'accuracy' && (activeInfo = null)"
+            class="glass-card p-3 flex flex-col items-center transition-all duration-300 relative cursor-pointer active:scale-95"
+            :class="[getAccStyles(profile.recent_acc).card, activeInfo === 'accuracy' ? 'ring-2 ring-blue-400' : '']">
             <div class="stat-label">Accuracy</div>
             <div class="stat-value font-bold" :class="getAccStyles(profile.recent_acc).text"
               x-text="(profile.recent_acc || 0) + '%'"></div>
+
+            <!-- Accuracy Tooltip -->
+            <div x-show="activeInfo === 'accuracy'" x-cloak x-transition
+              class="absolute top-full left-0 right-0 mt-2 z-50 bg-gray-900/95 text-white p-3 rounded-xl shadow-2xl text-[10px] leading-tight text-left min-w-[160px]">
+              <div class="font-black text-blue-400 mb-1 uppercase">Scoring (Last 20)</div>
+              <div class="space-y-1 opacity-90">
+                <p>• Perfect(100): -90m to +60m</p>
+                <p>• Good(50): Late up to 4h</p>
+                <p>• Fair(25): Late >4h, same day</p>
+                <p>• Overdue(0): >3h early or next day</p>
+              </div>
+              <div class="absolute -top-1 left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900/95">
+              </div>
+            </div>
           </div>
-          <div class="glass-card p-3 flex flex-col items-center transition-colors duration-500"
-            :class="getAccStyles(profile.alltime_acc).card">
-            <div class="stat-label">All-time Acc</div>
+
+          <!-- All-time Acc Card -->
+          <div @click="activeInfo = (activeInfo === 'alltime' ? null : 'alltime')"
+            @click.outside="activeInfo === 'alltime' && (activeInfo = null)"
+            class="glass-card p-3 flex flex-col items-center transition-all duration-300 relative cursor-pointer active:scale-95"
+            :class="[getAccStyles(profile.alltime_acc).card, activeInfo === 'alltime' ? 'ring-2 ring-blue-400' : '']">
+            <div class="stat-label truncate w-full text-center">All-time Acc</div>
             <div class="stat-value font-bold" :class="getAccStyles(profile.alltime_acc).text"
               x-text="(profile.alltime_acc || 0) + '%'"></div>
+
+            <!-- All-time Tooltip -->
+            <div x-show="activeInfo === 'alltime'" x-cloak x-transition
+              class="absolute top-full left-0 right-0 mt-2 z-50 bg-gray-900/95 text-white p-3 rounded-xl shadow-2xl text-[10px] leading-tight text-center min-w-[140px]">
+              Avg accuracy from all your submissions.
+              <div class="absolute -top-1 left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900/95">
+              </div>
+            </div>
           </div>
-          <div class="glass-card p-3 flex flex-col items-center">
+
+          <!-- Consistency Card -->
+          <div @click="activeInfo = (activeInfo === 'consistency' ? null : 'consistency')"
+            @click.outside="activeInfo === 'consistency' && (activeInfo = null)"
+            class="glass-card p-3 flex flex-col items-center transition-all duration-300 relative cursor-pointer active:scale-95"
+            :class="activeInfo === 'consistency' ? 'ring-2 ring-orange-400' : ''">
             <div class="stat-label">Consistency</div>
             <div class="stat-value text-orange-500 font-bold">
               <span x-text="profile.current_consistency || 0"></span>
               <i class="fa-solid fa-fire text-sm ml-0.5"></i>
+            </div>
+
+            <!-- Consistency Tooltip -->
+            <div x-show="activeInfo === 'consistency'" x-cloak x-transition
+              class="absolute top-full left-0 right-0 mt-2 z-50 bg-gray-900/95 text-white p-3 rounded-xl shadow-2xl text-[10px] leading-tight text-center min-w-[140px]">
+              Streak of ≥95% acc days.<br>Up to 1.5x EXP bonus.
+              <div class="absolute -top-1 left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900/95">
+              </div>
             </div>
           </div>
         </div>
@@ -299,7 +341,10 @@
         <!-- TICKER_MESSAGES END -->
 
         <!-- EXPERIENCE_PROGRESS START -->
-        <div class="glass-card p-4">
+        <div @click="activeInfo = (activeInfo === 'experience' ? null : 'experience')"
+          @click.outside="activeInfo === 'experience' && (activeInfo = null)"
+          class="glass-card p-4 relative cursor-pointer transition-all duration-300 active:scale-[0.98]"
+          :class="activeInfo === 'experience' ? 'ring-2 ring-purple-400' : ''">
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2">
               <i class="fa-solid fa-bars-progress text-purple-500"></i>
@@ -316,6 +361,19 @@
             <span x-text="profile.total_exp?.toLocaleString() + ' EXP'"></span>
             <span
               x-text="profile.next_rank_exp ? 'Next: ' + (profile.next_rank_name || '') + ' (' + profile.next_rank_exp.toLocaleString() + ' EXP)' : 'Next: MAX'"></span>
+          </div>
+
+          <!-- Experience Tooltip -->
+          <div x-show="activeInfo === 'experience'" x-cloak x-transition
+            class="absolute top-full left-4 right-4 mt-2 z-50 bg-gray-900/95 text-white p-3 rounded-xl shadow-2xl text-[10px] leading-tight text-left">
+            <div class="font-black text-purple-400 mb-1 uppercase">EXP Points</div>
+            <div class="grid grid-cols-2 gap-x-4 gap-y-1 opacity-90">
+              <p>• Case: +50(P), 25(G), 10(F)</p>
+              <p>• Daily Bonus: +100 (Acc ≥95%)</p>
+              <p>• Combo: Up to 1.5x bonus</p>
+            </div>
+            <div class="absolute -top-1 left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900/95">
+            </div>
           </div>
         </div>
         <!-- EXPERIENCE_PROGRESS END -->
@@ -585,7 +643,10 @@
             </div>
 
             <!-- AVG_PRECISION_V2 -->
-            <div class="glass-card p-3 relative overflow-hidden flex flex-col items-center justify-center">
+            <div @click="activeInfo = (activeInfo === 'precision' ? null : 'precision')"
+              @click.outside="activeInfo === 'precision' && (activeInfo = null)"
+              class="glass-card p-3 relative flex flex-col items-center justify-center cursor-pointer transition-all duration-300 active:scale-95"
+              :class="activeInfo === 'precision' ? 'ring-2 ring-indigo-400' : ''">
               <div class="w-full flex flex-col items-center text-center">
                 <div class="stat-label">Same-date PRECISION</div>
                 <div class="stat-value">
@@ -600,6 +661,14 @@
                   <span :class="avgDelta <= 0 ? 'text-emerald-500' : 'text-orange-500'"
                     x-text="avgDelta <= 0 ? 'BEFORE' : 'AFTER'"></span>
                   <span class="text-gray-700">Session end</span>
+                </div>
+              </div>
+
+              <!-- Precision Tooltip -->
+              <div x-show="activeInfo === 'precision'" x-cloak x-transition
+                class="absolute top-full left-0 right-0 mt-2 z-50 bg-gray-900/95 text-white p-3 rounded-xl shadow-2xl text-[10px] leading-tight text-center min-w-[140px]">
+                Offset from session end.<br>Closer to 0 is better.
+                <div class="absolute -top-1 left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900/95">
                 </div>
               </div>
             </div>
@@ -935,6 +1004,7 @@
         sellItemTarget: null,
         showSellResultModal: false,
         earnedExpResult: 0,
+        activeInfo: null,
 
 
         getAccStyles(acc) {
