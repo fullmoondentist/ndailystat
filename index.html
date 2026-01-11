@@ -267,7 +267,7 @@
           <div @click="activeInfo = (activeInfo === 'accuracy' ? null : 'accuracy')"
             @click.outside="activeInfo === 'accuracy' && (activeInfo = null)"
             class="glass-card p-3 flex flex-col items-center transition-all duration-300 relative cursor-pointer active:scale-95"
-            :class="[getAccStyles(profile.recent_acc).card, activeInfo === 'accuracy' ? 'ring-2 ring-blue-400' : '']">
+            :class="[getAccStyles(profile.recent_acc).card, activeInfo === 'accuracy' ? 'ring-2 ring-blue-400 z-[60]' : 'z-10']">
             <div class="stat-label">Accuracy</div>
             <div class="stat-value font-bold" :class="getAccStyles(profile.recent_acc).text"
               x-text="(profile.recent_acc || 0) + '%'"></div>
@@ -291,7 +291,7 @@
           <div @click="activeInfo = (activeInfo === 'alltime' ? null : 'alltime')"
             @click.outside="activeInfo === 'alltime' && (activeInfo = null)"
             class="glass-card p-3 flex flex-col items-center transition-all duration-300 relative cursor-pointer active:scale-95"
-            :class="[getAccStyles(profile.alltime_acc).card, activeInfo === 'alltime' ? 'ring-2 ring-blue-400' : '']">
+            :class="[getAccStyles(profile.alltime_acc).card, activeInfo === 'alltime' ? 'ring-2 ring-blue-400 z-[60]' : 'z-10']">
             <div class="stat-label truncate w-full text-center">All-time Acc</div>
             <div class="stat-value font-bold" :class="getAccStyles(profile.alltime_acc).text"
               x-text="(profile.alltime_acc || 0) + '%'"></div>
@@ -309,7 +309,7 @@
           <div @click="activeInfo = (activeInfo === 'consistency' ? null : 'consistency')"
             @click.outside="activeInfo === 'consistency' && (activeInfo = null)"
             class="glass-card p-3 flex flex-col items-center transition-all duration-300 relative cursor-pointer active:scale-95"
-            :class="activeInfo === 'consistency' ? 'ring-2 ring-orange-400' : ''">
+            :class="activeInfo === 'consistency' ? 'ring-2 ring-orange-400 z-[60]' : 'z-10'">
             <div class="stat-label">Consistency</div>
             <div class="stat-value text-orange-500 font-bold">
               <span x-text="profile.current_consistency || 0"></span>
@@ -344,7 +344,7 @@
         <div @click="activeInfo = (activeInfo === 'experience' ? null : 'experience')"
           @click.outside="activeInfo === 'experience' && (activeInfo = null)"
           class="glass-card p-4 relative cursor-pointer transition-all duration-300 active:scale-[0.98]"
-          :class="activeInfo === 'experience' ? 'ring-2 ring-purple-400' : ''">
+          :class="activeInfo === 'experience' ? 'ring-2 ring-purple-400 z-[60]' : 'z-10'">
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2">
               <i class="fa-solid fa-bars-progress text-purple-500"></i>
@@ -646,7 +646,7 @@
             <div @click="activeInfo = (activeInfo === 'precision' ? null : 'precision')"
               @click.outside="activeInfo === 'precision' && (activeInfo = null)"
               class="glass-card p-3 relative flex flex-col items-center justify-center cursor-pointer transition-all duration-300 active:scale-95"
-              :class="activeInfo === 'precision' ? 'ring-2 ring-indigo-400' : ''">
+              :class="activeInfo === 'precision' ? 'ring-2 ring-indigo-400 z-[60]' : 'z-10'">
               <div class="w-full flex flex-col items-center text-center">
                 <div class="stat-label">Same-date PRECISION</div>
                 <div class="stat-value">
