@@ -114,7 +114,7 @@
 
         <!-- TOP_HEADER START -->
         <header
-          :class="'bg-gradient-to-br ' + (rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500') + ' text-white px-6 py-6 rounded-2xl shadow-lg relative overflow-visible mt-2'">
+          :class="'bg-gradient-to-br ' + (rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500') + ' text-white px-6 py-6 rounded-2xl shadow-lg relative overflow-visible mt-2 ' + (showClassTooltip || showTitleTooltip ? 'z-[80]' : 'z-20')">
 
           <!-- Clipped Background Effects -->
           <div class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
