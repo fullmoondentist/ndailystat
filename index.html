@@ -79,21 +79,28 @@
                 padding-right: 100%;
                 animation: ticker 120s linear infinite;
             }
-            @keyframes ticker {
-                0% { transform: translate3d(0, 0, 0); }
-                100% { transform: translate3d(-100%, 0, 0); }
+            @keyframes shimmer {
+                0% { transform: translateX(-150%) skewX(-15deg); }
+                100% { transform: translateX(150%) skewX(-15deg); }
             }
-            @keyframes revealGraph {
-                0% {
-                    clip-path: inset(0 100% 0 0);
-                }
-                100% {
-                    clip-path: inset(0 0 0 0);
-                }
+            .animate-shimmer {
+                animation: shimmer 6s infinite;
             }
-            .animate-reveal-graph {
-                clip-path: inset(0 100% 0 0);
-                animation: revealGraph 1.5s ease-out forwards;
+            @keyframes pulse-glow {
+                0%, 100% { opacity: 0.5; filter: blur(8px); }
+                50% { opacity: 0.8; filter: blur(12px); }
+            }
+            .animate-pulse-glow {
+                animation: pulse-glow 3s ease-in-out infinite;
+            }
+            .pattern-hexagon {
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='hexagons' fill='%23ffffff' fill-opacity='0.05' fill-rule='nonzero'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9l11 6.35 11-6.35V31.1l-11 6.35-11-6.35V17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            }
+            .pattern-stripes {
+                background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.03) 10px, rgba(255,255,255,0.03) 20px);
+            }
+            .pattern-crystal {
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
             }
             [x-cloak] { display: none !important; }
         }
@@ -114,7 +121,23 @@
 
         <!-- TOP_HEADER START -->
         <header
-          :class="'bg-gradient-to-br ' + (rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500') + ' text-white px-6 py-6 rounded-2xl shadow-lg relative overflow-visible mt-2 ' + (showClassTooltip || showTitleTooltip ? 'z-[80]' : 'z-20')">
+          :class="'bg-gradient-to-br ' + (rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500') + ' text-white px-6 py-6 rounded-2xl shadow-lg relative overflow-hidden mt-2 ' + (showClassTooltip || showTitleTooltip ? 'z-[80]' : 'z-20') + (profile.current_class === 'Diamond' ? ' shadow-[0_0_20px_rgba(56,189,248,0.4)]' : '')">
+
+          <!-- Dynamic Background Pattern Layer -->
+          <div class="absolute inset-0 opacity-10 pointer-events-none" :class="{
+              'pattern-hexagon': profile.current_class === 'Diamond' || profile.current_class === 'Platinum',
+              'pattern-crystal': profile.current_class === 'Gold',
+              'pattern-stripes': profile.current_class === 'Silver' || profile.current_class === 'Bronze'
+            }">
+          </div>
+
+          <!-- Shimmer Sweep Effect for Diamond/Platinum -->
+          <div x-show="profile.current_class === 'Diamond' || profile.current_class === 'Platinum'"
+            class="absolute inset-0 opacity-20 pointer-events-none overflow-hidden rounded-2xl">
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent w-1/2 -skew-x-12 animate-shimmer">
+            </div>
+          </div>
 
           <!-- Clipped Background Effects -->
           <div class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
@@ -125,16 +148,28 @@
           <div class="relative z-10 flex justify-between items-stretch">
 
             <div class="flex items-center gap-4">
-              <!-- Profile Picture -->
-              <div
-                class="w-20 h-20 rounded-full border-2 border-white/50 overflow-hidden shadow-lg bg-white/20 flex-shrink-0">
-                <template x-if="profile.pictureUrl">
-                  <img :src="profile.pictureUrl" class="w-full h-full object-cover">
-                </template>
-                <template x-if="!profile.pictureUrl">
-                  <div class="w-full h-full flex items-center justify-center text-xl font-bold bg-white/10 uppercase"
-                    x-text="profile.display_name?.charAt(0) || '?' "></div>
-                </template>
+              <!-- Profile Picture with Dynamic Frame -->
+              <div class="relative group">
+                <!-- Aura Glow for Diamond -->
+                <div x-show="profile.current_class === 'Diamond'"
+                  class="absolute -inset-1 bg-cyan-400 rounded-full blur-md opacity-50 animate-pulse-glow"></div>
+
+                <div
+                  class="w-20 h-20 rounded-full border-2 overflow-hidden shadow-lg relative bg-white/20 flex-shrink-0 transition-all duration-500"
+                  :class="{
+                    'border-cyan-200 ring-4 ring-cyan-500/30 scale-105': profile.current_class === 'Diamond',
+                    'border-yellow-200 ring-2 ring-yellow-400/40': profile.current_class === 'Gold',
+                    'border-emerald-200 ring-2 ring-emerald-400/30': profile.current_class === 'Platinum',
+                    'border-white/50': !['Diamond', 'Gold', 'Platinum'].includes(profile.current_class)
+                  }">
+                  <template x-if="profile.pictureUrl">
+                    <img :src="profile.pictureUrl" class="w-full h-full object-cover">
+                  </template>
+                  <template x-if="!profile.pictureUrl">
+                    <div class="w-full h-full flex items-center justify-center text-xl font-bold bg-white/10 uppercase"
+                      x-text="profile.display_name?.charAt(0) || '?' "></div>
+                  </template>
+                </div>
               </div>
 
               <div class="text-left flex flex-col justify-center">
