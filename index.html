@@ -840,6 +840,58 @@
   </div>
   <!-- RANKUP_CELEBRATION_MODAL END -->
 
+  <!-- REWARD_EXCHANGE_CONFIRM_MODAL START -->
+  <div x-show="showSellModal" x-cloak
+    class="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-black/40 backdrop-blur-[2px]"
+    x-transition.opacity>
+    <div class="glass-card w-full max-w-[280px] p-6 text-center shadow-2xl"
+      x-transition:enter="transition ease-out duration-300 scale-95 opacity-0"
+      x-transition:enter-start="scale-95 opacity-0" x-transition:enter-end="scale-100 opacity-100">
+
+      <div class="text-3xl mb-3" x-text="sellItemTarget?.emoji"></div>
+      <h3 class="text-lg font-bold text-gray-800 mb-1">Exchange Reward?</h3>
+      <p class="text-gray-500 text-xs mb-6">แลก <span class="font-bold text-gray-700"
+          x-text="sellItemTarget?.displayName"></span><br>เป็น 50-300 EXP?</p>
+
+      <div class="flex gap-3">
+        <button @click="showSellModal = false"
+          class="flex-1 py-2.5 bg-gray-100 text-gray-500 font-bold rounded-xl text-xs active:scale-95 transition-transform">
+          Cancel
+        </button>
+        <button @click="executeSell()"
+          class="flex-1 py-2.5 bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold rounded-xl text-xs shadow-lg active:scale-95 transition-transform">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- REWARD_EXCHANGE_CONFIRM_MODAL END -->
+
+  <!-- REWARD_EXCHANGE_RESULT_MODAL START -->
+  <div x-show="showSellResultModal" x-cloak
+    class="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-black/20 backdrop-blur-[1px]"
+    x-transition.opacity>
+    <div class="glass-card w-full max-w-[240px] p-6 text-center shadow-2xl border-2 border-emerald-100"
+      x-transition:enter="transition ease-out duration-500 scale-90 opacity-0"
+      x-transition:enter-start="scale-90 opacity-0" x-transition:enter-end="scale-100 opacity-100">
+
+      <div class="text-4xl mb-2 animate-bounce">✨</div>
+      <h3 class="text-emerald-600 font-black text-xl mb-1">Success!</h3>
+      <p class="text-gray-500 text-xs mb-4">You earned</p>
+
+      <div class="inline-block px-4 py-2 bg-emerald-50 rounded-2xl mb-6">
+        <span class="text-2xl font-black text-emerald-600" x-text="'+' + earnedExpResult"></span>
+        <span class="text-xs font-bold text-emerald-400 ml-1 uppercase">EXP</span>
+      </div>
+
+      <button @click="showSellResultModal = false"
+        class="w-full py-3 bg-gray-800 text-white font-bold rounded-xl text-xs active:scale-95 transition-transform">
+        Awesome!
+      </button>
+    </div>
+  </div>
+  <!-- REWARD_EXCHANGE_RESULT_MODAL END -->
+
   <!-- LOADING_OVERLAY START -->
   <div x-show="isLoading" x-cloak
     class="fixed inset-0 z-[200] bg-white flex flex-col items-center justify-center space-y-4">
@@ -873,6 +925,10 @@
         showPersonaTooltip: false,
         showClassTooltip: false,
         showTitleTooltip: false,
+        showSellModal: false,
+        sellItemTarget: null,
+        showSellResultModal: false,
+        earnedExpResult: 0,
 
 
         getAccStyles(acc) {
@@ -1463,9 +1519,19 @@
         },
 
         async sellReward(reward) {
-          if (!confirm(`ยืนยันการแลก "${reward.displayName}" เป็น 50-300 EXP?`)) return;
+          // Open custom confirm modal instead of browser confirm
+          this.sellItemTarget = reward;
+          this.showSellModal = true;
+          this.selectedReward = null;
+        },
 
+        async executeSell() {
+          if (!this.sellItemTarget) return;
+
+          const reward = this.sellItemTarget;
+          this.showSellModal = false;
           this.isLoading = true;
+
           try {
             const res = await this.callAPI('exchangeReward', {
               email: this.profile.email,
@@ -1473,24 +1539,38 @@
             });
 
             if (res.success) {
+              this.earnedExpResult = res.earned_exp;
+
               // Refresh profile data
               await this.fetchData(this.profile.email, this.userId, this.profile.pictureUrl);
 
-              if (res.rank_changed) {
-                this.showRankup = true;
-              }
+              // Show success modal
+              this.showSellResultModal = true;
 
-              // Simple feedback (could be enhanced later)
-              // alert(`สำเร็จ! คุณได้รับ ${res.earned_exp} EXP`);
+              if (res.rank_changed) {
+                // Wait a bit before showing rank up if needed
+                setTimeout(() => {
+                  if (!this.showSellResultModal) this.showRankup = true;
+                  else {
+                    // Watch for result modal close to show rankup
+                    const unwatch = this.$watch('showSellResultModal', (val) => {
+                      if (!val) {
+                        this.showRankup = true;
+                        unwatch();
+                      }
+                    });
+                  }
+                }, 500);
+              }
             } else {
               alert('Error: ' + res.message);
             }
           } catch (err) {
-            console.error('Sell reward failed', err);
+            console.error('Exchange failed', err);
             alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
           } finally {
             this.isLoading = false;
-            this.selectedReward = null;
+            this.sellItemTarget = null;
           }
         },
 
