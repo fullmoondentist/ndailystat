@@ -449,7 +449,7 @@
                     <div class="font-bold mb-2" x-text="item.displayName"></div>
                     <button @click.stop="sellReward(item)"
                       class="w-full py-1.5 px-3 bg-gradient-to-r from-rose-500 to-pink-500 text-white text-[10px] font-black rounded-lg shadow-md active:scale-95 transition-transform uppercase">
-                      Exchange for 50-300 EXP
+                      Exchange for EXP
                     </button>
                     <!-- Tooltip Arrow -->
                     <div
@@ -899,14 +899,20 @@
 
       <div class="absolute top-0 left-0 w-full h-2 premium-gradient"></div>
 
-      <div class="text-6xl mb-4 animate-bounce">🎊</div>
-      <h2 class="text-2xl font-black text-gray-800 mb-2" x-text="'RANK UP: ' + profile.current_class"></h2>
-      <p class="text-gray-500 text-sm mb-6">Congratulations! You've reached a higher rank.</p>
+      <div class="text-6xl mb-4 animate-bounce"
+        x-text="profile.rank_up_msg?.includes('CLASS') ? (rankConfig[profile.current_class]?.emoji || '🎊') : (profile.rank_up_msg?.includes('TITLE') ? '🎖️' : '🎊')">
+      </div>
+      <h2 class="text-2xl font-black text-gray-800 mb-2" x-text="profile.rank_up_msg?.split(':')[0] || 'RANK UP!'"></h2>
+      <p class="text-gray-500 text-sm mb-6 font-bold"
+        x-text="profile.rank_up_msg?.split(':').slice(1).join(':').trim() || 'Congratulations!'"></p>
 
       <div
-        :class="'inline-flex items-center px-6 py-2 rounded-full text-white font-black shadow-lg mb-8 bg-gradient-to-r ' + (rankConfig[profile.current_class]?.color || 'from-blue-600 to-indigo-600')">
-        <span x-text="rankConfig[profile.current_class]?.emoji || '🏆'"></span>
-        <span x-text="profile.current_class" class="ml-2 uppercase text-lg"></span>
+        :class="'inline-flex items-center px-6 py-2 rounded-full text-white font-black shadow-lg mb-8 bg-gradient-to-r ' + (profile.rank_up_msg?.includes('CLASS') ? (rankConfig[profile.current_class]?.color || 'from-blue-600 to-indigo-600') : 'from-yellow-400 to-orange-500')">
+        <span
+          x-text="profile.rank_up_msg?.includes('CLASS') ? (rankConfig[profile.current_class]?.emoji || '🏆') : '✨'"></span>
+        <span
+          x-text="profile.rank_up_msg?.includes('CLASS') ? profile.current_class : (profile.current_title ? profile.current_title.replace(/^[^a-zA-Z]*/, '') : 'New Title')"
+          class="ml-2 uppercase text-lg"></span>
       </div>
 
       <button @click="closeRankup()"
