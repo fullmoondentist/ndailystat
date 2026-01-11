@@ -850,8 +850,8 @@
 
       <div class="text-3xl mb-3" x-text="sellItemTarget?.emoji"></div>
       <h3 class="text-lg font-bold text-gray-800 mb-1">Exchange Reward?</h3>
-      <p class="text-gray-500 text-xs mb-6">แลก <span class="font-bold text-gray-700"
-          x-text="sellItemTarget?.displayName"></span><br>เป็น 50-300 EXP?</p>
+      <p class="text-gray-500 text-xs mb-6">Exchange <span class="font-bold text-gray-700"
+          x-text="sellItemTarget?.displayName"></span><br>for 50-300 EXP?</p>
 
       <div class="flex gap-3">
         <button @click="showSellModal = false"
@@ -1567,7 +1567,7 @@
             }
           } catch (err) {
             console.error('Exchange failed', err);
-            alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+            alert('Connection error, please try again.');
           } finally {
             this.isLoading = false;
             this.sellItemTarget = null;
