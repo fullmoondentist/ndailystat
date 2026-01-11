@@ -169,7 +169,7 @@
                     <div class="absolute bottom-full right-4 border-4 border-transparent border-b-gray-800"></div>
 
                     <!-- Close Button -->
-                    <button @click="showClassTooltip = false"
+                    <button @click.stop="showClassTooltip = false"
                       class="absolute top-2 left-2 text-gray-400 hover:text-white transition-colors">
                       <i class="fa-solid fa-xmark text-sm"></i>
                     </button>
@@ -214,7 +214,7 @@
                     <div class="absolute bottom-full right-4 border-4 border-transparent border-b-gray-800"></div>
 
                     <!-- Close Button -->
-                    <button @click="showTitleTooltip = false"
+                    <button @click.stop="showTitleTooltip = false"
                       class="absolute top-2 left-2 text-gray-400 hover:text-white transition-colors z-10">
                       <i class="fa-solid fa-xmark text-sm"></i>
                     </button>
