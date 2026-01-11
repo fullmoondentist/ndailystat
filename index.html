@@ -38,7 +38,10 @@
         @apply leading-tight;
       }
       body {
-        @apply leading-tight;
+        @apply leading-tight overflow-x-hidden;
+      }
+      html {
+        @apply overflow-x-hidden;
       }
     }
     @layer components {
@@ -111,10 +114,13 @@
 
         <!-- TOP_HEADER START -->
         <header
-          :class="'bg-gradient-to-br ' + (rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500') + ' text-white px-6 py-6 rounded-2xl shadow-lg relative overflow-visible'">
+          :class="'bg-gradient-to-br ' + (rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500') + ' text-white px-6 py-6 rounded-2xl shadow-lg relative overflow-visible mt-2'">
 
-          <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-          <div class="absolute bottom-0 left-0 -ml-10 -mb-10 w-48 h-48 bg-blue-400/20 rounded-full blur-2xl"></div>
+          <!-- Clipped Background Effects -->
+          <div class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
+            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 -ml-10 -mb-10 w-48 h-48 bg-blue-400/20 rounded-full blur-2xl"></div>
+          </div>
 
           <div class="relative z-10 flex justify-between items-stretch">
 
