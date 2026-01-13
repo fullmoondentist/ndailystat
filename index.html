@@ -120,29 +120,34 @@
       <div x-show="activeTab === 'dashboard'" class="space-y-4">
 
         <!-- TOP_HEADER START -->
-        <header
-          :class="'bg-gradient-to-br ' + (rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500') + ' text-white px-6 py-6 rounded-2xl shadow-lg relative overflow-hidden mt-2 ' + (showClassTooltip || showTitleTooltip ? 'z-[80]' : 'z-20') + (profile.current_class === 'Diamond' ? ' shadow-[0_0_20px_rgba(56,189,248,0.4)]' : '')">
+        <header class="relative px-6 py-6 mt-2 text-white"
+          :class="(showClassTooltip || showTitleTooltip ? 'z-[80]' : 'z-20')">
 
-          <!-- Dynamic Background Pattern Layer -->
-          <div class="absolute inset-0 opacity-10 pointer-events-none" :class="{
-              'pattern-hexagon': profile.current_class === 'Diamond' || profile.current_class === 'Platinum',
-              'pattern-crystal': profile.current_class === 'Gold',
-              'pattern-stripes': profile.current_class === 'Silver' || profile.current_class === 'Bronze'
-            }">
-          </div>
+          <!-- Background Layer (Clipped) -->
+          <div class="absolute inset-0 rounded-2xl overflow-hidden shadow-lg -z-10"
+            :class="(rankConfig[profile.current_class]?.color || 'from-gray-400 to-gray-500') + ' bg-gradient-to-br ' + (profile.current_class === 'Diamond' ? ' shadow-[0_0_20px_rgba(56,189,248,0.4)]' : '')">
 
-          <!-- Shimmer Sweep Effect for Diamond/Platinum -->
-          <div x-show="profile.current_class === 'Diamond' || profile.current_class === 'Platinum'"
-            class="absolute inset-0 opacity-20 pointer-events-none overflow-hidden rounded-2xl">
-            <div
-              class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent w-1/2 -skew-x-12 animate-shimmer">
+            <!-- Dynamic Background Pattern Layer -->
+            <div class="absolute inset-0 opacity-10 pointer-events-none" :class="{
+                'pattern-hexagon': profile.current_class === 'Diamond' || profile.current_class === 'Platinum',
+                'pattern-crystal': profile.current_class === 'Gold',
+                'pattern-stripes': profile.current_class === 'Silver' || profile.current_class === 'Bronze'
+              }">
             </div>
-          </div>
 
-          <!-- Clipped Background Effects -->
-          <div class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
-            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-0 left-0 -ml-10 -mb-10 w-48 h-48 bg-blue-400/20 rounded-full blur-2xl"></div>
+            <!-- Shimmer Sweep Effect for Diamond/Platinum -->
+            <div x-show="profile.current_class === 'Diamond' || profile.current_class === 'Platinum'"
+              class="absolute inset-0 opacity-20 pointer-events-none overflow-hidden rounded-2xl">
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent w-1/2 -skew-x-12 animate-shimmer">
+              </div>
+            </div>
+
+            <!-- Clipped Background Effects -->
+            <div class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
+              <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+              <div class="absolute bottom-0 left-0 -ml-10 -mb-10 w-48 h-48 bg-blue-400/20 rounded-full blur-2xl"></div>
+            </div>
           </div>
 
           <div class="relative z-10 flex justify-between items-stretch">
@@ -356,7 +361,7 @@
 
             <!-- Consistency Tooltip -->
             <div x-show="activeInfo === 'consistency'" x-cloak x-transition
-              class="absolute top-full left-0 right-0 mt-2 z-50 bg-gray-900/95 text-white p-3 rounded-xl shadow-2xl text-[10px] leading-tight text-center min-w-[140px]">
+              class="absolute top-full right-0 mt-2 z-50 bg-gray-900/95 text-white p-3 rounded-xl shadow-2xl text-[10px] leading-tight text-center min-w-[140px] origin-top-right">
               <div class="font-bold text-orange-300 mb-1 uppercase text-xs">Streak Bonus</div>
               <div class="text-[10px] text-gray-400 mb-2 italic">Condition: Daily Acc ≥ 95%</div>
               <div class="grid grid-cols-2 gap-x-2 text-left opacity-90">
@@ -366,7 +371,7 @@
                 <div>4d: +40%</div>
                 <div class="col-span-2 text-center font-bold text-orange-400">5d+: +50% (Max)</div>
               </div>
-              <div class="absolute -top-1 left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900/95">
+              <div class="absolute -top-1 right-4 border-4 border-transparent border-b-gray-900/95">
               </div>
             </div>
           </div>
