@@ -587,34 +587,22 @@
               <div class="flex-1 h-px bg-slate-100"></div>
             </div>
 
-            <div class="flex flex-wrap gap-2">
+            <div class="grid grid-cols-2 gap-2">
               <template x-for="user in clubMembers" :key="user.email">
                 <div
-                  class="inline-flex items-center gap-2 pl-1 pr-3 py-1 bg-white border border-slate-100 rounded-full shadow-sm hover:shadow-md transition-all group cursor-default"
+                  class="flex items-center justify-between px-3 py-1.5 bg-white border border-slate-100 rounded-full shadow-sm hover:shadow-md transition-all group cursor-default"
                   :class="user.email === profile.email ? 'ring-1 ring-blue-500 border-blue-200' : ''">
 
-                  <!-- Tiny Avatar -->
-                  <div class="relative w-6 h-6 shrink-0">
-                    <div
-                      class="w-full h-full rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center overflow-hidden">
-                      <template x-if="user.pictureUrl">
-                        <img :src="user.pictureUrl" class="w-full h-full object-cover">
-                      </template>
-                      <span x-show="!user.pictureUrl" class="text-[8px] font-bold text-slate-400"
-                        x-text="formatName(user.email).charAt(0)"></span>
-                    </div>
-                    <!-- Dept Dot -->
-                    <div
-                      class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-white rounded-full flex items-center justify-center text-[6px] shadow-sm border border-slate-50"
-                      x-html="deptIconMap[user.department]">
-                    </div>
+                  <div class="flex items-center gap-2 overflow-hidden">
+                    <!-- Crown Emoji -->
+                    <span class="text-xs">👑</span>
+
+                    <!-- Name -->
+                    <span class="text-[11px] font-bold text-slate-700 truncate" x-text="formatName(user.email)"></span>
                   </div>
 
-                  <!-- Name -->
-                  <div class="flex flex-col leading-none">
-                    <span class="text-[10px] font-bold text-slate-700 group-hover:text-blue-600 transition-colors"
-                      x-text="formatName(user.email)"></span>
-                  </div>
+                  <!-- Dept Icon -->
+                  <div class="text-[10px] text-slate-400 opacity-60" x-html="deptIconMap[user.department]"></div>
                 </div>
               </template>
             </div>
