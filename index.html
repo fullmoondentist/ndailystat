@@ -569,7 +569,7 @@
               </h3>
               <div class="flex items-center gap-2" x-show="allowToggleAllLeaderboard">
                 <span class="text-[10px] font-bold text-gray-400 uppercase"
-                  x-text="showAllLeaderboard ? 'All Instructors' : 'Top ' + leaderboardLimit"></span>
+                  x-text="showAllLeaderboard ? 'All Instructors' : 'Top 20'"></span>
                 <button @click="showAllLeaderboard = !showAllLeaderboard"
                   class="w-10 h-5 rounded-full bg-gray-100 relative transition-colors duration-300"
                   :class="showAllLeaderboard ? 'bg-blue-100' : 'bg-gray-100'">
@@ -581,61 +581,36 @@
 
           </div>
 
-          <div class="mt-4 space-y-5">
-            <template x-for="group in groupedLeaderboard" :key="group.rank">
-              <div class="bg-white/40 rounded-xl p-3 border border-white/40">
-                <!-- Group Header -->
-                <div class="flex items-center justify-between mb-3 border-b border-gray-100/50 pb-2">
-                  <div class="flex items-center gap-2">
-                    <div class="w-6 h-6 flex items-center justify-center font-bold text-xs rounded-lg shadow-sm"
-                      :class="group.rank === 1 ? 'bg-gradient-to-br from-yellow-300 to-yellow-500 text-white' : (group.rank === 2 ? 'bg-gradient-to-br from-slate-300 to-slate-400 text-white' : (group.rank === 3 ? 'bg-gradient-to-br from-orange-400 to-amber-600 text-white' : 'bg-gray-100 text-gray-500'))">
-                      <span x-show="group.rank > 3" x-text="group.rank"></span>
-                      <i x-show="group.rank === 1" class="fa-solid fa-crown text-[10px]"></i>
-                      <span x-show="group.rank === 2 || group.rank === 3" x-text="group.rank"></span>
-                    </div>
-                    <div class="flex flex-col leading-none">
-                      <span class="text-xs font-bold text-gray-700 uppercase">Rank <span
-                          x-text="group.rank"></span></span>
-                      <span class="text-[10px] text-gray-400 font-medium">Accuracy <span class="text-gray-600 font-bold"
-                          x-text="group.recent_acc + '%'"></span></span>
-                    </div>
-                  </div>
-                  <div
-                    class="text-[10px] font-bold text-gray-400 bg-gray-50 px-2 py-1 rounded-full border border-gray-100"
-                    x-text="group.users.length + ' Instructors'"></div>
+          <div class="mt-4">
+            <template x-for="(user, idx) in displayedLeaderboard" :key="user.email">
+              <div class="flex items-center gap-3 p-3 border-b border-gray-100 last:border-0"
+                :class="user.email === profile.email ? 'bg-blue-50/50' : ''">
+                <div class="w-8 h-8 flex items-center justify-center font-bold text-sm rounded-lg"
+                  :class="idx === 0 ? 'bg-yellow-100 text-yellow-700' : (idx === 1 ? 'bg-slate-100 text-slate-500' : (idx === 2 ? 'bg-orange-100 text-orange-700' : 'text-gray-400'))">
+                  <span x-show="idx > 2" x-text="idx + 1"></span>
+                  <i x-show="idx === 0" class="fa-solid fa-crown"></i>
+                  <span x-show="idx === 1 || idx === 2" x-text="idx + 1"></span>
                 </div>
-
-                <!-- Capsules Grid -->
-                <div class="flex flex-wrap gap-2">
-                  <template x-for="user in group.users" :key="user.email">
-                    <div class="flex items-center gap-1.5 px-2 py-1.5 rounded-full border transition-all duration-200"
-                      :class="user.email === profile.email 
-                        ? 'bg-blue-600 border-blue-500 text-white ring-2 ring-blue-200 shadow-lg scale-105 z-10' 
-                        : 'bg-white/60 border-white/50 text-gray-600 hover:bg-white hover:shadow-sm'">
-
-                      <!-- Avatar/Initial -->
-                      <div
-                        class="w-4 h-4 rounded-full overflow-hidden flex items-center justify-center text-[8px] font-bold shrink-0"
-                        :class="user.email === profile.email ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-500'">
-                        <span x-text="user.display_name?.charAt(0) || '?'"></span>
-                      </div>
-
-                      <div class="flex flex-col leading-none">
-                        <span class="text-[10px] font-bold truncate max-w-[80px]"
-                          x-text="formatName(user.email)"></span>
-                      </div>
-
-                      <!-- Mini Dept Icon -->
-                      <span x-html="deptIconMap[user.department]" class="text-[8px] opacity-60"></span>
-                    </div>
-                  </template>
+                <div class="flex-1">
+                  <div class="text-sm font-bold text-gray-800 flex items-center gap-1.5">
+                    <span x-text="formatName(user.email)"></span>
+                    <span x-html="deptIconMap[user.department]" class="text-[10px] opacity-40"></span>
+                  </div>
+                  <div class="text-xs text-gray-400" x-text="user.current_title">
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-sm font-bold" :class="getAccStyles(user.recent_acc).text"
+                    x-text="(user.recent_acc || 0) + '%'">
+                  </div>
+                  <div class="text-xs font-bold text-gray-300">Recent Accuracy</div>
                 </div>
               </div>
             </template>
           </div>
 
-          <!-- Your Rank Summary (Bottom) - Show if I'm not in the top displayed groups or list is collapsed -->
-          <div x-show="!showAllLeaderboard && myIndex >= 0"
+          <!-- Your Rank Summary (Bottom) -->
+          <div x-show="!showAllLeaderboard && myRank > leaderboardLimit"
             class="mt-4 bg-blue-50/50 rounded-xl p-3 flex items-center justify-between border border-blue-100/50">
             <div class="flex items-center gap-3">
               <div
@@ -1076,7 +1051,7 @@
         userId: null,
         system: {},
         leaderboard: [],
-        leaderboardLimit: 100,
+        leaderboardLimit: 20,
         allowToggleAllLeaderboard: false,
         showAllLeaderboard: false,
         recentScores: [],
@@ -1164,39 +1139,7 @@
           return index !== -1 ? index + 1 : '-';
         },
 
-        get groupedLeaderboard() {
-          const all = this.allSortedLeaderboard;
-          // Use 'leaderboardLimit' as a limit for RANKS now, or just show all if desired.
-          // Let's show all for now inside the collapsed logic, or limit to top 5 ranks?
-          // User request was to make it grouped to see everyone. 
-          // Let's filter by displayed
-          let targetList = this.showAllLeaderboard ? all : all.slice(0, this.leaderboardLimit);
-
-          const groups = [];
-          let currentGroup = null;
-
-          targetList.forEach(user => {
-            if (!currentGroup || currentGroup.rank !== user.rank) {
-              if (currentGroup) groups.push(currentGroup);
-              currentGroup = {
-                rank: user.rank,
-                recent_acc: user.recent_acc,
-                users: []
-              };
-            }
-            currentGroup.users.push(user);
-          });
-          if (currentGroup) groups.push(currentGroup);
-
-          return groups;
-        },
-
-        get myIndex() {
-          return this.allSortedLeaderboard.findIndex(u => u.email === this.profile.email);
-        },
-
         get displayedLeaderboard() {
-          // Legacy getter kept for compatibility if needed, but UI now uses groupedLeaderboard
           if (this.showAllLeaderboard) return this.allSortedLeaderboard;
           return this.allSortedLeaderboard.slice(0, this.leaderboardLimit);
         },
