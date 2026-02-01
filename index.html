@@ -569,7 +569,7 @@
               </h3>
               <div class="flex items-center gap-2" x-show="allowToggleAllLeaderboard">
                 <span class="text-[10px] font-bold text-gray-400 uppercase"
-                  x-text="showAllLeaderboard ? 'All Instructors' : 'Top 20'"></span>
+                  x-text="showAllLeaderboard ? 'All Instructors' : 'Top 10'"></span>
                 <button @click="showAllLeaderboard = !showAllLeaderboard"
                   class="w-10 h-5 rounded-full bg-gray-100 relative transition-colors duration-300"
                   :class="showAllLeaderboard ? 'bg-blue-100' : 'bg-gray-100'">
@@ -1114,7 +1114,7 @@
         userId: null,
         system: {},
         leaderboard: [],
-        leaderboardLimit: 20,
+        leaderboardLimit: 10,
         allowToggleAllLeaderboard: false,
         showAllLeaderboard: false,
         recentScores: [],
