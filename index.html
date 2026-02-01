@@ -607,13 +607,13 @@
             <div class="grid grid-cols-2 gap-2">
               <template x-for="user in clubMembers" :key="user.email">
                 <div
-                  class="relative overflow-hidden flex items-center justify-between px-2 py-1 bg-gradient-to-b from-white to-sky-100 border border-blue-200/50 rounded-full shadow-sm shadow-blue-100/50 group cursor-default"
-                  :class="user.email === profile.email ? 'ring-1 ring-blue-500 border-blue-400' : ''">
+                  class="relative overflow-hidden flex items-center justify-between px-2 py-1 bg-gradient-to-b from-amber-50 to-amber-100 border border-amber-200 rounded-full shadow-sm shadow-amber-100/50 group cursor-default"
+                  :class="user.email === profile.email ? 'ring-1 ring-amber-500 border-amber-400' : ''">
 
                   <!-- Shimmer Effect -->
                   <div class="absolute inset-0 pointer-events-none">
                     <div
-                      class="absolute inset-0 bg-gradient-to-r from-transparent via-white/80 to-transparent w-full h-full animate-shimmer">
+                      class="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent w-full h-full animate-shimmer">
                     </div>
                   </div>
 
@@ -622,12 +622,12 @@
                     <span class="text-xs shrink-0 drop-shadow-sm">👑</span>
 
                     <!-- Name (Tight & Truncated) -->
-                    <span class="text-xs font-bold text-slate-700 truncate w-full -ml-0.5"
+                    <span class="text-xs font-bold text-amber-950 truncate w-full -ml-0.5"
                       x-text="formatName(user.email)"></span>
                   </div>
 
                   <!-- Dept Icon (Matched with Challengers) -->
-                  <div class="ml-1 text-[10px] opacity-40 shrink-0 relative z-10"
+                  <div class="ml-1 text-[10px] text-amber-800 opacity-40 shrink-0 relative z-10"
                     x-html="deptIconMap[user.department] || '<i class=\'fa-solid fa-user\'></i>'"></div>
                 </div>
               </template>
