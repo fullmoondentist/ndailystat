@@ -1204,8 +1204,8 @@
           // 1. Check if in 100% Club
           if ((this.profile.recent_acc || 0) >= 100) return 1;
 
-          // 2. Check if in Challengers
-          const challengers = this.challengerMembers; // This now has .rank computed
+          // 2. Check if in Challengers (Use FULL list, not sliced)
+          const challengers = this.allChallengers; 
           const me = challengers.find(u => u.email === email);
           return me ? me.rank : '-';
         },
@@ -1217,7 +1217,7 @@
             .sort((a, b) => (a.display_name || '').localeCompare(b.display_name || ''));
         },
 
-        get challengerMembers() {
+        get allChallengers() {
           // Challengers: Recent Acc < 100
           // Sorting: Recent -> Alltime -> Alpha
           const list = this.leaderboard
@@ -1230,9 +1230,8 @@
 
           // Calculate Dense Ranking (Start at 2)
           let currentRank = 2;
-          let prevUser = null;
 
-          const rankedList = list.map((u, idx) => {
+          return list.map((u, idx) => {
             if (idx > 0) {
               // If scores are DIFFERENT from previous, increment rank
               // Scores = Recent Acc & All-time Acc (ignore alpha)
@@ -1245,9 +1244,12 @@
             // Return new object with rank
             return { ...u, rank: currentRank };
           });
+        },
 
-          if (this.showAllLeaderboard) return rankedList;
-          return rankedList.slice(0, this.leaderboardLimit);
+        get challengerMembers() {
+          const list = this.allChallengers;
+          if (this.showAllLeaderboard) return list;
+          return list.slice(0, this.leaderboardLimit);
         },
 
         get orderedDeptStats() {
