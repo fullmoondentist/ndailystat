@@ -77,7 +77,7 @@
                 display: inline-block;
                 white-space: nowrap;
                 padding-right: 100%;
-                animation: ticker 100s linear infinite;
+                animation: ticker var(--ticker-duration, 100s) linear infinite;
             }
             @keyframes ticker {
                 0% { transform: translate3d(100vw, 0, 0); }
@@ -384,7 +384,8 @@
 
         <!-- TICKER_MESSAGES START -->
         <div class="ticker-wrap rounded-xl" x-show="system.ticker_messages?.length > 0">
-          <div class="ticker-move text-[11px] font-bold text-blue-900/60 uppercase">
+          <div class="ticker-move text-[11px] font-bold text-blue-900/60 uppercase"
+            :style="{ '--ticker-duration': (system.ticker_messages?.join('').length * 0.2 + 15) + 's' }">
             <template x-for="msg in system.ticker_messages" :key="msg">
               <span class="mx-8 flex-inline items-center">
                 <i class="fa-solid fa-bullhorn mr-2"></i>
