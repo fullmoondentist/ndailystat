@@ -324,10 +324,16 @@
               <div class="font-bold text-blue-300 mb-1 uppercase text-xs">Scoring Criteria</div>
               <div class="text-[10px] text-gray-400 mb-2 italic">Δ from session-end time</div>
               <div class="space-y-1 opacity-90">
-                <p>• Perfect (100): On time (-120m to +60m)</p>
-                <p>• Good (50): Late < 4 hrs</p>
-                    <p>• Fair (25): Late > 4 hrs (Same day)</p>
-                    <p>• Overdue (0): After day</p>
+                <p
+                  x-text="'• Perfect (' + (system.scoring_config?.PERFECT_SCORE || 100) + '): On time (-' + (system.scoring_config?.PERFECT_EARLY_DELTA || 120) + 'm to +' + (system.scoring_config?.PERFECT_LATE_DELTA || 60) + 'm)'">
+                </p>
+                <p
+                  x-text="'• Good (' + (system.scoring_config?.GOOD_SCORE || 50) + '): Late < ' + ((system.scoring_config?.GOOD_LATE_DELTA || 240)/60) + ' hrs'">
+                </p>
+                <p
+                  x-text="'• Fair (' + (system.scoring_config?.FAIR_SCORE || 25) + '): Late > ' + ((system.scoring_config?.GOOD_LATE_DELTA || 240)/60) + ' hrs (Same day)'">
+                </p>
+                <p x-text="'• Overdue (' + (system.scoring_config?.OVERDUE_SCORE || 0) + '): After day'"></p>
               </div>
               <div class="absolute -top-1 left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900/95">
               </div>
@@ -1138,11 +1144,15 @@
 
         getAccStyles(acc) {
           const v = parseFloat(acc) || 0;
-          if (v >= 90) return {
+          // Sync with CONFIG.SCORING from Backend if available
+          const perfect = this.system.ranking_config?.TIERS?.DIAMOND?.min || 95;
+          const good = this.system.ranking_config?.TIERS?.GOLD?.min || 70;
+
+          if (v >= perfect) return {
             card: '!bg-emerald-50/50 !border-emerald-100/50',
             text: 'text-emerald-600'
           };
-          if (v >= 75) return {
+          if (v >= good) return {
             card: '!bg-blue-50/50 !border-blue-100/50',
             text: 'text-blue-600'
           };
@@ -1171,8 +1181,8 @@
         },
 
         rankConfig: {
-          'Diamond': { emoji: '💎', color: 'from-cyan-400 to-blue-500' },
-          'Platinum': { emoji: '◻️', color: 'from-emerald-400 to-teal-500' },
+          'Diamond': { emoji: '💎', color: 'from-cyan-500 to-blue-600' },
+          'Platinum': { emoji: '◻️', color: 'from-slate-300 via-blue-100 to-slate-400' },
           'Gold': { emoji: '🥇', color: 'from-yellow-400 to-orange-500' },
           'Silver': { emoji: '🥈', color: 'from-slate-300 to-slate-400' },
           'Bronze': { emoji: '🥉', color: 'from-orange-700 to-amber-900' },
@@ -1545,67 +1555,54 @@
         },
 
         get classProgression() {
-          // Based on CONFIG.CLASS_RANK.TIERS from Config.gs
+          const config = this.system.ranking_config?.TIERS || {};
           const classes = [
-            { name: 'Diamond', emoji: '💎', minPrecision: 95, maxPrecision: 100, order: 1 },
-            { name: 'Platinum', emoji: '◻️', minPrecision: 85, maxPrecision: 94, order: 2 },
-            { name: 'Gold', emoji: '🥇', minPrecision: 70, maxPrecision: 84, order: 3 },
-            { name: 'Silver', emoji: '🥈', minPrecision: 50, maxPrecision: 69, order: 4 },
-            { name: 'Bronze', emoji: '🥉', minPrecision: 0, maxPrecision: 49, order: 5 },
-            { name: 'Beginner', emoji: '▫️', minPrecision: null, maxPrecision: null, order: 6 }
+            { name: 'Diamond', order: 1 },
+            { name: 'Platinum', order: 2 },
+            { name: 'Gold', order: 3 },
+            { name: 'Silver', order: 4 },
+            { name: 'Bronze', order: 5 },
+            { name: 'Beginner', order: 6 }
           ];
 
-          return classes.map(cls => ({
-            ...cls,
-            isCurrent: cls.name === this.profile.current_class
-          }));
+          return classes.map(cls => {
+            const tier = config[cls.name.toUpperCase()] || {};
+            return {
+              name: cls.name,
+              emoji: tier.emoji || (this.rankConfig[cls.name]?.emoji || '▫️'),
+              minPrecision: tier.min !== undefined ? tier.min : null,
+              maxPrecision: tier.max !== undefined ? tier.max : null,
+              order: cls.order,
+              isCurrent: cls.name === this.profile.current_class
+            };
+          });
         },
 
         get titleProgression() {
-          // Title configuration based on Config.gs EXP_RANK.PHASES
-          const phases = [
+          const config = this.system.exp_config?.PHASES || [];
+          const currentExp = this.profile.total_exp || 0;
+          const currentTitle = this.profile.current_title || '';
+
+          // Fallback to old phases if config is not yet loaded or empty
+          const phases = config.length > 0 ? config : [
+            { name: 'Legendary', emoji: '👑', min: 15001, max: Infinity, ranges: [] },
+            { name: 'Grand Master', emoji: '⚜️', min: 9001, max: 15000, ranges: [] },
             {
-              name: 'Legendary',
-              emoji: '👑',
-              min: 15001,
-              max: Infinity,
-              tiers: []
-            },
-            {
-              name: 'Grand Master',
-              emoji: '⚜️',
-              min: 9001,
-              max: 15000,
-              tiers: []
-            },
-            {
-              name: 'Master',
-              emoji: '💠',
-              min: 4501,
-              max: 9000,
-              tiers: [
+              name: 'Master', emoji: '💠', min: 4501, max: 9000, ranges: [
                 { tier: 'Tier Ⅰ', min: 7501, max: 9000, icon: '🌟' },
                 { tier: 'Tier Ⅱ', min: 6001, max: 7500, icon: '⭐️' },
                 { tier: 'Tier Ⅲ', min: 4501, max: 6000, icon: '' }
               ]
             },
             {
-              name: 'Senior',
-              emoji: '🎖️',
-              min: 1501,
-              max: 4500,
-              tiers: [
+              name: 'Senior', emoji: '🎖️', min: 1501, max: 4500, ranges: [
                 { tier: 'Tier Ⅰ', min: 3501, max: 4500, icon: '🌟' },
                 { tier: 'Tier Ⅱ', min: 2501, max: 3500, icon: '⭐️' },
                 { tier: 'Tier Ⅲ', min: 1501, max: 2500, icon: '' }
               ]
             },
             {
-              name: 'Rookie',
-              emoji: '🔰',
-              min: 0,
-              max: 1500,
-              tiers: [
+              name: 'Rookie', emoji: '🔰', min: 0, max: 1500, ranges: [
                 { tier: 'Tier Ⅰ', min: 1001, max: 1500, icon: '🌟' },
                 { tier: 'Tier Ⅱ', min: 501, max: 1000, icon: '⭐️' },
                 { tier: 'Tier Ⅲ', min: 0, max: 500, icon: '' }
@@ -1613,24 +1610,28 @@
             }
           ];
 
-          const currentExp = this.profile.total_exp || 0;
-          const currentTitle = this.profile.current_title || '';
-
-          return phases.map((phase, idx) => {
+          return [...phases].reverse().map((phase, idx) => {
             const isCurrentPhase = currentTitle.includes(phase.name);
             let currentTier = null;
+            const tiers = phase.ranges || [];
 
-            if (phase.tiers && phase.tiers.length > 0) {
-              currentTier = phase.tiers.find(t => currentExp >= t.min && currentExp <= t.max);
+            // Find current stage/phase boundaries if min/max not direct
+            let min = phase.min;
+            let max = phase.max;
+
+            if (tiers.length > 0) {
+              min = Math.min(...tiers.map(t => t.min));
+              max = Math.max(...tiers.map(t => t.max));
+              currentTier = tiers.find(t => currentExp >= t.min && currentExp <= t.max);
             }
 
             return {
               order: idx + 1,
               name: phase.name,
               emoji: phase.emoji,
-              min: phase.min,
-              max: phase.max === Infinity ? null : phase.max,
-              tiers: phase.tiers || [],
+              min: min,
+              max: max === Infinity ? null : max,
+              tiers: tiers.map(t => ({ ...t, tier: t.tier })), // mapping name
               isCurrentPhase,
               currentTier: isCurrentPhase ? currentTier : null
             };
