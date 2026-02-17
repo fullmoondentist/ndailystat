@@ -373,13 +373,17 @@
             <div x-show="activeInfo === 'consistency'" x-cloak x-transition
               class="absolute top-full right-0 mt-2 z-50 bg-gray-900/95 text-white p-3 rounded-xl shadow-2xl text-[10px] leading-tight text-center min-w-[140px] origin-top-right">
               <div class="font-bold text-orange-300 mb-1 uppercase text-xs">Streak Bonus</div>
-              <div class="text-[10px] text-gray-400 mb-2 italic">Condition: Daily Acc ≥ 95%</div>
+              <div class="text-[10px] text-gray-400 mb-2 italic"
+                x-text="'Condition: Daily Acc ≥ ' + (system.streak_config?.PERFECT?.min || 95) + '%'"></div>
               <div class="grid grid-cols-2 gap-x-2 text-left opacity-90">
-                <div>1d: +10%</div>
-                <div>2d: +20%</div>
-                <div>3d: +30%</div>
-                <div>4d: +40%</div>
-                <div class="col-span-2 text-center font-bold text-orange-400">5d+: +50% (Max)</div>
+                <template x-for="i in 4" :key="i">
+                  <div
+                    x-text="i + 'd: +' + Math.round((system.streak_config?.STREAK_MULTIPLIER_STEP || 0.1) * i * 100) + '%'">
+                  </div>
+                </template>
+                <div class="col-span-2 text-center font-bold text-orange-400"
+                  x-text="'5d+: +' + Math.round(((system.streak_config?.STREAK_MULTIPLIER_MAX || 1.5) - 1) * 100) + '% (Max)'">
+                </div>
               </div>
               <div class="absolute -top-1 right-4 border-4 border-transparent border-b-gray-900/95">
               </div>
